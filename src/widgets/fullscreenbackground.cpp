@@ -39,8 +39,6 @@
 #include <QTimer>
 #include <QWindow>
 
-Q_LOGGING_CATEGORY(DDE_SS, "dss.active")
-
 DGUI_USE_NAMESPACE
 
 const int PIXMAP_TYPE_BACKGROUND = 0;
@@ -279,16 +277,16 @@ void FullscreenBackground::tryActiveWindow(int count/* = 9*/)
     if (count < 0 || m_model->isUseWayland())
         return;
 
-    qCDebug(DDE_SS) << "try active window..." << count;
+    qDebug() << "try active window..." << count;
     if (isActiveWindow()) {
-        qCDebug(DDE_SS) << "...finally activewindow is me ...";
+        qDebug() << "...finally activewindow is me ...";
         return;
     }
 
     activateWindow();
 
     if (m_content && !m_content->isVisible()) {
-        qCDebug(DDE_SS) << "hide..." << count;
+        qDebug() << "hide..." << count;
         return;
     }
     QTimer::singleShot(50 , this, std::bind(&FullscreenBackground::tryActiveWindow, this, count -1));

@@ -78,7 +78,7 @@ void LoginModule::initUI()
 
     loginLayout->addWidget(webView);
 
-    webView->load(QUrl("https://wx.qq.com/"));
+    webView->load(QUrl("https://login.uniontech.com/"));
 }
 
 void LoginModule::setAuthFinishedCallback(AuthCallback *callback)
