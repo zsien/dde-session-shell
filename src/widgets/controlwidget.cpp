@@ -32,6 +32,7 @@
 #include "tray_module_interface.h"
 #include "tipswidget.h"
 #include "public_func.h"
+#include "tipcontentwidget.h"
 
 #include <DFloatingButton>
 #include <DArrowRectangle>
@@ -157,14 +158,15 @@ void ControlWidget::initUI()
     m_mainLayout->setSpacing(26);
     m_mainLayout->setAlignment(Qt::AlignRight | Qt::AlignBottom);
 
-    m_sessionBtn = new DFloatingButton(this);
+    m_sessionBtn = new FlotingButton(this);
     m_sessionBtn->setIconSize(BUTTON_ICON_SIZE);
     m_sessionBtn->setFixedSize(BUTTON_SIZE);
     m_sessionBtn->setAutoExclusive(true);
     m_sessionBtn->setBackgroundRole(DPalette::Button);
     m_sessionBtn->hide();
+    m_sessionBtn->setTipText(tr("session"));
 
-    m_keyboardBtn = new DFloatingButton(this);
+    m_keyboardBtn = new FlotingButton(this);
     m_keyboardBtn->setAccessibleName("KeyboardLayoutBtn");
     m_keyboardBtn->setFixedSize(BUTTON_SIZE);
     m_keyboardBtn->setAutoExclusive(true);
@@ -172,6 +174,7 @@ void ControlWidget::initUI()
     m_keyboardBtn->setAutoExclusive(true);
     static_cast<QAbstractButton *>(m_keyboardBtn)->setText(QString());
     m_keyboardBtn->installEventFilter(this);
+    m_keyboardBtn->setTipText(tr("keyboard layout"));
 
     // 给显示文字的按钮设置样式
     QPalette pal = m_keyboardBtn->palette();
@@ -179,7 +182,7 @@ void ControlWidget::initUI()
     pal.setColor(QPalette::HighlightedText, QColor(Qt::white));
     m_keyboardBtn->setPalette(pal);
 
-    m_virtualKBBtn = new DFloatingButton(this);
+    m_virtualKBBtn = new FlotingButton(this);
     m_virtualKBBtn->setAccessibleName("VirtualKeyboardBtn");
     m_virtualKBBtn->setIcon(QIcon::fromTheme(":/img/screen_keyboard_normal.svg"));
     m_virtualKBBtn->hide();
@@ -188,8 +191,9 @@ void ControlWidget::initUI()
     m_virtualKBBtn->setAutoExclusive(true);
     m_virtualKBBtn->setBackgroundRole(DPalette::Button);
     m_virtualKBBtn->installEventFilter(this);
+    m_virtualKBBtn->setTipText(tr("virtual keyboard"));
 
-    m_switchUserBtn = new DFloatingButton(this);
+    m_switchUserBtn = new FlotingButton(this);
     m_switchUserBtn->setAccessibleName("SwitchUserBtn");
     m_switchUserBtn->setIcon(QIcon::fromTheme(":/img/bottom_actions/userswitch_normal.svg"));
     m_switchUserBtn->setIconSize(BUTTON_ICON_SIZE);
@@ -197,8 +201,9 @@ void ControlWidget::initUI()
     m_switchUserBtn->setAutoExclusive(true);
     m_switchUserBtn->setBackgroundRole(DPalette::Button);
     m_switchUserBtn->installEventFilter(this);
+    m_switchUserBtn->setTipText(tr("switch user"));
 
-    m_powerBtn = new DFloatingButton(this);
+    m_powerBtn = new FlotingButton(this);
     m_powerBtn->setAccessibleName("PowerBtn");
     m_powerBtn->setIcon(QIcon(":/img/bottom_actions/shutdown_normal.svg"));
     m_powerBtn->setIconSize(BUTTON_ICON_SIZE);
@@ -206,6 +211,7 @@ void ControlWidget::initUI()
     m_powerBtn->setAutoExclusive(true);
     m_powerBtn->setBackgroundRole(DPalette::Button);
     m_powerBtn->installEventFilter(this);
+    m_powerBtn->setTipText(tr("shutdown"));
 
     m_btnList.append(m_sessionBtn);
     m_btnList.append(m_keyboardBtn);
@@ -236,11 +242,26 @@ void ControlWidget::initUI()
 void ControlWidget::initConnect()
 {
     connect(&module::ModulesLoader::instance(), &module::ModulesLoader::moduleFound, this, &ControlWidget::addModule);
-    connect(m_sessionBtn, &DFloatingButton::clicked, this, &ControlWidget::requestSwitchSession);
-    connect(m_switchUserBtn, &DFloatingButton::clicked, this, &ControlWidget::requestSwitchUser);
-    connect(m_powerBtn, &DFloatingButton::clicked, this, &ControlWidget::requestShutdown);
-    connect(m_virtualKBBtn, &DFloatingButton::clicked, this, &ControlWidget::requestSwitchVirtualKB);
-    connect(m_keyboardBtn, &DFloatingButton::clicked, this, &ControlWidget::setKBLayoutVisible);
+    connect(m_sessionBtn, &FlotingButton::clicked, this, &ControlWidget::requestSwitchSession);
+    connect(m_sessionBtn, &FlotingButton::requestShowTips, this, &ControlWidget::showInfoTips);
+    connect(m_sessionBtn, &FlotingButton::requestHideTips, this, &ControlWidget::hideInfoTips);
+
+    connect(m_switchUserBtn, &FlotingButton::clicked, this, &ControlWidget::requestSwitchUser);
+    connect(m_switchUserBtn, &FlotingButton::requestShowTips, this, &ControlWidget::showInfoTips);
+    connect(m_switchUserBtn, &FlotingButton::requestHideTips, this, &ControlWidget::hideInfoTips);
+
+    connect(m_powerBtn, &FlotingButton::clicked, this, &ControlWidget::requestShutdown);
+    connect(m_powerBtn, &FlotingButton::requestShowTips, this, &ControlWidget::showInfoTips);
+    connect(m_powerBtn, &FlotingButton::requestHideTips, this, &ControlWidget::hideInfoTips);
+
+    connect(m_virtualKBBtn, &FlotingButton::clicked, this, &ControlWidget::requestSwitchVirtualKB);
+    connect(m_virtualKBBtn, &FlotingButton::requestShowTips, this, &ControlWidget::showInfoTips);
+    connect(m_virtualKBBtn, &FlotingButton::requestHideTips, this, &ControlWidget::hideInfoTips);
+
+    connect(m_keyboardBtn, &FlotingButton::clicked, this, &ControlWidget::setKBLayoutVisible);
+    connect(m_keyboardBtn, &FlotingButton::requestShowTips, this, &ControlWidget::showInfoTips);
+    connect(m_keyboardBtn, &FlotingButton::requestHideTips, this, &ControlWidget::hideInfoTips);
+
     connect(m_model, &SessionBaseModel::currentUserChanged, this, &ControlWidget::setUser);
     connect(m_dconfig, &DConfig::valueChanged, this, [this] (const QString &key) {
         if (m_virtualKBBtn && key == "hideOnboard") {
@@ -654,4 +675,30 @@ void ControlWidget::updateTapOrder()
         if ((i + 1) < buttons.size())
             setTabOrder(buttons[i], buttons[i + 1]);
     }
+}
+
+void ControlWidget::showInfoTips()
+{
+    FlotingButton * button = qobject_cast<FlotingButton *>(sender());
+    if (!button) {
+        return;
+    }
+
+    if (!m_tipContentWidget) {
+        m_tipContentWidget = new TipContentWidget(this);
+    }
+
+    m_tipContentWidget->setText(button->tipText());
+    m_tipsWidget->setContent(m_tipContentWidget);
+
+    m_tipsWidget->show(mapToGlobal(button->pos()).x() + button->width() / 2, mapToGlobal(button->pos()).y());
+}
+
+void ControlWidget::hideInfoTips()
+{
+    if (m_tipsWidget->getContent()) {
+        m_tipsWidget->getContent()->setVisible(false);
+    }
+
+    m_tipsWidget->hide();
 }

@@ -61,6 +61,7 @@ class QMenu;
 class SessionBaseModel;
 class KBLayoutListView;
 class TipsWidget;
+class TipContentWidget;
 
 const int BlurRadius = 15;
 const int BlurTransparency = 70;
@@ -90,6 +91,13 @@ public:
         installEventFilter(this);
     }
 
+    void setTipText(const QString &tipText) {
+        m_tipText = tipText;
+    }
+    QString tipText() const {
+        return m_tipText;
+    }
+
 Q_SIGNALS:
     void requestShowMenu();
     void requestShowTips();
@@ -97,6 +105,9 @@ Q_SIGNALS:
 
 protected:
     bool eventFilter(QObject *watch, QEvent *event) override;
+
+private:
+    QString m_tipText;
 };
 class ControlWidget : public QWidget
 {
@@ -144,15 +155,20 @@ private:
     void updateLayout();
     void updateTapOrder();
 
+private slots:
+    void showInfoTips();
+    void hideInfoTips();
+
 private:
     int m_index = 0;
     QList<DFloatingButton *> m_btnList;
 
     QHBoxLayout *m_mainLayout = nullptr;
-    DFloatingButton *m_virtualKBBtn = nullptr;
-    DFloatingButton *m_switchUserBtn = nullptr;
-    DFloatingButton *m_powerBtn = nullptr;
-    DFloatingButton *m_sessionBtn = nullptr;
+    FlotingButton *m_virtualKBBtn = nullptr;
+    FlotingButton *m_switchUserBtn = nullptr;
+    FlotingButton *m_powerBtn = nullptr;
+    FlotingButton *m_sessionBtn = nullptr;
+    TipContentWidget *m_tipContentWidget = nullptr;
     QLabel *m_sessionTip = nullptr;
     QWidget *m_tipWidget = nullptr;
 #ifndef SHENWEI_PLATFORM
@@ -165,7 +181,7 @@ private:
 
     DArrowRectangle *m_arrowRectWidget;
     KBLayoutListView *m_kbLayoutListView;   // 键盘布局列表
-    DFloatingButton *m_keyboardBtn;         // 键盘布局按钮
+    FlotingButton *m_keyboardBtn;         // 键盘布局按钮
     std::shared_ptr<User> m_curUser;
     QList<QMetaObject::Connection> m_connectionList;
     bool m_onboardBtnVisible;
