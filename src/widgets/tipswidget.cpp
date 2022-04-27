@@ -3,7 +3,7 @@
 DWIDGET_USE_NAMESPACE
 
 TipsWidget::TipsWidget(QWidget *parent)
-    : DArrowRectangle(DArrowRectangle::ArrowBottom, parent)
+    : DArrowRectangle(DArrowRectangle::ArrowBottom, parent ? DArrowRectangle::FloatWidget : DArrowRectangle::FloatWindow, parent)
 {
     setProperty("_d_radius_force", true); // 无特效模式时，让窗口圆角
     setShadowBlurRadius(20);

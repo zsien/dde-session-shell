@@ -79,7 +79,7 @@ void LockContent::initUI()
     m_logoWidget->setAccessibleName("LogoWidget");
     setLeftBottomWidget(m_logoWidget);
 
-    m_controlWidget = new ControlWidget(m_model);
+    m_controlWidget = new ControlWidget(m_model, this);
     m_controlWidget->setAccessibleName("ControlWidget");
     setRightBottomWidget(m_controlWidget);
 

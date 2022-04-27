@@ -73,7 +73,7 @@ bool FlotingButton::eventFilter(QObject *watch, QEvent *event)
 ControlWidget::ControlWidget(const SessionBaseModel *model, QWidget *parent)
     : QWidget(parent)
     , m_contextMenu(new QMenu(this))
-    , m_tipsWidget(new TipsWidget(this))
+    , m_tipsWidget(new TipsWidget(parent ? parent->window() : nullptr))
     , m_arrowRectWidget(new DArrowRectangle(DArrowRectangle::ArrowBottom, this))
     , m_kbLayoutListView(nullptr)
     , m_keyboardBtn(nullptr)
@@ -150,6 +150,8 @@ void ControlWidget::setVirtualKBVisible(bool visible)
 
 void ControlWidget::initUI()
 {
+    m_tipsWidget->setVisible(false);
+
     m_mainLayout = new QHBoxLayout(this);
     m_mainLayout->setContentsMargins(0, 0, 60, 0);
     m_mainLayout->setSpacing(26);
@@ -311,7 +313,8 @@ void ControlWidget::addModule(module::BaseModuleInterface *module)
     connect(button, &FlotingButton::requestShowTips, this, [ = ] {
         if (trayModule->itemTipsWidget()) {
             m_tipsWidget->setContent(trayModule->itemTipsWidget());
-            m_tipsWidget->show(mapToGlobal(button->pos()).x() + button->width() / 2,mapToGlobal(button->pos()).y());
+            QPoint p = m_tipsWidget->parentWidget() ? m_tipsWidget->parentWidget()->mapFromGlobal(mapToGlobal(button->pos())) : mapToGlobal(button->pos());
+            m_tipsWidget->show(p.x() + button->width() / 2, p.y());
         }
     });
 
