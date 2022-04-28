@@ -27,6 +27,7 @@
 namespace dss {
 namespace module {
 
+const QStringList ValidVersions = {"1.0.0", "1.0.1"};
 class BaseModuleInterface
 {
 public:
@@ -65,6 +66,12 @@ public:
      * @return ModuleType
      */
     virtual ModuleType type() const = 0;
+
+    /**
+     * @brief isNeedInitPlugin 是否需要初始化插件，主要适应插件通过配置不显示等情况。
+     * @return
+     */
+    virtual bool isNeedInitPlugin() const = 0;
 };
 
 } // namespace module

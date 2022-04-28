@@ -46,9 +46,6 @@ LoginModule::LoginModule(QObject *parent)
 
 LoginModule::~LoginModule()
 {
-    if (m_loginWidget) {
-        delete m_loginWidget;
-    }
     if (m_callbackData) {
         delete m_callbackData;
     }

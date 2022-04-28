@@ -146,7 +146,6 @@ void ControlWidget::initKeyboardLayoutList()
 void ControlWidget::setVirtualKBVisible(bool visible)
 {
     m_onboardBtnVisible = visible;
-    m_virtualKBBtn->setVisible(visible && !m_dconfig->value("hideOnboard", false).toBool());
 }
 
 void ControlWidget::initUI()
@@ -182,17 +181,6 @@ void ControlWidget::initUI()
     pal.setColor(QPalette::HighlightedText, QColor(Qt::white));
     m_keyboardBtn->setPalette(pal);
 
-    m_virtualKBBtn = new FlotingButton(this);
-    m_virtualKBBtn->setAccessibleName("VirtualKeyboardBtn");
-    m_virtualKBBtn->setIcon(QIcon::fromTheme(":/img/screen_keyboard_normal.svg"));
-    m_virtualKBBtn->hide();
-    m_virtualKBBtn->setIconSize(BUTTON_ICON_SIZE);
-    m_virtualKBBtn->setFixedSize(BUTTON_SIZE);
-    m_virtualKBBtn->setAutoExclusive(true);
-    m_virtualKBBtn->setBackgroundRole(DPalette::Button);
-    m_virtualKBBtn->installEventFilter(this);
-    m_virtualKBBtn->setTipText(tr("virtual keyboard"));
-
     m_switchUserBtn = new FlotingButton(this);
     m_switchUserBtn->setAccessibleName("SwitchUserBtn");
     m_switchUserBtn->setIcon(QIcon::fromTheme(":/img/bottom_actions/userswitch_normal.svg"));
@@ -215,7 +203,6 @@ void ControlWidget::initUI()
 
     m_btnList.append(m_sessionBtn);
     m_btnList.append(m_keyboardBtn);
-    m_btnList.append(m_virtualKBBtn);
     m_btnList.append(m_switchUserBtn);
     m_btnList.append(m_powerBtn);
 
@@ -224,7 +211,6 @@ void ControlWidget::initUI()
 
     m_mainLayout->addWidget(m_sessionBtn);
     m_mainLayout->addWidget(m_keyboardBtn);
-    m_mainLayout->addWidget(m_virtualKBBtn);
     m_mainLayout->addWidget(m_switchUserBtn);
     m_mainLayout->addWidget(m_powerBtn);
 
@@ -254,20 +240,11 @@ void ControlWidget::initConnect()
     connect(m_powerBtn, &FlotingButton::requestShowTips, this, &ControlWidget::showInfoTips);
     connect(m_powerBtn, &FlotingButton::requestHideTips, this, &ControlWidget::hideInfoTips);
 
-    connect(m_virtualKBBtn, &FlotingButton::clicked, this, &ControlWidget::requestSwitchVirtualKB);
-    connect(m_virtualKBBtn, &FlotingButton::requestShowTips, this, &ControlWidget::showInfoTips);
-    connect(m_virtualKBBtn, &FlotingButton::requestHideTips, this, &ControlWidget::hideInfoTips);
-
     connect(m_keyboardBtn, &FlotingButton::clicked, this, &ControlWidget::setKBLayoutVisible);
     connect(m_keyboardBtn, &FlotingButton::requestShowTips, this, &ControlWidget::showInfoTips);
     connect(m_keyboardBtn, &FlotingButton::requestHideTips, this, &ControlWidget::hideInfoTips);
 
     connect(m_model, &SessionBaseModel::currentUserChanged, this, &ControlWidget::setUser);
-    connect(m_dconfig, &DConfig::valueChanged, this, [this] (const QString &key) {
-        if (m_virtualKBBtn && key == "hideOnboard") {
-            m_virtualKBBtn->setVisible(m_onboardBtnVisible && !m_dconfig->value("hideOnboard", false).toBool());
-        }
-    });
 }
 
 void ControlWidget::addModule(module::BaseModuleInterface *module)
@@ -479,7 +456,6 @@ void ControlWidget::setSessionSwitchEnable(const bool visible)
 void ControlWidget::chooseToSession(const QString &session)
 {
     if (m_sessionBtn && m_sessionTip) {
-        qDebug() << "chosen session: " << session;
         if (session.isEmpty())
             return;
 

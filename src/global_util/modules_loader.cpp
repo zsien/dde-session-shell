@@ -22,6 +22,7 @@
 #include "modules_loader.h"
 
 #include "base_module_interface.h"
+#include "tray_module_interface.h"
 
 #include <QDebug>
 #include <QDir>
@@ -32,7 +33,6 @@ namespace dss {
 namespace module {
 
 const QString ModulesDir = "/usr/lib/dde-session-shell/modules";
-
 ModulesLoader::ModulesLoader(QObject *parent)
     : QThread(parent)
 {
@@ -67,6 +67,10 @@ QHash<QString, BaseModuleInterface *> ModulesLoader::findModulesByType(const int
 void ModulesLoader::run()
 {
     findModule(ModulesDir);
+
+    // 本地编译modules
+    QString localDir = QCoreApplication::applicationDirPath() + "/modules";
+    findModule(localDir);
 }
 
 bool ModulesLoader::checkVersion(const QString &target, const QString &base)
@@ -104,15 +108,25 @@ void ModulesLoader::findModule(const QString &path)
         qInfo() << module << "is found";
         QPluginLoader loader(path);
         const QJsonObject &meta = loader.metaData().value("MetaData").toObject();
-        if (!checkVersion(meta.value("api").toString(), "1.0.0")) {
-            qWarning() << "The module version is too low.";
+        QString moduleVersion = meta.value("api").toString();
+        if (!ValidVersions.contains(moduleVersion)) {
+            qWarning() << "The module version is error!";
             continue;
         }
+
         BaseModuleInterface *moduleInstance = dynamic_cast<BaseModuleInterface *>(loader.instance());
         if (!moduleInstance) {
             qWarning() << loader.errorString();
             continue;
         }
+
+        // 新版本BaseModuleInterface，新增isNeedInitPlugin来判断插件是否需要加载。
+        if (moduleVersion == "1.0.1" && !moduleInstance->isNeedInitPlugin()) {
+            qInfo() << "plugin :" << moduleInstance->key() << " version:"
+                    << moduleVersion << " is valid, but not need load";
+            return;
+        }
+
         if (m_modules.contains(moduleInstance->key())) {
             continue;
         }

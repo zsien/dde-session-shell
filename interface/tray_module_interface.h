@@ -66,7 +66,6 @@ public:
      * @param checked 菜单是否是勾选状态
      */
     virtual void invokedMenuItem(const QString &menuId, const bool checked) const = 0;
-
 };
 
 } // namespace module

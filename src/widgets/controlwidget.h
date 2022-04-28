@@ -169,7 +169,6 @@ private:
     QList<DFloatingButton *> m_btnList;
 
     QHBoxLayout *m_mainLayout = nullptr;
-    FlotingButton *m_virtualKBBtn = nullptr;
     FlotingButton *m_switchUserBtn = nullptr;
     FlotingButton *m_powerBtn = nullptr;
     FlotingButton *m_sessionBtn = nullptr;

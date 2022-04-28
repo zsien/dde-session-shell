@@ -66,7 +66,7 @@ public:
      * @brief 模块图标的路径
      * @return std::string
      */
-    virtual std::string icon() const { return nullptr; }
+    virtual std::string icon() const { return std::string(); }
 
     /**
      * @brief 认证完成后，需要调用回调函数 CallbackFun

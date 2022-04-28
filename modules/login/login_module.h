@@ -44,6 +44,7 @@ public:
     inline QWidget *content() override { return m_loginWidget; }
 
     void setAuthFinishedCallback(AuthCallback *callback) override;
+    virtual bool isNeedInitPlugin() const { return true; }
 
 private:
     void initUI();

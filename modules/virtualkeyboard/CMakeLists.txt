@@ -1,6 +1,3 @@
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets WebEngineWidgets REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets WebEngineWidgets REQUIRED)
-
 include_directories(
     ${DFrameworkDBus_INCLUDE_DIRS}
     global
@@ -8,15 +5,11 @@ include_directories(
 
 link_libraries(
     ${Qt_LIBS}
-    Qt${QT_VERSION_MAJOR}::Widgets
-    Qt${QT_VERSION_MAJOR}::WebEngineWidgets
 )
 
-set(LIB_NAME login)
+set(LIB_NAME virtualkeyboard)
 
 aux_source_directory(. SRCS)
-
-# add_library(${LIB_NAME} STATIC ${SRCS})
 
 add_library(${LIB_NAME} SHARED ${SRCS})
 

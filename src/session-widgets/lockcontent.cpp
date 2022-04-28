@@ -10,7 +10,6 @@
 #include "shutdownwidget.h"
 #include "timewidget.h"
 #include "userframelist.h"
-#include "virtualkbinstance.h"
 
 #include <DDBusSender>
 
@@ -105,28 +104,11 @@ void LockContent::initConnections()
     connect(m_controlWidget, &ControlWidget::requestShutdown, this, [ = ] {
         m_model->setCurrentModeState(SessionBaseModel::ModeStatus::PowerMode);
     });
-    connect(m_controlWidget, &ControlWidget::requestSwitchVirtualKB, this, &LockContent::toggleVirtualKB);
     connect(m_controlWidget, &ControlWidget::requestShowModule, this, &LockContent::showModule);
 
     //刷新背景单独与onStatusChanged信号连接，避免在showEvent事件时调用onStatusChanged而重复刷新背景，减少刷新次数
     connect(m_model, &SessionBaseModel::onStatusChanged, this, &LockContent::onStatusChanged);
 
-    //在锁屏显示时，启动onborad进程，锁屏结束时结束onboard进程
-    auto initVirtualKB = [&](bool hasvirtualkb) {
-        if (hasvirtualkb && !m_virtualKB) {
-            connect(&VirtualKBInstance::Instance(), &VirtualKBInstance::initFinished, this, [&] {
-                m_virtualKB = VirtualKBInstance::Instance().virtualKBWidget();
-                m_controlWidget->setVirtualKBVisible(true);
-            }, Qt::QueuedConnection);
-            VirtualKBInstance::Instance().init();
-        } else {
-            VirtualKBInstance::Instance().stopVirtualKBProcess();
-            m_virtualKB = nullptr;
-            m_controlWidget->setVirtualKBVisible(false);
-        }
-    };
-
-    connect(m_model, &SessionBaseModel::hasVirtualKBChanged, this, initVirtualKB, Qt::QueuedConnection);
     connect(m_model, &SessionBaseModel::userListChanged, this, &LockContent::onUserListChanged);
     connect(m_model, &SessionBaseModel::userListLoginedChanged, this, &LockContent::onUserListChanged);
     connect(m_model, &SessionBaseModel::authFinished, this, &LockContent::restoreMode);
@@ -376,17 +358,12 @@ void LockContent::showEvent(QShowEvent *event)
 void LockContent::hideEvent(QHideEvent *event)
 {
     m_shutdownFrame->recoveryLayout();
+
     QFrame::hideEvent(event);
 }
 
 void LockContent::resizeEvent(QResizeEvent *event)
 {
-    QTimer::singleShot(0, this, [ = ] {
-        if (m_virtualKB && m_virtualKB->isVisible()) {
-            updateVirtualKBPosition();
-        }
-    });
-
     if (SessionBaseModel::PasswordMode == m_model->currentModeState() || (SessionBaseModel::ConfirmPasswordMode == m_model->currentModeState())) {
         m_centerSpacerItem->changeSize(0, m_authWidget->getTopSpacing());
         m_centerVLayout->update();
@@ -432,26 +409,6 @@ void LockContent::updateTimeFormat(bool use24)
     }
 }
 
-void LockContent::toggleVirtualKB()
-{
-    if (!m_virtualKB) {
-        VirtualKBInstance::Instance();
-        QTimer::singleShot(500, this, [ = ] {
-            m_virtualKB = VirtualKBInstance::Instance().virtualKBWidget();
-            qDebug() << "init virtualKB over." << m_virtualKB;
-            toggleVirtualKB();
-        });
-        return;
-    }
-
-    m_virtualKB->setParent(this);
-    m_virtualKB->raise();
-    // m_userLoginInfo->getUserLoginWidget()->setPassWordEditFocus();
-
-    updateVirtualKBPosition();
-    m_virtualKB->setVisible(!m_virtualKB->isVisible());
-}
-
 void LockContent::showModule(const QString &name)
 {
     BaseModuleInterface *module = ModulesLoader::instance().findModuleByName(name);
@@ -470,12 +427,6 @@ void LockContent::showModule(const QString &name)
         setCenterContent(m_loginWidget);
         break;
     }
-}
-
-void LockContent::updateVirtualKBPosition()
-{
-    const QPoint point = mapToParent(QPoint((width() - m_virtualKB->width()) / 2, height() - m_virtualKB->height() - 50));
-    m_virtualKB->move(point);
 }
 
 void LockContent::onUserListChanged(QList<std::shared_ptr<User> > list)

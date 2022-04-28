@@ -152,9 +152,6 @@ void SessionBaseModel::setVisible(const bool visible)
     }
     m_visible = visible;
 
-    //根据界面显示还是隐藏设置是否加载虚拟键盘
-    setHasVirtualKB(m_visible);
-
     emit visibleChanged(m_visible);
 }
 
