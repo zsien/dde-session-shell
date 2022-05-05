@@ -109,6 +109,11 @@ protected:
 private:
     QString m_tipText;
 };
+
+/**
+ * @brief The ControlWidget class
+ * @note 主界面右下角图标区域
+ */
 class ControlWidget : public QWidget
 {
     Q_OBJECT

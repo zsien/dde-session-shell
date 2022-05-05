@@ -88,9 +88,9 @@ protected:
 
 protected:
     SessionBaseModel *m_model;
-    ControlWidget *m_controlWidget;
-    ShutdownWidget *m_shutdownFrame;
-    QWidget *m_virtualKB;
+    ControlWidget *m_controlWidget;             // 右下角图标
+    ShutdownWidget *m_shutdownFrame;            // 关机界面
+    QWidget *m_virtualKB;                       //
     std::shared_ptr<User> m_user;
     QList<QMetaObject::Connection> m_currentUserConnects;
     LogoWidget *m_logoWidget;

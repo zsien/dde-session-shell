@@ -32,7 +32,6 @@ LockContent::LockContent(SessionBaseModel *const model, QWidget *parent)
     , m_localServer(new QLocalServer(this))
 {
     m_model->setCurrentModeState(SessionBaseModel::ModeStatus::PasswordMode);
-
     initUI();
     initConnections();
 

@@ -44,6 +44,7 @@ User::User(QObject *parent)
     , m_shortDateFormat(0)
     , m_shortTimeFormat(0)
     , m_weekdayFormat(0)
+    , m_accountType(-1)
     , m_uid(INT_MAX)
     , m_avatar(DEFAULT_AVATAR)
     , m_greeterBackground(DEFAULT_BACKGROUND)
@@ -67,6 +68,7 @@ User::User(const User &user)
     , m_shortDateFormat(user.m_shortDateFormat)
     , m_shortTimeFormat(user.m_shortTimeFormat)
     , m_weekdayFormat(user.m_weekdayFormat)
+    , m_accountType(user.m_accountType)
     , m_uid(user.m_uid)
     , m_avatar(user.m_avatar)
     , m_fullName(user.m_fullName)
@@ -250,6 +252,7 @@ void NativeUser::initConnections()
     connect(m_userInter, &UserInter::ShortDateFormatChanged, this, &NativeUser::updateShortDateFormat);
     connect(m_userInter, &UserInter::ShortTimeFormatChanged, this, &NativeUser::updateShortTimeFormat);
     connect(m_userInter, &UserInter::WeekdayFormatChanged, this, &NativeUser::updateWeekdayFormat);
+    connect(m_userInter, &UserInter::AccountTypeChanged, this, &NativeUser::updateAccountType);
     connect(m_userInter, &UserInter::UidChanged, this, &NativeUser::updateUid);
     connect(m_userInter, &UserInter::UserNameChanged, this, &NativeUser::updateName);
     connect(m_userInter, &UserInter::Use24HourFormatChanged, this, &NativeUser::updateUse24HourFormat);
@@ -268,6 +271,7 @@ void NativeUser::initData()
     m_shortDateFormat = m_userInter->shortDateFormat();
     m_shortTimeFormat = m_userInter->shortTimeFormat();
     m_weekdayFormat = m_userInter->weekdayFormat();
+    m_accountType = m_userInter->accountType();
 
     const QString avatarPath = toLocalFile(m_userInter->iconFile());
     if (!avatarPath.isEmpty() && QFile(avatarPath).exists() && QFile(avatarPath).size() && QImageReader(avatarPath).canRead()) {
@@ -553,6 +557,15 @@ void NativeUser::updateWeekdayFormat(const int format)
     }
     m_weekdayFormat = format;
     emit weekdayFormatChanged(format);
+}
+
+void NativeUser::updateAccountType(const int type)
+{
+    if (m_accountType == type)
+        return;
+
+    m_accountType = type;
+    emit accountTypeChanged(type);
 }
 
 /**

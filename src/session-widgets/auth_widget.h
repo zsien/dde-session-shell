@@ -93,7 +93,6 @@ protected:
 
     void updateBlurEffectGeometry();
     void updatePasswordExpiredState();
-    void updateExpiredState();
 
     void registerSyncFunctions(const QString &flag, std::function<void(QVariant)> function);
     void syncSingle(const QVariant &value);

@@ -41,6 +41,12 @@ public:
         Default
     };
 
+    enum AccountType {
+        Admin = 0,
+        Standard = 1,
+        Other = 2
+    };
+
     enum ExpiredState {
         ExpiredNormal,
         ExpiredSoon,
@@ -75,6 +81,7 @@ public:
     inline int shortDateFormat() const { return m_shortDateFormat; }
     inline int shortTimeFormat() const { return m_shortTimeFormat; }
     inline int weekdayFormat() const { return m_weekdayFormat; }
+    inline int accountType() const { return m_accountType; }
 
     virtual inline int type() const { return Default; }
     inline QMap<int, LimitsInfo> *limitsInfo() const { return m_limitsInfo; }
@@ -115,6 +122,7 @@ signals:
     void shortDateFormatChanged(const int);
     void shortTimeFormatChanged(const int);
     void weekdayFormatChanged(const int);
+    void accountTypeChanged(const int);
     void use24HourFormatChanged(const bool);
     void passwordExpiredInfoChanged();
 
@@ -136,6 +144,7 @@ protected:
     int m_shortDateFormat;               // 短日期格式
     int m_shortTimeFormat;               // 短时间格式
     int m_weekdayFormat;                 // 星期显示格式
+    int m_accountType;                   // 账户类型 1:管理员 0:标准用户 2:域账户
     uid_t m_uid;                         // 用户 uid
     QString m_avatar;                    // 用户头像
     QString m_fullName;                  // 用户全名
@@ -182,6 +191,7 @@ private slots:
     void updateShortDateFormat(const int format);
     void updateShortTimeFormat(const int format);
     void updateWeekdayFormat(const int format);
+    void updateAccountType(const int type);
     void updateUid(const QString &uid);
     void updateUse24HourFormat(const bool is24HourFormat);
 
