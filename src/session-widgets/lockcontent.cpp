@@ -23,12 +23,19 @@ using namespace dss::module;
 LockContent::LockContent(SessionBaseModel *const model, QWidget *parent)
     : SessionBaseWindow(parent)
     , m_model(model)
+    , m_controlWidget(new ControlWidget(m_model))
+    , m_shutdownFrame(new ShutdownWidget(this))
+    , m_logoWidget(new LogoWidget(this))
+    , m_timeWidget(new TimeWidget(this))
+    , m_mediaWidget(nullptr)
     , m_virtualKB(nullptr)
+    , m_loginWidget(nullptr)
+    , m_userListWidget(nullptr)
     , m_wmInter(new com::deepin::wm("com.deepin.wm", "/com/deepin/wm", QDBusConnection::sessionBus(), this))
     , m_sfaWidget(nullptr)
     , m_mfaWidget(nullptr)
     , m_authWidget(nullptr)
-    , m_userListWidget(nullptr)
+    , m_lockFailTimes(0)
     , m_localServer(new QLocalServer(this))
 {
     m_model->setCurrentModeState(SessionBaseModel::ModeStatus::PasswordMode);
@@ -64,21 +71,17 @@ LockContent::LockContent(SessionBaseModel *const model, QWidget *parent)
 
 void LockContent::initUI()
 {
-    m_timeWidget = new TimeWidget();
     m_timeWidget->setAccessibleName("TimeWidget");
     setCenterTopWidget(m_timeWidget);
     // 处理时间制跳转策略，获取到时间制再显示时间窗口
     m_timeWidget->setVisible(false);
 
-    m_shutdownFrame = new ShutdownWidget;
     m_shutdownFrame->setAccessibleName("ShutdownFrame");
     m_shutdownFrame->setModel(m_model);
 
-    m_logoWidget = new LogoWidget;
     m_logoWidget->setAccessibleName("LogoWidget");
     setLeftBottomWidget(m_logoWidget);
 
-    m_controlWidget = new ControlWidget(m_model, this);
     m_controlWidget->setAccessibleName("ControlWidget");
     setRightBottomWidget(m_controlWidget);
 
@@ -502,16 +505,16 @@ void LockContent::tryGrabKeyboard()
     }
 
     if (window()->windowHandle() && window()->windowHandle()->setKeyboardGrabEnabled(true)) {
-        m_failures = 0;
+        m_lockFailTimes = 0;
         return;
     }
 
-    m_failures++;
+    m_lockFailTimes++;
 
-    if (m_failures == 15) {
+    if (m_lockFailTimes == 15) {
         qWarning() << "Trying grabkeyboard has exceeded the upper limit. dde-lock will quit.";
 
-        m_failures = 0;
+        m_lockFailTimes = 0;
 
         DDBusSender()
             .service("org.freedesktop.Notifications")

@@ -80,7 +80,7 @@ LockFrame::LockFrame(SessionBaseModel *const model, QWidget *parent)
     setContent(m_lockContent);
 
     connect(m_lockContent, &LockContent::requestSwitchToUser, this, &LockFrame::requestSwitchToUser);
-    connect(m_lockContent, &LockContent::requestSetLayout, this, &LockFrame::requestSetLayout);
+    connect(m_lockContent, &LockContent::requestSetKeyboardLayout, this, &LockFrame::requestSetKeyboardLayout);
     connect(m_lockContent, &LockContent::requestBackground, this, static_cast<void (LockFrame::*)(const QString &)>(&LockFrame::updateBackground));
     connect(m_lockContent, &LockContent::requestStartAuthentication, this, &LockFrame::requestStartAuthentication);
     connect(m_lockContent, &LockContent::sendTokenToAuth, this, &LockFrame::sendTokenToAuth);

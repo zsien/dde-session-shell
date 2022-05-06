@@ -54,7 +54,7 @@ public:
 
 signals:
     void requestSwitchToUser(std::shared_ptr<User> user);
-    void requestSetLayout(std::shared_ptr<User> user, const QString &layout);
+    void requestSetKeyboardLayout(std::shared_ptr<User> user, const QString &layout);
     void requestEnableHotzone(bool disable);
     void sendKeyValue(QString keyValue);
 

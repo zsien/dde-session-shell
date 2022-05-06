@@ -442,7 +442,7 @@ void ShutdownWidget::onStatusChanged(SessionBaseModel::ModeStatus status)
 
 void ShutdownWidget::runSystemMonitor()
 {
-    QProcess::startDetached("/usr/bin/deepin-system-monitor");
+    QProcess::startDetached("/usr/bin/deepin-system-monitor", QStringList());
 
     if (m_systemMonitor) {
         m_systemMonitor->clearFocus();
