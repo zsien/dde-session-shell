@@ -155,6 +155,7 @@ target_include_directories(dde-lock PUBLIC
     ${Qt5X11Extras_INCLUDE_DIRS}
     ${PROJECT_SOURCE_DIR}/src/dde-lock
     ${PROJECT_SOURCE_DIR}/src/dde-lock/dbus
+    ${Greeter_INCLUDE_DIRS}
 )
 target_link_libraries(dde-lock PRIVATE
     ${Qt_LIBS}
@@ -169,6 +170,7 @@ target_link_libraries(dde-lock PRIVATE
     ${Qt5DBus_LIBRARIES}
     ${Qt5Network_LIBRARIES}
     ${QGSettings_LIBRARIES}
+    ${Greeter_LIBRARIES}
 )
 
 set(GREETER_SRCS
@@ -187,7 +189,6 @@ set(GREETER_SRCS
     src/lightdm-deepin-greeter/greeterworker.cpp
     src/lightdm-deepin-greeter/logincontent.cpp
     src/lightdm-deepin-greeter/logintipswindow.cpp
-    src/lightdm-deepin-greeter/sessionwidget.cpp
 )
 add_executable(lightdm-deepin-greeter
     ${GREETER_SRCS}

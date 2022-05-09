@@ -62,6 +62,7 @@ class SessionBaseModel;
 class KBLayoutListView;
 class TipsWidget;
 class TipContentWidget;
+class SessionPopupWidget;
 
 const int BlurRadius = 15;
 const int BlurTransparency = 70;
@@ -109,11 +110,6 @@ protected:
 private:
     QString m_tipText;
 };
-
-/**
- * @brief The ControlWidget class
- * @note 主界面右下角图标区域
- */
 class ControlWidget : public QWidget
 {
     Q_OBJECT
@@ -128,7 +124,7 @@ public:
 signals:
     void requestSwitchUser();
     void requestShutdown();
-    void requestSwitchSession();
+    void requestSwitchSession(const QString &session);
     void requestSwitchVirtualKB();
     void requestKeyboardLayout(const QPoint &pos);
     void requestShowModule(const QString &name);
@@ -147,6 +143,7 @@ public slots:
     void setKeyboardList(const QStringList& str);
     void onItemClicked(const QString& str);
     void resizeArrowWidget();
+    void showSessionPopup();
 
 protected:
     bool eventFilter(QObject *watched, QEvent *event) Q_DECL_OVERRIDE;
@@ -190,6 +187,8 @@ private:
     QList<QMetaObject::Connection> m_connectionList;
     bool m_onboardBtnVisible;
     DTK_CORE_NAMESPACE::DConfig *m_dconfig;
+
+    SessionPopupWidget *m_sessionPopupWidget;
 };
 
 #endif // CONTROLWIDGET_H

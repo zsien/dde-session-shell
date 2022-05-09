@@ -21,7 +21,7 @@
 
 #include "logincontent.h"
 #include "logintipswindow.h"
-#include "sessionwidget.h"
+#include "sessionmanager.h"
 #include "controlwidget.h"
 
 LoginContent::LoginContent(SessionBaseModel *const model, QWidget *parent)
@@ -29,18 +29,16 @@ LoginContent::LoginContent(SessionBaseModel *const model, QWidget *parent)
 {
     setAccessibleName("LoginContent");
 
-    m_sessionFrame = new SessionWidget;
-    m_sessionFrame->setModel(model);
-    m_controlWidget->setSessionSwitchEnable(m_sessionFrame->sessionCount() > 1);
+    SessionManager::Reference().setModel(model);
+    m_controlWidget->setSessionSwitchEnable(SessionManager::Reference().sessionCount() > 1);
     m_controlWidget->chooseToSession(model->sessionKey());
 
     m_loginTipsWindow = new LoginTipsWindow;
     connect(m_loginTipsWindow, &LoginTipsWindow::requestClosed, m_model, &SessionBaseModel::tipsShowed);
 
-    connect(m_sessionFrame, &SessionWidget::hideFrame, this, &LockContent::restoreMode);
-    connect(m_sessionFrame, &SessionWidget::sessionChanged, this, &LockContent::restoreMode);
-    connect(m_controlWidget, &ControlWidget::requestSwitchSession, this, [ = ] {
+    connect(m_controlWidget, &ControlWidget::requestSwitchSession, [ = ](QString session) {
         m_model->setCurrentModeState(SessionBaseModel::ModeStatus::SessionMode);
+        SessionManager::Reference().switchSession(session);
     });
     connect(m_model, &SessionBaseModel::onSessionKeyChanged, m_controlWidget, &ControlWidget::chooseToSession);
     connect(m_model, &SessionBaseModel::onSessionKeyChanged, this, &LockContent::restoreMode);
@@ -53,26 +51,14 @@ void LoginContent::onCurrentUserChanged(std::shared_ptr<User> user)
         return;
 
     LockContent::onCurrentUserChanged(user);
-    m_sessionFrame->switchToUser(user->name());
+    SessionManager::Reference().updateSession(user->name());
 }
 
 void LoginContent::onStatusChanged(SessionBaseModel::ModeStatus status)
 {
-    switch (status) {
-    case SessionBaseModel::ModeStatus::SessionMode:
-        pushSessionFrame();
-        break;
-    default:
+    if (status != SessionBaseModel::ModeStatus::SessionMode) {
         pushTipsFrame();
-        break;
     }
-}
-
-void LoginContent::pushSessionFrame()
-{
-    QSize size = getCenterContentSize();
-    m_sessionFrame->setFixedSize(size);
-    setCenterContent(m_sessionFrame);
 }
 
 void LoginContent::pushTipsFrame()

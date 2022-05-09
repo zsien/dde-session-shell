@@ -24,7 +24,6 @@
 
 #include "lockcontent.h"
 
-class SessionWidget;
 class LoginTipsWindow;
 
 class LoginContent : public LockContent
@@ -35,12 +34,10 @@ public:
 
     void onCurrentUserChanged(std::shared_ptr<User> user) override;
     void onStatusChanged(SessionBaseModel::ModeStatus status) override;
-    void pushSessionFrame();
     void pushTipsFrame();
     void popTipsFrame();
 
 private:
-    SessionWidget *m_sessionFrame;
     LoginTipsWindow *m_loginTipsWindow;
     bool m_showTipsWidget = true;
 };

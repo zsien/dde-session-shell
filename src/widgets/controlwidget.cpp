@@ -33,6 +33,8 @@
 #include "tipswidget.h"
 #include "public_func.h"
 #include "tipcontentwidget.h"
+#include "sessionpopupwidget.h"
+#include "sessionmanager.h"
 
 #include <DFloatingButton>
 #include <DArrowRectangle>
@@ -80,6 +82,7 @@ ControlWidget::ControlWidget(const SessionBaseModel *model, QWidget *parent)
     , m_keyboardBtn(nullptr)
     , m_onboardBtnVisible(true)
     , m_dconfig(DConfig::create(getDefaultConfigFileName(), getDefaultConfigFileName(), QString(), this))
+    , m_sessionPopupWidget(nullptr)
 {
     setModel(model);
     initUI();
@@ -138,7 +141,7 @@ void ControlWidget::initKeyboardLayoutList()
     pal.setColor(DPalette::Inactive, DPalette::Base, QColor(235, 235, 235, int(0.05 * 255)));
     setPalette(pal);
 
-    m_arrowRectWidget->setContent(m_kbLayoutListView);
+    m_kbLayoutListView->setVisible(false);
     connect(m_kbLayoutListView, &KBLayoutListView::itemClicked, this, &ControlWidget::onItemClicked);
     connect(m_kbLayoutListView, &KBLayoutListView::sizeChange, this, &ControlWidget::resizeArrowWidget);
 }
@@ -228,7 +231,8 @@ void ControlWidget::initUI()
 void ControlWidget::initConnect()
 {
     connect(&module::ModulesLoader::instance(), &module::ModulesLoader::moduleFound, this, &ControlWidget::addModule);
-    connect(m_sessionBtn, &FlotingButton::clicked, this, &ControlWidget::requestSwitchSession);
+    connect(m_sessionBtn, &FlotingButton::clicked, this, &ControlWidget::showSessionPopup);
+
     connect(m_sessionBtn, &FlotingButton::requestShowTips, this, &ControlWidget::showInfoTips);
     connect(m_sessionBtn, &FlotingButton::requestHideTips, this, &ControlWidget::hideInfoTips);
 
@@ -539,6 +543,14 @@ void ControlWidget::setKBLayoutVisible()
     if (!layoutButton)
         return;
 
+    QWidget *content = m_arrowRectWidget->getContent();
+    if (!content) {
+        m_arrowRectWidget->setContent(m_kbLayoutListView);
+    } else if (content != m_kbLayoutListView) {
+        content->setVisible(false);
+        m_arrowRectWidget->setContent(m_kbLayoutListView);
+    }
+
     // 算上三角形的高度
     QPoint pos = mapToGlobal(layoutButton->pos()) - QPoint((m_kbLayoutListView->width() - layoutButton->width())/2, m_kbLayoutListView->height() + 10);
     m_arrowRectWidget->setGeometry(QRect(pos, m_kbLayoutListView->size() + QSize(0, 10)));
@@ -588,6 +600,36 @@ void ControlWidget::resizeArrowWidget()
 {
     if (m_arrowRectWidget)
         m_arrowRectWidget->setFixedSize(m_kbLayoutListView->size() + QSize(0, 10));
+}
+
+void ControlWidget::showSessionPopup()
+{
+    if (!m_sessionPopupWidget) {
+        m_sessionPopupWidget = new SessionPopupWidget(this);
+        connect(m_sessionPopupWidget, &SessionPopupWidget::sessionItemClicked, [this](QString session) {
+            m_arrowRectWidget->hide();
+            Q_EMIT requestSwitchSession(session);
+        });
+
+        m_sessionPopupWidget->setSessionInfo(SessionManager::Reference().sessionInfo(),
+                                             SessionManager::Reference().currentSession());
+    } else {
+        m_sessionPopupWidget->updateCurrentSession(SessionManager::Reference().currentSession());
+    }
+
+    QWidget *content = m_arrowRectWidget->getContent();
+    if (!content) {
+        m_arrowRectWidget->setContent(m_sessionPopupWidget);
+    } else if (content != m_sessionPopupWidget) {
+        content->setVisible(false);
+        m_arrowRectWidget->setContent(m_sessionPopupWidget);
+    }
+
+    // 算上三角形的高度
+    QPoint pos = mapToGlobal(m_sessionBtn->pos()) - QPoint((m_sessionPopupWidget->width() - m_sessionBtn->width())/2,
+                                                           m_sessionPopupWidget->height() + 10);
+    m_arrowRectWidget->setGeometry(QRect(pos, m_sessionPopupWidget->size() + QSize(0, 10)));
+    m_arrowRectWidget->setVisible(!m_arrowRectWidget->isVisible());
 }
 
 bool ControlWidget::eventFilter(QObject *watched, QEvent *event)

@@ -38,6 +38,7 @@ target_include_directories(${BIN_NAME} PUBLIC
     ${PROJECT_BINARY_DIR}
     ${PROJECT_SOURCE_DIR}/src/dde-lock
     ${PROJECT_SOURCE_DIR}/src/dde-lock/dbus
+    ${Greeter_INCLUDE_DIRS}
 )
 
 target_link_libraries(${BIN_NAME} PRIVATE
@@ -55,6 +56,7 @@ target_link_libraries(${BIN_NAME} PRIVATE
     ${Qt5Concurrent_LIBRARIES}
     ${Qt5X11Extras_LIBRARIES}
     ${Qt5Network_LIBRARIES}
+    ${Greeter_LIBRARIES}
     -lpthread
     -lm
 )
