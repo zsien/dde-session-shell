@@ -575,6 +575,7 @@ void SFAWidget::initUKeyAuth()
 void SFAWidget::initFaceAuth()
 {
     if (m_faceAuth) {
+        m_chooseAuthButtonBox->setEnabled(true);
         m_faceAuth->reset();
         return;
     }
@@ -766,6 +767,11 @@ void SFAWidget::checkAuthResult(const int type, const int state)
         m_user->setLastAuthType(type);
         m_lockButton->setEnabled(true);
         m_lockButton->setFocus();
+
+        if (type == AT_Face) {
+            // 禁止切换其他认证方式
+            m_chooseAuthButtonBox->setEnabled(false);
+        }
     }
 }
 
