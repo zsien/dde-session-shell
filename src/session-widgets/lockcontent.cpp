@@ -53,7 +53,7 @@ LockContent::LockContent(SessionBaseModel *const model, QWidget *parent)
         setMPRISEnable(model->currentModeState() != SessionBaseModel::ModeStatus::ShutDownMode);
     }
 
-    QTimer::singleShot(0, this, [=] {
+    QTimer::singleShot(0, this, [ = ] {
         onCurrentUserChanged(model->currentUser());
         onUserListChanged(model->isServerModel() ? model->loginedUserList() : model->userList());
     });

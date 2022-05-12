@@ -24,15 +24,15 @@ DCORE_USE_NAMESPACE
 
 LockWorker::LockWorker(SessionBaseModel *const model, QObject *parent)
     : AuthInterface(model, parent)
-    , m_authenticating(false)
     , m_isThumbAuth(false)
+    , m_canAuthenticate(false)
     , m_authFramework(new DeepinAuthFramework(this))
     , m_lockInter(new DBusLockService("com.deepin.dde.LockService", "/com/deepin/dde/LockService", QDBusConnection::systemBus(), this))
     , m_hotZoneInter(new DBusHotzone("com.deepin.daemon.Zone", "/com/deepin/daemon/Zone", QDBusConnection::sessionBus(), this))
-    , m_resetSessionTimer(new QTimer(this))
-    , m_limitsUpdateTimer(new QTimer(this))
     , m_sessionManagerInter(new SessionManagerInter("com.deepin.SessionManager", "/com/deepin/SessionManager", QDBusConnection::sessionBus(), this))
     , m_switchosInterface(new HuaWeiSwitchOSInterface("com.huawei", "/com/huawei/switchos", QDBusConnection::sessionBus(), this))
+    , m_resetSessionTimer(new QTimer(this))
+    , m_limitsUpdateTimer(new QTimer(this))
     , m_kglobalaccelInter(nullptr)
     , m_kwinInter(nullptr)
 {
@@ -55,7 +55,7 @@ LockWorker::LockWorker(SessionBaseModel *const model, QObject *parent)
     }
 
     m_resetSessionTimer->setSingleShot(true);
-    connect(m_resetSessionTimer, &QTimer::timeout, this, [=] {
+    connect(m_resetSessionTimer, &QTimer::timeout, this, [ = ] {
         endAuthentication(m_account, AT_All);
         destoryAuthentication(m_account);
         createAuthentication(m_account);
@@ -67,7 +67,7 @@ LockWorker::LockWorker(SessionBaseModel *const model, QObject *parent)
  */
 void LockWorker::initConnections()
 {
-    /* com.deepin.daemon.Accounts */
+   // 监听用户的新增、删除、上次登出用户、用户列表变化
     connect(m_accountsInter, &AccountsInter::UserAdded, m_model, static_cast<void (SessionBaseModel::*)(const QString &)>(&SessionBaseModel::addUser));
     connect(m_accountsInter, &AccountsInter::UserDeleted, m_model, static_cast<void (SessionBaseModel::*)(const QString &)>(&SessionBaseModel::removeUser));
     // connect(m_accountsInter, &AccountsInter::UserListChanged, m_model, &SessionBaseModel::updateUserList);  // UserListChanged信号的处理， 改用UserAdded和UserDeleted信号替代
@@ -78,6 +78,7 @@ void LockWorker::initConnections()
     });
     connect(m_loginedInter, &LoginedInter::LastLogoutUserChanged, m_model, static_cast<void (SessionBaseModel::*)(const uid_t)>(&SessionBaseModel::updateLastLogoutUser));
     connect(m_loginedInter, &LoginedInter::UserListChanged, m_model, &SessionBaseModel::updateLoginedUserList);
+
     /* com.deepin.daemon.Authenticate */
     connect(m_authFramework, &DeepinAuthFramework::FramworkStateChanged, m_model, &SessionBaseModel::updateFrameworkState);
     connect(m_authFramework, &DeepinAuthFramework::LimitsInfoChanged, this, [this](const QString &account) {
@@ -88,30 +89,30 @@ void LockWorker::initConnections()
     });
     connect(m_authFramework, &DeepinAuthFramework::SupportedEncryptsChanged, m_model, &SessionBaseModel::updateSupportedEncryptionType);
     connect(m_authFramework, &DeepinAuthFramework::SupportedMixAuthFlagsChanged, m_model, &SessionBaseModel::updateSupportedMixAuthFlags);
-    /* com.deepin.daemon.Authenticate.Session */
     connect(m_authFramework, &DeepinAuthFramework::FuzzyMFAChanged, m_model, &SessionBaseModel::updateFuzzyMFA);
     connect(m_authFramework, &DeepinAuthFramework::MFAFlagChanged, m_model, &SessionBaseModel::updateMFAFlag);
     connect(m_authFramework, &DeepinAuthFramework::PINLenChanged, m_model, &SessionBaseModel::updatePINLen);
     connect(m_authFramework, &DeepinAuthFramework::PromptChanged, m_model, &SessionBaseModel::updatePrompt);
     connect(m_authFramework, &DeepinAuthFramework::AuthStateChanged, this, &LockWorker::onAuthStateChanged);
     connect(m_authFramework, &DeepinAuthFramework::FactorsInfoChanged, m_model, &SessionBaseModel::updateFactorsInfo);
+
     /* com.deepin.dde.LockService */
-    connect(m_lockInter, &DBusLockService::UserChanged, this, [=](const QString &json) {
+    connect(m_lockInter, &DBusLockService::UserChanged, this, [ = ](const QString &json) {
         qInfo() << "DBusLockService::UserChanged:" << json;
         QTimer::singleShot(100, this, [ = ] {
             m_model->setCurrentModeState(SessionBaseModel::ModeStatus::PasswordMode);
         });
         m_resetSessionTimer->stop();
     });
-    connect(m_lockInter, &DBusLockService::Event, this, &LockWorker::lockServiceEvent);
+    connect(m_lockInter, &DBusLockService::Event, this, &LockWorker::handleServiceEvent);
+
     /* com.deepin.SessionManager */
-    connect(m_sessionManagerInter, &SessionManagerInter::Unlock, this, [=] {
-        m_authenticating = false;
-        m_password.clear();
+    connect(m_sessionManagerInter, &SessionManagerInter::Unlock, this, [ = ] {
         emit m_model->authFinished(true);
     });
+
     /* org.freedesktop.login1.Session */
-    connect(m_login1SessionSelf, &Login1SessionSelf::ActiveChanged, this, [=](bool active) {
+    connect(m_login1SessionSelf, &Login1SessionSelf::ActiveChanged, this, [ = ](bool active) {
         qInfo() << "DBusLockService::ActiveChanged:" << active;
         if (active) {
             createAuthentication(m_model->currentUser()->name());
@@ -120,8 +121,9 @@ void LockWorker::initConnections()
             destoryAuthentication(m_account);
         }
     });
+
     /* org.freedesktop.login1.Manager */
-    connect(m_login1Inter, &DBusLogin1Manager::PrepareForSleep, this, [=](bool isSleep) {
+    connect(m_login1Inter, &DBusLogin1Manager::PrepareForSleep, this, [ = ](bool isSleep) {
         qInfo() << "DBusLogin1Manager::PrepareForSleep:" << isSleep;
         if (isSleep) {
             endAuthentication(m_account, AT_All);
@@ -131,8 +133,9 @@ void LockWorker::initConnections()
         }
         emit m_model->prepareForSleep(isSleep);
     });
+
     /* model */
-    connect(m_model, &SessionBaseModel::authTypeChanged, this, [=](const int type) {
+    connect(m_model, &SessionBaseModel::authTypeChanged, this, [ = ](const int type) {
         qInfo() << "Auth type changed: " << type;
         if (type > 0 && m_model->getAuthProperty().MFAFlag) {
             startAuthentication(m_account, type);
@@ -141,7 +144,7 @@ void LockWorker::initConnections()
         m_limitsUpdateTimer->start();
     });
     connect(m_model, &SessionBaseModel::onPowerActionChanged, this, &LockWorker::doPowerAction);
-    connect(m_model, &SessionBaseModel::visibleChanged, this, [=](bool visible) {
+    connect(m_model, &SessionBaseModel::visibleChanged, this, [ = ](bool visible) {
         if (visible) {
             if (m_model->currentModeState() != SessionBaseModel::ShutDownMode && m_model->currentModeState() != SessionBaseModel::UserMode) {
                 createAuthentication(m_model->currentUser()->name());
@@ -153,17 +156,19 @@ void LockWorker::initConnections()
             setCurrentUser(m_model->currentUser());
         }
     });
-    connect(m_model, &SessionBaseModel::onStatusChanged, this, [=](SessionBaseModel::ModeStatus state) {
+    connect(m_model, &SessionBaseModel::onStatusChanged, this, [ = ](SessionBaseModel::ModeStatus state) {
         if (state == SessionBaseModel::ModeStatus::PowerMode || state == SessionBaseModel::ModeStatus::ShutDownMode) {
             checkPowerInfo();
         }
     });
+
     /* others */
     connect(m_limitsUpdateTimer, &QTimer::timeout, this, [this] {
         if (m_authFramework->isDeepinAuthValid())
             m_model->updateLimitedInfo(m_authFramework->GetLimitedInfo(m_account));
     });
-    connect(m_dbusInter, &DBusObjectInter::NameOwnerChanged, this, [=](const QString &name, const QString &oldOwner, const QString &newOwner) {
+
+    connect(m_dbusInter, &DBusObjectInter::NameOwnerChanged, this, [ = ](const QString &name, const QString &oldOwner, const QString &newOwner) {
         Q_UNUSED(oldOwner)
         if (name == "com.deepin.daemon.Authenticate" && newOwner != "" && m_model->visible() && m_sessionManagerInter->locked()) {
             m_resetSessionTimer->stop();
@@ -366,7 +371,7 @@ void LockWorker::doPowerAction(const SessionBaseModel::PowerAction action)
         if (delayTime < 0) {
             delayTime = 500;
         }
-        QTimer::singleShot(delayTime, this, [=] {
+        QTimer::singleShot(delayTime, this, [ = ] {
             m_sessionManagerInter->RequestSuspend();
         });
     }
@@ -383,7 +388,7 @@ void LockWorker::doPowerAction(const SessionBaseModel::PowerAction action)
         if (delayTime < 0) {
             delayTime = 500;
         }
-        QTimer::singleShot(delayTime, this, [=] {
+        QTimer::singleShot(delayTime, this, [ = ] {
             m_sessionManagerInter->RequestHibernate();
         });
     }
@@ -413,7 +418,7 @@ void LockWorker::doPowerAction(const SessionBaseModel::PowerAction action)
         return;
     case SessionBaseModel::PowerAction::RequireSwitchSystem:
         m_switchosInterface->setOsFlag(!m_switchosInterface->getOsFlag());
-        QTimer::singleShot(200, this, [=] { m_sessionManagerInter->RequestReboot(); });
+        QTimer::singleShot(200, this, [ = ] { m_sessionManagerInter->RequestReboot(); });
         break;
     case SessionBaseModel::PowerAction::RequireSwitchUser:
         m_model->setCurrentModeState(SessionBaseModel::ModeStatus::UserMode);
@@ -616,7 +621,7 @@ void LockWorker::endAuthentication(const QString &account, const int authType)
     }
 }
 
-void LockWorker::lockServiceEvent(quint32 eventType, quint32 pid, const QString &username, const QString &message)
+void LockWorker::handleServiceEvent(quint32 eventType, quint32 pid, const QString &username, const QString &message)
 {
     Q_UNUSED(pid)
     if (!m_model->currentUser())
@@ -628,8 +633,6 @@ void LockWorker::lockServiceEvent(quint32 eventType, quint32 pid, const QString 
     // Don't show password prompt from standard pam modules since
     // we'll provide our own prompt or just not.
     const QString msg = message.simplified() == "Password:" ? "" : message;
-
-    m_authenticating = false;
 
     if (msg == "Verification timed out") {
         m_isThumbAuth = true;
@@ -679,8 +682,6 @@ void LockWorker::onAuthFinished()
 void LockWorker::onUnlockFinished(bool unlocked)
 {
     qInfo() << "LockWorker::onUnlockFinished -- unlocked state : " << unlocked;
-
-    m_authenticating = false;
 
     //To Do: 最好的方案是修改同步后端认证信息的代码设计
     if (m_model->currentModeState() == SessionBaseModel::ModeStatus::UserMode)

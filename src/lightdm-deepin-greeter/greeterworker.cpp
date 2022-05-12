@@ -63,7 +63,7 @@ GreeterWorker::GreeterWorker(SessionBaseModel *const model, QObject *parent)
     }
 
     m_resetSessionTimer->setSingleShot(true);
-    connect(m_resetSessionTimer, &QTimer::timeout, this, [=] {
+    connect(m_resetSessionTimer, &QTimer::timeout, this, [ = ] {
         endAuthentication(m_account, AT_All);
         m_model->updateAuthState(AT_All, AS_Cancel, "Cancel");
         destoryAuthentication(m_account);
@@ -118,7 +118,7 @@ void GreeterWorker::initConnections()
     connect(m_authFramework, &DeepinAuthFramework::PINLenChanged, m_model, &SessionBaseModel::updatePINLen);
     connect(m_authFramework, &DeepinAuthFramework::PromptChanged, m_model, &SessionBaseModel::updatePrompt);
     /* org.freedesktop.login1.Session */
-    connect(m_login1SessionSelf, &Login1SessionSelf::ActiveChanged, this, [=](bool active) {
+    connect(m_login1SessionSelf, &Login1SessionSelf::ActiveChanged, this, [ = ](bool active) {
         qInfo() << "Login1SessionSelf::ActiveChanged:" << active;
         if (m_model->currentUser() == nullptr || m_model->currentUser()->name().isEmpty()) {
             return;
@@ -133,7 +133,7 @@ void GreeterWorker::initConnections()
         }
     });
     /* org.freedesktop.login1.Manager */
-    connect(m_login1Inter, &DBusLogin1Manager::PrepareForSleep, this, [=](bool isSleep) {
+    connect(m_login1Inter, &DBusLogin1Manager::PrepareForSleep, this, [ = ](bool isSleep) {
         qInfo() << "DBusLogin1Manager::PrepareForSleep:" << isSleep;
         // 登录界面待机或休眠时提供显示假黑屏，唤醒时显示正常界面
         m_model->setIsBlackMode(isSleep);
@@ -159,7 +159,7 @@ void GreeterWorker::initConnections()
         m_soundPlayerInter->PrepareShutdownSound(static_cast<int>(m_model->currentUser()->uid()));
     });
     /* com.deepin.dde.LockService */
-    connect(m_lockInter, &DBusLockService::UserChanged, this, [=](const QString &json) {
+    connect(m_lockInter, &DBusLockService::UserChanged, this, [ = ](const QString &json) {
         qInfo() << "DBusLockService::UserChanged:" << json;
         // 如果是已登录用户则返回，否则已登录用户和未登录用户来回切换时会造成用户信息错误
         std::shared_ptr<User> user_ptr = m_model->json2User(json);
@@ -178,7 +178,7 @@ void GreeterWorker::initConnections()
         });
     });
     /* model */
-    connect(m_model, &SessionBaseModel::authTypeChanged, this, [=](const int type) {
+    connect(m_model, &SessionBaseModel::authTypeChanged, this, [ = ](const int type) {
         qInfo() << "Auth type changed: " << type;
         if (type > 0 && m_model->getAuthProperty().MFAFlag) {
             startAuthentication(m_account, m_model->getAuthProperty().AuthType);
@@ -187,7 +187,7 @@ void GreeterWorker::initConnections()
     });
     connect(m_model, &SessionBaseModel::onPowerActionChanged, this, &GreeterWorker::doPowerAction);
     connect(m_model, &SessionBaseModel::currentUserChanged, this, &GreeterWorker::onCurrentUserChanged);
-    connect(m_model, &SessionBaseModel::visibleChanged, this, [=](bool visible) {
+    connect(m_model, &SessionBaseModel::visibleChanged, this, [ = ](bool visible) {
         if (visible) {
             if (!m_model->isServerModel()
                 && (!m_model->currentUser()->isNoPasswordLogin() || m_model->currentUser()->expiredState() == User::ExpiredAlready)) {
@@ -198,7 +198,7 @@ void GreeterWorker::initConnections()
         }
     });
     /* others */
-    connect(KeyboardMonitor::instance(), &KeyboardMonitor::numlockStatusChanged, this, [=](bool on) {
+    connect(KeyboardMonitor::instance(), &KeyboardMonitor::numlockStatusChanged, this, [ = ](bool on) {
         saveNumlockState(m_model->currentUser(), on);
     });
     connect(m_limitsUpdateTimer, &QTimer::timeout, this, [this] {
@@ -552,7 +552,7 @@ void GreeterWorker::checkDBusServer(bool isValid)
         m_accountsInter->userList();
     } else {
         // FIXME: 我不希望这样做，但是QThread::msleep会导致无限递归
-        QTimer::singleShot(300, this, [=] {
+        QTimer::singleShot(300, this, [ = ] {
             qWarning() << "com.deepin.daemon.Accounts is not start, rechecking!";
             checkDBusServer(m_accountsInter->isValid());
         });
@@ -634,7 +634,7 @@ void GreeterWorker::authenticationComplete()
 
     qInfo() << "start session = " << m_model->sessionKey();
 
-    auto startSessionSync = [=]() {
+    auto startSessionSync = [ = ]() {
         setCurrentUser(m_model->currentUser());
         m_greeter->startSessionSync(m_model->sessionKey());
     };
@@ -707,7 +707,7 @@ void GreeterWorker::onAuthStateChanged(const int type, const int state, const QS
                         startAuthentication(m_account, type);
                     });
                 }
-                QTimer::singleShot(50, this, [=] {
+                QTimer::singleShot(50, this, [ = ] {
                     m_model->updateAuthState(type, state, message);
                 });
                 break;
@@ -716,7 +716,7 @@ void GreeterWorker::onAuthStateChanged(const int type, const int state, const QS
                     m_model->setCurrentModeState(SessionBaseModel::ModeStatus::PasswordMode);
                 endAuthentication(m_account, type);
                 // TODO: 信号时序问题,考虑优化,Bug 89056
-                QTimer::singleShot(50, this, [=] {
+                QTimer::singleShot(50, this, [ = ] {
                     m_model->updateAuthState(type, state, message);
                 });
                 break;

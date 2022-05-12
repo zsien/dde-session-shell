@@ -523,7 +523,7 @@ void SFAWidget::initUKeyAuth()
     connect(m_ukeyAuth, &AuthUKey::authFinished, this, [this](const int authState) {
         checkAuthResult(AT_Ukey, authState);
     });
-    connect(m_ukeyAuth, &AuthUKey::requestAuthenticate, this, [=] {
+    connect(m_ukeyAuth, &AuthUKey::requestAuthenticate, this, [ = ] {
         const QString &text = m_ukeyAuth->lineEditText();
         if (text.isEmpty()) {
             return;

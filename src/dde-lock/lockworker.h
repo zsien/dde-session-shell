@@ -59,22 +59,21 @@ private:
     void setLocked(const bool locked);
 
     // lock
-    void lockServiceEvent(quint32 eventType, quint32 pid, const QString &username, const QString &message);
+    void handleServiceEvent(quint32 eventType, quint32 pid, const QString &username, const QString &message);
     void onUnlockFinished(bool unlocked);
 
 private:
-    bool m_authenticating;
     bool m_isThumbAuth;
+    bool m_canAuthenticate;
     DeepinAuthFramework *m_authFramework;
     DBusLockService *m_lockInter;
     DBusHotzone *m_hotZoneInter;
+    SessionManagerInter *m_sessionManagerInter;
+    HuaWeiSwitchOSInterface *m_switchosInterface;
+
+    QMap<std::shared_ptr<User>, bool> m_lockUser;
     QTimer *m_resetSessionTimer;
     QTimer *m_limitsUpdateTimer;
-    QString m_password;
-    QMap<std::shared_ptr<User>, bool> m_lockUser;
-    SessionManagerInter *m_sessionManagerInter;
-    HuaWeiSwitchOSInterface *m_switchosInterface = nullptr;
-    bool m_canAuthenticate = false;
     QString m_account;
     QDBusInterface *m_kglobalaccelInter;
     QDBusInterface *m_kwinInter;

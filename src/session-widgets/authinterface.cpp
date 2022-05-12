@@ -62,8 +62,6 @@ void AuthInterface::onUserListChanged(const QStringList &list)
             onUserRemove(u);
         }
     }
-
-    m_loginedInter->userList();
 }
 
 void AuthInterface::onUserAdded(const QString &user)
@@ -90,8 +88,6 @@ void AuthInterface::initData()
     onUserListChanged(m_accountsInter->userList());
     onLastLogoutUserChanged(m_loginedInter->lastLogoutUser());
     onLoginUserListChanged(m_loginedInter->userList());
-    // m_accountsInter->userList();
-    // m_loginedInter->lastLogoutUser();
 
     checkConfig();
     checkPowerInfo();
@@ -99,9 +95,6 @@ void AuthInterface::initData()
 
 void AuthInterface::initDBus()
 {
-    // m_accountsInter->setSync(false);
-    // m_loginedInter->setSync(false);
-
     connect(m_accountsInter, &AccountsInter::UserListChanged, this, &AuthInterface::onUserListChanged, Qt::QueuedConnection);
     connect(m_accountsInter, &AccountsInter::UserAdded, this, &AuthInterface::onUserAdded, Qt::QueuedConnection);
     connect(m_accountsInter, &AccountsInter::UserDeleted, this, &AuthInterface::onUserRemove, Qt::QueuedConnection);
@@ -145,7 +138,7 @@ void AuthInterface::onLoginUserListChanged(const QString &list)
 
         auto find_it = std::find_if(
             availableUidList.begin(), availableUidList.end(),
-            [=] (const uint find_addomain_uid) { return find_addomain_uid == uid; });
+            [ = ] (const uint addomainUid) { return addomainUid == uid; });
 
         if (haveDisplay && find_it == availableUidList.end()) {
             // init addoman user
@@ -198,8 +191,7 @@ QVariant AuthInterface::getGSettings(const QString& node, const QString& key)
 
 bool AuthInterface::isLogined(uint uid)
 {
-    return std::any_of(m_loginUserList.begin(), m_loginUserList.end(),
-                       [uid](const uint UID) { return UID == uid; });
+    return std::any_of(m_loginUserList.begin(), m_loginUserList.end(), [uid](const uint UID) { return UID == uid; });
 }
 
 bool AuthInterface::isDeepin()
@@ -220,7 +212,7 @@ void AuthInterface::checkConfig()
 
 void AuthInterface::checkPowerInfo()
 {
-    //替换接口org.freedesktop.login1 为com.deepin.sessionManager,原接口的是否支持待机和休眠的信息不准确
+    // 替换接口org.freedesktop.login1 为com.deepin.sessionManager,原接口的是否支持待机和休眠的信息不准确
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     bool can_sleep = env.contains(POWER_CAN_SLEEP) ? QVariant(env.value(POWER_CAN_SLEEP)).toBool()
                                                    : getGSettings("Power","sleep").toBool() && m_powerManagerInter->CanSuspend();

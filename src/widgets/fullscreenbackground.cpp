@@ -177,7 +177,7 @@ void FullscreenBackground::setScreen(QPointer<QScreen> screen, bool isVisible)
         m_primaryShowFinished = true;
         emit contentVisibleChanged(true);
     } else {
-        QTimer::singleShot(1000, this, [=] {
+        QTimer::singleShot(1000, this, [ = ] {
             m_primaryShowFinished = true;
             setMouseTracking(true);
         });
