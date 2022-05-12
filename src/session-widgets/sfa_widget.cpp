@@ -772,6 +772,9 @@ void SFAWidget::checkAuthResult(const int type, const int state)
             // 禁止切换其他认证方式
             m_chooseAuthButtonBox->setEnabled(false);
         }
+    } else if (type == AT_Face && state == AS_Failure) {
+        // 获取焦点后，可响应键盘enter/return事件，重新人脸认证
+        m_retryButton->setFocus();
     }
 }
 
@@ -801,6 +804,11 @@ void SFAWidget::replaceWidget(AuthModule *authModule)
 
 void SFAWidget::onRetryButtonVisibleChanged(bool visible)
 {
+    if (!visible && m_retryButton->hasFocus()) {
+        // 人脸认证失败后，retryButton获取焦点，enter事件后隐藏btn造成焦点跳转到其他btn上
+        m_retryButton->clearFocus();
+    }
+
     m_retryButton->setVisible(visible);
     m_lockButton->setVisible(!visible);
 }
