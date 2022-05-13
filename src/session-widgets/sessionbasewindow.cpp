@@ -63,6 +63,7 @@ void SessionBaseWindow::setCenterContent(QWidget * const widget, Qt::AlignmentFl
     if (!widget || m_centerWidget == widget) {
         return;
     }
+
     if (m_centerWidget) {
         m_centerLayout->removeWidget(m_centerWidget);
         m_centerWidget->hide();

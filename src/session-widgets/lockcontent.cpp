@@ -23,7 +23,7 @@ LockContent::LockContent(SessionBaseModel *const model, QWidget *parent)
     : SessionBaseWindow(parent)
     , m_model(model)
     , m_controlWidget(new ControlWidget(m_model))
-    , m_shutdownFrame(new ShutdownWidget(this))
+    , m_shutdownFrame(nullptr)
     , m_logoWidget(new LogoWidget(this))
     , m_timeWidget(new TimeWidget(this))
     , m_mediaWidget(nullptr)
@@ -37,11 +37,19 @@ LockContent::LockContent(SessionBaseModel *const model, QWidget *parent)
     , m_lockFailTimes(0)
     , m_localServer(new QLocalServer(this))
 {
-    m_model->setCurrentModeState(SessionBaseModel::ModeStatus::PasswordMode);
+    if (m_model->appType() == AppType::Login) {
+        // 管理员账户且密码过期的情况下，设置当前状态为ResetPasswdMode，从而方便直接跳转到重置密码界面
+        bool showReset = m_model->currentUser()->expiredState() == User::ExpiredState::ExpiredAlready
+                && m_model->currentUser()->accountType() == User::AccountType::Admin;
+        m_model->setCurrentModeState(showReset ? SessionBaseModel::ModeStatus::ResetPasswdMode : SessionBaseModel::ModeStatus::PasswordMode);
+    } else {
+        m_model->setCurrentModeState(SessionBaseModel::ModeStatus::PasswordMode);
+    }
+
     initUI();
     initConnections();
 
-    if (model->appType() == Lock) {
+    if (model->appType() == AppType::Lock) {
         setMPRISEnable(model->currentModeState() != SessionBaseModel::ModeStatus::ShutDownMode);
     }
 
@@ -74,9 +82,6 @@ void LockContent::initUI()
     setCenterTopWidget(m_timeWidget);
     // 处理时间制跳转策略，获取到时间制再显示时间窗口
     m_timeWidget->setVisible(false);
-
-    m_shutdownFrame->setAccessibleName("ShutdownFrame");
-    m_shutdownFrame->setModel(m_model);
 
     m_logoWidget->setAccessibleName("LogoWidget");
     setLeftBottomWidget(m_logoWidget);
@@ -255,10 +260,13 @@ void LockContent::pushShutdownFrame()
 {
     //设置关机选项界面大小为中间区域的大小,并移动到左上角，避免显示后出现移动现象
     QSize size = getCenterContentSize();
+    m_shutdownFrame.reset(new ShutdownWidget(this));
+    m_shutdownFrame->setAccessibleName("ShutdownFrame");
+    m_shutdownFrame->setModel(m_model);
     m_shutdownFrame->setFixedSize(size);
     m_shutdownFrame->move(0, 0);
     m_shutdownFrame->onStatusChanged(m_model->currentModeState());
-    setCenterContent(m_shutdownFrame);
+    setCenterContent(m_shutdownFrame.get());
 }
 
 void LockContent::setMPRISEnable(const bool state)
@@ -334,7 +342,7 @@ void LockContent::mouseReleaseEvent(QMouseEvent *event)
     }
 
     if (m_model->currentModeState() == SessionBaseModel::UserMode
-        || m_model->currentModeState() == SessionBaseModel::PowerMode) {
+            || m_model->currentModeState() == SessionBaseModel::PowerMode) {
         // 触屏点击空白处不退出用户列表界面
         if (event->source() == Qt::MouseEventSynthesizedByQt)
             return SessionBaseWindow::mouseReleaseEvent(event);
@@ -357,8 +365,8 @@ void LockContent::showEvent(QShowEvent *event)
 
 void LockContent::hideEvent(QHideEvent *event)
 {
-    m_shutdownFrame->recoveryLayout();
-
+    if (!m_shutdownFrame.isNull())
+        m_shutdownFrame->recoveryLayout();
     QFrame::hideEvent(event);
 }
 
@@ -374,7 +382,14 @@ void LockContent::resizeEvent(QResizeEvent *event)
 
 void LockContent::restoreMode()
 {
-    m_model->setCurrentModeState(SessionBaseModel::ModeStatus::PasswordMode);
+    if (m_model->appType() == AppType::Login) {
+        // 管理员账户且密码过期的情况下，设置当前状态为ResetPasswdMode，从而方便直接跳转到重置密码界面
+        bool showReset = m_model->currentUser()->expiredState() == User::ExpiredState::ExpiredAlready
+                && m_model->currentUser()->accountType() == User::AccountType::Admin;
+        m_model->setCurrentModeState(showReset ? SessionBaseModel::ModeStatus::ResetPasswdMode : SessionBaseModel::ModeStatus::PasswordMode);
+    } else {
+        m_model->setCurrentModeState(SessionBaseModel::ModeStatus::PasswordMode);
+    }
 }
 
 void LockContent::updateGreeterBackgroundPath(const QString &path)
@@ -442,10 +457,12 @@ void LockContent::onUserListChanged(QList<std::shared_ptr<User> > list)
     bool enable = (alwaysShowUserSwitchButton ||
                    (allowShowUserSwitchButton &&
                     (list.size() > (m_model->isServerModel() ? 0 : 1)))) &&
-                  haveLogindUser;
+            haveLogindUser;
 
     m_controlWidget->setUserSwitchEnable(enable);
-    m_shutdownFrame->setUserSwitchEnable(enable);
+
+    if (m_shutdownFrame)
+        m_shutdownFrame->setUserSwitchEnable(enable);
 }
 
 void LockContent::tryGrabKeyboard()
@@ -468,19 +485,19 @@ void LockContent::tryGrabKeyboard()
         m_lockFailTimes = 0;
 
         DDBusSender()
-            .service("org.freedesktop.Notifications")
-            .path("/org/freedesktop/Notifications")
-            .interface("org.freedesktop.Notifications")
-            .method(QString("Notify"))
-            .arg(tr("Lock Screen"))
-            .arg(static_cast<uint>(0))
-            .arg(QString(""))
-            .arg(QString(""))
-            .arg(tr("Failed to lock screen"))
-            .arg(QStringList())
-            .arg(QVariantMap())
-            .arg(5000)
-            .call();
+                .service("org.freedesktop.Notifications")
+                .path("/org/freedesktop/Notifications")
+                .interface("org.freedesktop.Notifications")
+                .method(QString("Notify"))
+                .arg(tr("Lock Screen"))
+                .arg(static_cast<uint>(0))
+                .arg(QString(""))
+                .arg(QString(""))
+                .arg(tr("Failed to lock screen"))
+                .arg(QStringList())
+                .arg(QVariantMap())
+                .arg(5000)
+                .call();
 
         emit requestLockFrameHide();
         return;

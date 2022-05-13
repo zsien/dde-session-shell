@@ -23,13 +23,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "loginwindow.h"
+#include "loginframe.h"
 #include "logincontent.h"
 #include "userinfo.h"
 
 #include <QWindow>
 
-LoginWindow::LoginWindow(SessionBaseModel *const model, QWidget *parent)
+LoginFrame::LoginFrame(SessionBaseModel *const model, QWidget *parent)
     : FullscreenBackground(model, parent)
     , m_loginContent(new LoginContent(model, this))
     , m_model(model)
@@ -60,17 +60,17 @@ LoginWindow::LoginWindow(SessionBaseModel *const model, QWidget *parent)
 #endif
     });
 
-    connect(m_loginContent, &LockContent::requestSwitchToUser, this, &LoginWindow::requestSwitchToUser);
-    connect(m_loginContent, &LockContent::requestSetKeyboardLayout, this, &LoginWindow::requestSetKeyboardLayout);
+    connect(m_loginContent, &LockContent::requestSwitchToUser, this, &LoginFrame::requestSwitchToUser);
+    connect(m_loginContent, &LockContent::requestSetKeyboardLayout, this, &LoginFrame::requestSetKeyboardLayout);
 
-    connect(m_loginContent, &LockContent::requestCheckAccount, this, &LoginWindow::requestCheckAccount);
-    connect(m_loginContent, &LockContent::requestStartAuthentication, this, &LoginWindow::requestStartAuthentication);
-    connect(m_loginContent, &LockContent::sendTokenToAuth, this, &LoginWindow::sendTokenToAuth);
-    connect(m_loginContent, &LockContent::requestEndAuthentication, this, &LoginWindow::requestEndAuthentication);
-    connect(m_loginContent, &LockContent::authFinished, this, &LoginWindow::authFinished);
+    connect(m_loginContent, &LockContent::requestCheckAccount, this, &LoginFrame::requestCheckAccount);
+    connect(m_loginContent, &LockContent::requestStartAuthentication, this, &LoginFrame::requestStartAuthentication);
+    connect(m_loginContent, &LockContent::sendTokenToAuth, this, &LoginFrame::sendTokenToAuth);
+    connect(m_loginContent, &LockContent::requestEndAuthentication, this, &LoginFrame::requestEndAuthentication);
+    connect(m_loginContent, &LockContent::authFinished, this, &LoginFrame::authFinished);
 }
 
-void LoginWindow::showEvent(QShowEvent *event)
+void LoginFrame::showEvent(QShowEvent *event)
 {
     FullscreenBackground::showEvent(event);
 
@@ -79,7 +79,7 @@ void LoginWindow::showEvent(QShowEvent *event)
     m_model->setVisible(true);
 }
 
-void LoginWindow::hideEvent(QHideEvent *event)
+void LoginFrame::hideEvent(QHideEvent *event)
 {
     FullscreenBackground::hideEvent(event);
 

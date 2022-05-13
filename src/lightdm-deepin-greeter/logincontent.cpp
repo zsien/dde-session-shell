@@ -23,6 +23,12 @@
 #include "logintipswindow.h"
 #include "sessionmanager.h"
 #include "controlwidget.h"
+#include "resetpasswdwidget.h"
+
+#include <DFloatingMessage>
+#include <DMessageManager>
+
+DWIDGET_USE_NAMESPACE
 
 LoginContent::LoginContent(SessionBaseModel *const model, QWidget *parent)
     : LockContent(model, parent)
@@ -56,7 +62,11 @@ void LoginContent::onCurrentUserChanged(std::shared_ptr<User> user)
 
 void LoginContent::onStatusChanged(SessionBaseModel::ModeStatus status)
 {
-    if (status != SessionBaseModel::ModeStatus::SessionMode) {
+    switch (status) {
+    case SessionBaseModel::ModeStatus::ResetPasswdMode:
+        pushChangePasswordFrame();
+        break;
+    default:
         pushTipsFrame();
     }
 }
@@ -81,5 +91,29 @@ void LoginContent::popTipsFrame()
     m_showTipsWidget = false;
     setTopFrameVisible(true);
     setBottomFrameVisible(true);
+    LockContent::onStatusChanged(m_model->currentModeState());
+}
+
+void LoginContent::pushChangePasswordFrame()
+{
+    m_resetPasswordWidget.reset(new ResetPasswdWidget(m_model->currentUser(), this));
+    connect(m_resetPasswordWidget.get(), &ResetPasswdWidget::changePasswordSuccessed, this, [ = ] {
+        DFloatingMessage *message = new DFloatingMessage(DFloatingMessage::MessageType::TransientType);
+        QPalette pa;
+        pa.setColor(QPalette::Background, QColor(247, 247, 247, 51));
+        message->setPalette(pa);
+        message->setIcon(QIcon::fromTheme("dialog-ok"));
+        message->setMessage(tr("Password Change Success"));
+
+        message->setAttribute(Qt::WA_DeleteOnClose);
+        DMessageManager::instance()->sendMessage(this, message);
+
+        // TODO 这里是回到密码输入界面还是某个因子验证的界面
+        m_model->setCurrentModeState(SessionBaseModel::ModeStatus::PasswordMode);
+    });
+    QSize size = getCenterContentSize();
+    m_resetPasswordWidget->setMaximumSize(size);
+    setCenterContent(m_resetPasswordWidget.get());
+
     LockContent::onStatusChanged(m_model->currentModeState());
 }

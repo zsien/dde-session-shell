@@ -2,6 +2,8 @@ set(BIN_NAME lightdm-deepin-greeter-test)
 
 aux_source_directory(. GREETER_TEST)
 
+set(DEEPIN_PW_CHECK libdeepin_pw_check.so)
+
 set(GREETER_TEST_SRCS
     ${GREETER_TEST}
     ${authority_DBUS_SCRS}
@@ -13,10 +15,13 @@ set(GREETER_TEST_SRCS
     ${SESSION_WIDGETS}
     ${haweiswitchos_DBUS_SCRS}
     ${AUTHENTICATE}
-    ${PROJECT_SOURCE_DIR}/src/lightdm-deepin-greeter/loginwindow.cpp
+    ${PROJECT_SOURCE_DIR}/src/lightdm-deepin-greeter/loginframe.cpp
     ${PROJECT_SOURCE_DIR}/src/lightdm-deepin-greeter/greeterworker.cpp
     ${PROJECT_SOURCE_DIR}/src/lightdm-deepin-greeter/logincontent.cpp
     ${PROJECT_SOURCE_DIR}/src/lightdm-deepin-greeter/logintipswindow.cpp
+    ${PROJECT_SOURCE_DIR}/src/lightdm-deepin-greeter/pwqualitymanager.cpp
+    ${PROJECT_SOURCE_DIR}/src/lightdm-deepin-greeter/passwordlevelwidget.cpp
+    ${PROJECT_SOURCE_DIR}/src/lightdm-deepin-greeter/resetpasswdwidget.cpp
 )
 
 add_executable(${BIN_NAME}
@@ -59,6 +64,7 @@ target_link_libraries(${BIN_NAME} PRIVATE
     ${Greeter_LIBRARIES}
     ${Qt5Test_LIBRARIES}
     ${GTEST_LIBRARIES}
+    ${DEEPIN_PW_CHECK}
     -lpthread
     -lm
 )

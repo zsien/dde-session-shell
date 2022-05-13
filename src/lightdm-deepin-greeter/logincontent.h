@@ -25,7 +25,7 @@
 #include "lockcontent.h"
 
 class LoginTipsWindow;
-
+class ResetPasswdWidget;
 class LoginContent : public LockContent
 {
     Q_OBJECT
@@ -36,9 +36,13 @@ public:
     void onStatusChanged(SessionBaseModel::ModeStatus status) override;
     void pushTipsFrame();
     void popTipsFrame();
+    void pushChangePasswordFrame();
 
 private:
     LoginTipsWindow *m_loginTipsWindow;
+
+    QSharedPointer<ResetPasswdWidget> m_resetPasswordWidget;
+
     bool m_showTipsWidget = true;
 };
 

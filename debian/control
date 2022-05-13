@@ -27,7 +27,9 @@ Build-Depends: debhelper (>= 8.0.0), pkg-config,
  libx11-xcb-dev,
  libssl-dev,
  libdtkcore-dev,
- qtwebengine5-dev
+ qtwebengine5-dev,
+ libdeepin-pw-check-dev,
+ libxcb-util0-dev|libxcb-util1-dev
 Standards-Version: 3.9.4
 Homepage: http://www.deepin.org/
 
@@ -39,8 +41,8 @@ Depends: ${shlibs:Depends}, ${misc:Depends}, ${dist:Depends},
  startdde (>=5.8.9),
  x11-xserver-utils,
  deepin-authenticate(>=1.2.27),
- libssl-dev,
- libxcb-util1
+ libssl1.1,
+ libxcb-util0|libxcb-util1
 Provides: lightdm-greeter
 Recommends: onboard,
  dss-network-plugin,

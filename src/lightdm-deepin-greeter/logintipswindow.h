@@ -28,10 +28,10 @@ private:
 private:
     QHBoxLayout *m_mainLayout;
     QLabel *m_tipLabel;
-    QLabel *m_content;
+    QLabel *m_contentLabel;
     QPushButton *m_btn;
-    QString m_tipString;
-    QString m_contentString;
+    QString m_tips;
+    QString m_content;
 
 };
 

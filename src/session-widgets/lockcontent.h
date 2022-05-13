@@ -86,7 +86,7 @@ protected:
 protected:
     SessionBaseModel *m_model;
     ControlWidget *m_controlWidget;             // 右下角图标
-    ShutdownWidget *m_shutdownFrame;            // 关机界面
+    QSharedPointer<ShutdownWidget> m_shutdownFrame;            // 关机界面
     LogoWidget *m_logoWidget;                   // logo显示
     TimeWidget *m_timeWidget;                   // 时间日期显示
     MediaWidget *m_mediaWidget;                 // 多媒体信息显示

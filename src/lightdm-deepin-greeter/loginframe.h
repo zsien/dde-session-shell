@@ -23,23 +23,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LOGINWINDOW_H
-#define LOGINWINDOW_H
+#ifndef LOGINFRAME_H
+#define LOGINFRAME_H
 
 #include "fullscreenbackground.h"
 
-#include <memory>
+//#include <memory>
 
 class LoginContent;
 class SessionBaseModel;
 class User;
 
-class LoginWindow : public FullscreenBackground
+class LoginFrame : public FullscreenBackground
 {
     Q_OBJECT
 
 public:
-    explicit LoginWindow(SessionBaseModel *const model, QWidget *parent = nullptr);
+    explicit LoginFrame(SessionBaseModel *const model, QWidget *parent = nullptr);
 
 signals:
     void requestSwitchToUser(std::shared_ptr<User> user);
@@ -62,4 +62,4 @@ private:
     SessionBaseModel *m_model;
 };
 
-#endif // LOGINWINDOW_H
+#endif // LOGINFRAME_H

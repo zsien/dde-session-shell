@@ -247,7 +247,7 @@ void NativeUser::initConnections()
     connect(m_userInter, &UserInter::LocaleChanged, this, &NativeUser::updateLocale);
     connect(m_userInter, &UserInter::NoPasswdLoginChanged, this, &NativeUser::updateNoPasswordLogin);
     connect(m_userInter, &UserInter::PasswordHintChanged, this, &NativeUser::updatePasswordHint);
-    connect(m_userInter, &UserInter::PasswordStatusChanged, this, &NativeUser::updatePasswordState);
+    connect(m_userInter, &UserInter::PasswordStatusChanged, this, &NativeUser::updatePasswordStatus);
     connect(m_userInter, &UserInter::PasswordHintChanged, this, &NativeUser::updatePasswordHint);
     connect(m_userInter, &UserInter::ShortDateFormatChanged, this, &NativeUser::updateShortDateFormat);
     connect(m_userInter, &UserInter::ShortTimeFormatChanged, this, &NativeUser::updateShortTimeFormat);
@@ -508,9 +508,9 @@ void NativeUser::updatePasswordExpiredInfo()
  *
  * @param state 有密码：P 无密码：NP
  */
-void NativeUser::updatePasswordState(const QString &state)
+void NativeUser::updatePasswordStatus(const QString &state)
 {
-    const bool isPasswordValidTmp = state == "P" ? true : false;
+    const bool isPasswordValidTmp = ((state == "P") ? true : false);
     if (isPasswordValidTmp == m_isPasswordValid) {
         return;
     }

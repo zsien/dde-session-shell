@@ -171,7 +171,10 @@ target_link_libraries(dde-lock PRIVATE
     ${Qt5Network_LIBRARIES}
     ${QGSettings_LIBRARIES}
     ${Greeter_LIBRARIES}
+    ${DEEPIN_PW_CHECK}
 )
+
+set(DEEPIN_PW_CHECK libdeepin_pw_check.so)
 
 set(GREETER_SRCS
     ${authority_DBUS_SCRS}
@@ -185,15 +188,19 @@ set(GREETER_SRCS
     ${AUTHENTICATE}
     ${INTERFACE}
     src/app/lightdm-deepin-greeter.cpp
-    src/lightdm-deepin-greeter/loginwindow.cpp
+    src/lightdm-deepin-greeter/loginframe.cpp
     src/lightdm-deepin-greeter/greeterworker.cpp
     src/lightdm-deepin-greeter/logincontent.cpp
     src/lightdm-deepin-greeter/logintipswindow.cpp
+    src/lightdm-deepin-greeter/pwqualitymanager.cpp
+    src/lightdm-deepin-greeter/passwordlevelwidget.cpp
+    src/lightdm-deepin-greeter/resetpasswdwidget.cpp
 )
 add_executable(lightdm-deepin-greeter
     ${GREETER_SRCS}
     ${QRCS}
 )
+
 target_include_directories(lightdm-deepin-greeter PUBLIC
     ${PAM_INCLUDE_DIR}
     ${DTKWIDGET_INCLUDE_DIR}
@@ -231,6 +238,7 @@ target_link_libraries(lightdm-deepin-greeter PRIVATE
     ${Qt5Network_LIBRARIES}
     ${QGSettings_LIBRARIES}
     ${Greeter_LIBRARIES}
+    ${DEEPIN_PW_CHECK}
 )
 
 # debug模式下增加示例demo的编译

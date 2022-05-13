@@ -410,7 +410,7 @@ void AuthWidget::updatePasswordExpiredState()
             m_expiredStateLabel->show();
             m_expiredSpacerItem->changeSize(0, EXPIRED_SPACER_ITEM_HEIGHT);
         } else if (m_user && m_user->accountType() == User::AccountType::Admin) {
-            // TODO 直接跳转修改密码界面
+            // 已经在LoginContent处理了
         } else {
             m_expiredStateLabel->setText(tr("Password expired, please change"));
             m_expiredStateLabel->show();

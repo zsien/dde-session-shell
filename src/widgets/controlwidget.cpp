@@ -75,6 +75,16 @@ bool FlotingButton::eventFilter(QObject *watch, QEvent *event)
 
 ControlWidget::ControlWidget(const SessionBaseModel *model, QWidget *parent)
     : QWidget(parent)
+    , m_mainLayout(nullptr)
+    , m_switchUserBtn(new FlotingButton(this))
+    , m_powerBtn(new FlotingButton(this))
+    , m_sessionBtn(new FlotingButton(this))
+    , m_tipContentWidget(nullptr)
+    , m_sessionTip(nullptr)
+    , m_tipWidget(nullptr)
+#ifndef SHENWEI_PLATFORM
+    , m_tipsAni(nullptr)
+#endif
     , m_contextMenu(new QMenu(this))
     , m_tipsWidget(new TipsWidget(parent ? parent->window() : nullptr))
     , m_arrowRectWidget(new DArrowRectangle(DArrowRectangle::ArrowBottom, this))
@@ -160,7 +170,6 @@ void ControlWidget::initUI()
     m_mainLayout->setSpacing(26);
     m_mainLayout->setAlignment(Qt::AlignRight | Qt::AlignBottom);
 
-    m_sessionBtn = new FlotingButton(this);
     m_sessionBtn->setIconSize(BUTTON_ICON_SIZE);
     m_sessionBtn->setFixedSize(BUTTON_SIZE);
     m_sessionBtn->setAutoExclusive(true);
@@ -184,7 +193,6 @@ void ControlWidget::initUI()
     pal.setColor(QPalette::HighlightedText, QColor(Qt::white));
     m_keyboardBtn->setPalette(pal);
 
-    m_switchUserBtn = new FlotingButton(this);
     m_switchUserBtn->setAccessibleName("SwitchUserBtn");
     m_switchUserBtn->setIcon(QIcon::fromTheme(":/img/bottom_actions/userswitch_normal.svg"));
     m_switchUserBtn->setIconSize(BUTTON_ICON_SIZE);
@@ -194,7 +202,6 @@ void ControlWidget::initUI()
     m_switchUserBtn->installEventFilter(this);
     m_switchUserBtn->setTipText(tr("switch user"));
 
-    m_powerBtn = new FlotingButton(this);
     m_powerBtn->setAccessibleName("PowerBtn");
     m_powerBtn->setIcon(QIcon(":/img/bottom_actions/shutdown_normal.svg"));
     m_powerBtn->setIconSize(BUTTON_ICON_SIZE);

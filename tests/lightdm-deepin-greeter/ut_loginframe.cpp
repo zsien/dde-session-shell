@@ -1,4 +1,4 @@
-#include "loginwindow.h"
+#include "loginframe.h"
 #include "sessionbasemodel.h"
 #include "userinfo.h"
 
@@ -6,7 +6,7 @@
 
 #include <gtest/gtest.h>
 
-class UT_LoginWindow : public testing::Test
+class UT_LoginFrame : public testing::Test
 {
 protected:
     void SetUp() override;
@@ -14,29 +14,29 @@ protected:
 
     SessionBaseModel *m_sessionBaseModel;
     std::shared_ptr<User> m_user;
-    LoginWindow *m_loginwindow;
+    LoginFrame *m_loginwindow;
 };
 
-void UT_LoginWindow::SetUp()
+void UT_LoginFrame::SetUp()
 {
     m_sessionBaseModel = new SessionBaseModel();
     m_user = std::make_shared<User>();
     m_sessionBaseModel->updateCurrentUser(m_user);
-    m_loginwindow = new LoginWindow(m_sessionBaseModel);
+    m_loginwindow = new LoginFrame(m_sessionBaseModel);
 }
 
-void UT_LoginWindow::TearDown()
+void UT_LoginFrame::TearDown()
 {
     delete m_sessionBaseModel;
     delete m_loginwindow;
 }
 
-TEST_F(UT_LoginWindow, Validity)
+TEST_F(UT_LoginFrame, Validity)
 {
     ASSERT_NE(m_loginwindow, nullptr);
 }
 
-TEST_F(UT_LoginWindow, Visibility)
+TEST_F(UT_LoginFrame, Visibility)
 {
     m_loginwindow->show();
     m_loginwindow->hide();

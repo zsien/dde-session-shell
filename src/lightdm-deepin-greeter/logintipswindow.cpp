@@ -45,20 +45,20 @@ void LoginTipsWindow::initUI()
     QVBoxLayout *vLayout = new QVBoxLayout(this);
 
     // 提示内容布局
-    m_content = new QLabel();
-    m_content->setAccessibleName("ContentLabel");
-    m_content->setWordWrap(true);
-    QPalette t_palette = m_content->palette();
+    m_contentLabel = new QLabel();
+    m_contentLabel->setAccessibleName("ContentLabel");
+    m_contentLabel->setWordWrap(true);
+    QPalette t_palette = m_contentLabel->palette();
     t_palette.setColor(QPalette::WindowText, Qt::white);
-    m_content->setPalette(t_palette);
-    m_content->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    DFontSizeManager::instance()->bind(m_content, DFontSizeManager::T4);
-    m_content->setAlignment(Qt::AlignCenter);
-    m_content->setTextFormat(Qt::TextFormat::PlainText);
+    m_contentLabel->setPalette(t_palette);
+    m_contentLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    DFontSizeManager::instance()->bind(m_contentLabel, DFontSizeManager::T4);
+    m_contentLabel->setAlignment(Qt::AlignCenter);
+    m_contentLabel->setTextFormat(Qt::TextFormat::PlainText);
 
     // 获取/usr/share/dde-session-shell/dde-session-shell.conf 配置信息
-    m_contentString = findValueByQSettings<QString>(DDESESSIONCC::session_ui_configs, "Greeter", "tipsContent", "");
-    m_content->setText(m_contentString);
+    m_content = findValueByQSettings<QString>(DDESESSIONCC::session_ui_configs, "Greeter", "tipsContent", "");
+    m_contentLabel->setText(m_content);
 
     // 提示标题布局
     m_tipLabel = new QLabel();
@@ -76,8 +76,8 @@ void LoginTipsWindow::initUI()
     m_tipLabel->setTextFormat(Qt::TextFormat::PlainText);
 
     // 获取/usr/share/dde-session-shell/dde-session-shell.conf 配置信息
-    m_tipString = findValueByQSettings<QString>(DDESESSIONCC::session_ui_configs, "Greeter", "tipsTitle", "");
-    m_tipLabel->setText(m_tipString);
+    m_tips = findValueByQSettings<QString>(DDESESSIONCC::session_ui_configs, "Greeter", "tipsTitle", "");
+    m_tipLabel->setText(m_tips);
 
     // 确认按钮
     m_btn = new QPushButton();
@@ -87,7 +87,7 @@ void LoginTipsWindow::initUI()
 
     vLayout->addStretch();
     vLayout->addWidget(m_tipLabel, 0, Qt::AlignHCenter);
-    vLayout->addWidget(m_content, 0, Qt::AlignHCenter);
+    vLayout->addWidget(m_contentLabel, 0, Qt::AlignHCenter);
     vLayout->addWidget(m_btn, 0, Qt::AlignHCenter);
     vLayout->addStretch();
 
@@ -105,6 +105,6 @@ void LoginTipsWindow::initUI()
 
 bool LoginTipsWindow::isValid()
 {
-    return (!m_tipString.isEmpty() || !m_contentString.isEmpty());
+    return (!m_tips.isEmpty() || !m_content.isEmpty());
 }
 

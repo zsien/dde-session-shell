@@ -165,13 +165,13 @@ private:
     int m_index = 0;
     QList<DFloatingButton *> m_btnList;
 
-    QHBoxLayout *m_mainLayout = nullptr;
-    FlotingButton *m_switchUserBtn = nullptr;
-    FlotingButton *m_powerBtn = nullptr;
-    FlotingButton *m_sessionBtn = nullptr;
-    TipContentWidget *m_tipContentWidget = nullptr;
-    QLabel *m_sessionTip = nullptr;
-    QWidget *m_tipWidget = nullptr;
+    QHBoxLayout *m_mainLayout;
+    FlotingButton *m_switchUserBtn;
+    FlotingButton *m_powerBtn;
+    FlotingButton *m_sessionBtn;
+    TipContentWidget *m_tipContentWidget;
+    QLabel *m_sessionTip;
+    QWidget *m_tipWidget;
 #ifndef SHENWEI_PLATFORM
     QPropertyAnimation *m_tipsAni = nullptr;
 #endif

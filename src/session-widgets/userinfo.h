@@ -42,8 +42,8 @@ public:
     };
 
     enum AccountType {
-        Admin = 0,
-        Standard = 1,
+        Standard = 0,
+        Admin = 1,
         Other = 2
     };
 
@@ -187,7 +187,7 @@ private slots:
     void updateName(const QString &name);
     void updateNoPasswordLogin(const bool isNoPasswordLogin);
     void updatePasswordHint(const QString &hint);
-    void updatePasswordState(const QString &state);
+    void updatePasswordStatus(const QString &state);
     void updateShortDateFormat(const int format);
     void updateShortTimeFormat(const int format);
     void updateWeekdayFormat(const int format);
