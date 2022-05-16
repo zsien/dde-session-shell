@@ -392,11 +392,13 @@ void AuthWidget::updatePasswordExpiredState()
 {
     switch (m_user->expiredState()) {
     case User::ExpiredNormal:
+        this->setDisabled(false);
         m_expiredSpacerItem->changeSize(0, 0);
         m_expiredStateLabel->clear();
         m_expiredStateLabel->hide();
         break;
     case User::ExpiredSoon:
+        this->setDisabled(false);
         m_expiredStateLabel->setText(tr("Your password will expire in %n days, please change it timely", "", m_user->expiredDayLeft()));
         m_expiredStateLabel->show();
         m_expiredSpacerItem->changeSize(0, EXPIRED_SPACER_ITEM_HEIGHT);

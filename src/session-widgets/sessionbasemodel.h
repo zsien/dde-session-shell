@@ -199,7 +199,7 @@ signals:
     void prepareForSleep(bool is_Sleep);          //待机信号改变
     void shutdownInhibit(const SessionBaseModel::PowerAction action, bool needConfirm);
     void cancelShutdownInhibit();
-    void tipsShowed();
+    void requestLoginFrame();
     void clearServerLoginWidgetContent();
 
     void authStateChanged(const int, const int, const QString &);
@@ -216,11 +216,11 @@ private:
     bool m_isLockNoPassword;
     bool m_isBlackMode;
     bool m_isHibernateMode;
-    bool m_isLock = false;
+    bool m_isLock;
     bool m_allowShowCustomUser;
-    bool m_SEOpen; // 保存等保开启、关闭的状态
+    bool m_SEOpen;                                  // 保存等保开启、关闭的状态
     bool m_isUseWayland;
-    int m_userListSize = 0;
+    int m_userListSize;
     AppType m_appType;
     QList<std::shared_ptr<User>> m_userList;
     std::shared_ptr<User> m_currentUser;
@@ -228,8 +228,8 @@ private:
     QString m_sessionKey;
     PowerAction m_powerAction;
     ModeStatus m_currentModeState;
-    bool m_isCheckedInhibit = false;
-    AuthProperty m_authProperty; // 认证相关属性的值，初始时通过dbus获取，暂存在model中，供widget初始化界面使用
+    bool m_isCheckedInhibit;
+    AuthProperty m_authProperty;                    // 认证相关属性的值，初始时通过dbus获取，暂存在model中，供widget初始化界面使用
     QMap<QString, std::shared_ptr<User>> *m_users;
     QMap<QString, std::shared_ptr<User>> *m_loginedUsers;
 };

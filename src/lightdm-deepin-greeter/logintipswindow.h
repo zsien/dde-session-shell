@@ -20,7 +20,7 @@ public:
     bool isValid();
 
 signals:
-    void requestClosed();
+    void closed();
 
 private:
     void initUI();

@@ -174,7 +174,14 @@ void GreeterWorker::initConnections()
             m_account = account;
         }
         QTimer::singleShot(100, this, [ = ] {
-            m_model->setCurrentModeState(SessionBaseModel::ModeStatus::PasswordMode);
+            if (m_model->appType() == AppType::Login) {
+                // 管理员账户且密码过期的情况下，设置当前状态为ResetPasswdMode，从而方便直接跳转到重置密码界面
+                bool showReset = m_model->currentUser()->expiredState() == User::ExpiredState::ExpiredAlready
+                        && m_model->currentUser()->accountType() == User::AccountType::Admin;
+                m_model->setCurrentModeState(showReset ? SessionBaseModel::ModeStatus::ResetPasswdMode : SessionBaseModel::ModeStatus::PasswordMode);
+            } else {
+                m_model->setCurrentModeState(SessionBaseModel::ModeStatus::PasswordMode);
+            }
         });
     });
     /* model */
@@ -746,7 +753,6 @@ void GreeterWorker::onAuthStateChanged(const int type, const int state, const QS
         case AS_Success:
             if (type == AT_Face || type == AT_Iris)
                 m_resetSessionTimer->start();
-
             break;
         case AS_Failure:
             if (AT_All != type) {

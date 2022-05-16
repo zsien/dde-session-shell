@@ -30,8 +30,8 @@ void UT_LoginContent::TearDown()
 TEST_F(UT_LoginContent, BasicTest)
 {
     m_content->onCurrentUserChanged(m_model->currentUser());
-    m_content->pushTipsFrame();
-    m_content->popTipsFrame();
+    m_content->tryPushTipsFrame();
+    m_content->pushLoginFrame();
 }
 
 TEST_F(UT_LoginContent, ModeTest)

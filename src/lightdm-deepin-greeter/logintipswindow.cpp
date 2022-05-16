@@ -98,7 +98,7 @@ void LoginTipsWindow::initUI()
 
     connect(m_btn, &QPushButton::clicked, this, [ = ] {
         // 点击确认后打开登录界面
-        emit requestClosed();
+        emit closed();
         this->close();
     });
 }

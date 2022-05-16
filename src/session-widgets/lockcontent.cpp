@@ -39,8 +39,7 @@ LockContent::LockContent(SessionBaseModel *const model, QWidget *parent)
 {
     if (m_model->appType() == AppType::Login) {
         // 管理员账户且密码过期的情况下，设置当前状态为ResetPasswdMode，从而方便直接跳转到重置密码界面
-        bool showReset = m_model->currentUser()->expiredState() == User::ExpiredState::ExpiredAlready
-                && m_model->currentUser()->accountType() == User::AccountType::Admin;
+        bool showReset = m_model->currentUser()->expiredState() == User::ExpiredState::ExpiredAlready && m_model->currentUser()->accountType() == User::AccountType::Admin;
         m_model->setCurrentModeState(showReset ? SessionBaseModel::ModeStatus::ResetPasswdMode : SessionBaseModel::ModeStatus::PasswordMode);
     } else {
         m_model->setCurrentModeState(SessionBaseModel::ModeStatus::PasswordMode);
@@ -200,7 +199,8 @@ void LockContent::initUserListWidget()
 
 void LockContent::onCurrentUserChanged(std::shared_ptr<User> user)
 {
-    if (user.get() == nullptr) return; // if dbus is async
+    if (!user)
+        return;
 
     //如果是锁屏就用系统语言，如果是登陆界面就用用户语言
     auto locale = qApp->applicationName() == "dde-lock" ? QLocale::system().name() : user->locale();
@@ -228,9 +228,9 @@ void LockContent::onCurrentUserChanged(std::shared_ptr<User> user)
                           << connect(user.get(), &User::shortTimeFormatChanged, m_timeWidget, &TimeWidget::setShortTimeFormat);
 
     //TODO: refresh blur image
-    QTimer::singleShot(0, this, [ = ] {
+    QMetaObject::invokeMethod(this, [ = ] {
         updateTimeFormat(user->isUse24HourFormat());
-    });
+    }, Qt::QueuedConnection);
 
     m_logoWidget->updateLocale(locale);
 }
@@ -332,7 +332,7 @@ void LockContent::onStatusChanged(SessionBaseModel::ModeStatus status)
 
 void LockContent::mouseReleaseEvent(QMouseEvent *event)
 {
-    // 如果是设置密码界面，不做处理
+    // 如果是重置密码界面，不做处理
     if (m_model->currentModeState() == SessionBaseModel::ResetPasswdMode)
         return SessionBaseWindow::mouseReleaseEvent(event);
 
@@ -384,8 +384,7 @@ void LockContent::restoreMode()
 {
     if (m_model->appType() == AppType::Login) {
         // 管理员账户且密码过期的情况下，设置当前状态为ResetPasswdMode，从而方便直接跳转到重置密码界面
-        bool showReset = m_model->currentUser()->expiredState() == User::ExpiredState::ExpiredAlready
-                && m_model->currentUser()->accountType() == User::AccountType::Admin;
+        bool showReset = m_model->currentUser()->expiredState() == User::ExpiredState::ExpiredAlready && m_model->currentUser()->accountType() == User::AccountType::Admin;
         m_model->setCurrentModeState(showReset ? SessionBaseModel::ModeStatus::ResetPasswdMode : SessionBaseModel::ModeStatus::PasswordMode);
     } else {
         m_model->setCurrentModeState(SessionBaseModel::ModeStatus::PasswordMode);

@@ -34,16 +34,14 @@ public:
 
     void onCurrentUserChanged(std::shared_ptr<User> user) override;
     void onStatusChanged(SessionBaseModel::ModeStatus status) override;
-    void pushTipsFrame();
-    void popTipsFrame();
+
+    bool tryPushTipsFrame();
+    void pushLoginFrame();
     void pushChangePasswordFrame();
 
 private:
-    LoginTipsWindow *m_loginTipsWindow;
-
+    QSharedPointer<LoginTipsWindow> m_loginTipsWindow;
     QSharedPointer<ResetPasswdWidget> m_resetPasswordWidget;
-
-    bool m_showTipsWidget = true;
 };
 
 #endif // LOGINCONTENT_H
