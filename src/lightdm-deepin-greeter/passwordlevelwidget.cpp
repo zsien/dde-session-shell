@@ -38,6 +38,11 @@ PasswordLevelWidget::PasswordLevelWidget(QWidget *parent)
 {
     initUI();
     initConnections();
+
+#ifndef QT_DEBUG
+    // TODO 高度超出可显示的区域，导致显示异常，暂时屏蔽，具体的显示方式还在确认
+    m_tips->setVisible(false);
+#endif
 }
 
 void PasswordLevelWidget::reset()

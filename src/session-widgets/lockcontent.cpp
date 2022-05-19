@@ -348,7 +348,8 @@ void LockContent::mouseReleaseEvent(QMouseEvent *event)
         if (event->source() == Qt::MouseEventSynthesizedByQt)
             return SessionBaseWindow::mouseReleaseEvent(event);
 
-        // 点击空白处的时候切换到当前用户，以开启验证。
+        // 点击空白处的时候切换到当前用户，恢复对应状态（如密码过期）并开启验证。
+        restoreMode();
         emit requestSwitchToUser(m_model->currentUser());
     }
 

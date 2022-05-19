@@ -56,8 +56,8 @@ SFAWidget::SFAWidget(QWidget *parent)
     setObjectName(QStringLiteral("SFAWidget"));
     setAccessibleName(QStringLiteral("SFAWidget"));
 
-    setGeometry(0, 0, 280, 176);
-    setMinimumSize(280, 176);
+    setGeometry(0, 0, 280, 372);
+    setMinimumSize(280, 372);
 }
 
 void SFAWidget::initUI()
