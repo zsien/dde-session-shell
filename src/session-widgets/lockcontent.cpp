@@ -307,6 +307,7 @@ void LockContent::onStatusChanged(SessionBaseModel::ModeStatus status)
 
     if(m_model->isServerModel())
         onUserListChanged(m_model->loginedUserList());
+
     switch (status) {
     case SessionBaseModel::ModeStatus::PasswordMode:
         pushPasswordFrame();

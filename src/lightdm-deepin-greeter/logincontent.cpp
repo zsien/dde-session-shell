@@ -121,7 +121,6 @@ void LoginContent::pushChangePasswordFrame()
         message->setPalette(pa);
         message->setIcon(QIcon::fromTheme("dialog-ok"));
         message->setMessage(tr("Password Change Success"));
-
         message->setAttribute(Qt::WA_DeleteOnClose);
         DMessageManager::instance()->sendMessage(this, message);
 

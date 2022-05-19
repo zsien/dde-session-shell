@@ -470,15 +470,10 @@ void LockWorker::switchToUser(std::shared_ptr<User> user)
      * 当前用户界面还未更新完成，已经切换为下一用户界面了，导致切换回来时，闪现用户列表。
      * 故使用 QTimer 将切换用户的操作放在事件队列最后处理。
      */
-    if (user->isLogin()) {
-        QTimer::singleShot(0, this, [user] {
-            QProcess::startDetached("dde-switchtogreeter", QStringList() << user->name());
-        });
-    } else {
-        QTimer::singleShot(0, this, [] {
-            QProcess::startDetached("dde-switchtogreeter", QStringList());
-        });
-    }
+    // TODO 在未登陆的情况下，是怎么切换到对应用户的
+    QMetaObject::invokeMethod(this, [ user ] {
+        QProcess::startDetached("dde-switchtogreeter", (user->isLogin() ? QStringList() << user->name() : QStringList()));
+    }, Qt::QueuedConnection);
 }
 
 void LockWorker::enableZoneDetected(bool disable)
