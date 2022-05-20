@@ -46,7 +46,7 @@ signals:
     void requestSetKeyboardLayout(std::shared_ptr<User> user, const QString &layout);
 
     void requestCreateAuthController(const QString &account);
-    void requestDestoryAuthController(const QString &account);
+    void requestDestroyAuthController(const QString &account);
     void requestStartAuthentication(const QString &account, const int authType);
     void sendTokenToAuth(const QString &account, const int authType, const QString &token);
     void requestEndAuthentication(const QString &account, const int authType);

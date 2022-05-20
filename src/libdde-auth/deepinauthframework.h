@@ -43,7 +43,7 @@ public:
     /* Compatible with old authentication methods */
     void CreateAuthenticate(const QString &account);
     void SendToken(const QString &token);
-    void DestoryAuthenticate();
+    void DestroyAuthenticate();
 
     /* com.deepin.daemon.Authenticate */
     int GetFrameworkState() const;
@@ -82,7 +82,7 @@ signals:
 public slots:
     /* New authentication framework */
     void CreateAuthController(const QString &account, const int authType, const int appType);
-    void DestoryAuthController(const QString &account);
+    void DestroyAuthController(const QString &account);
     void StartAuthentication(const QString &account, const int authType, const int timeout);
     void EndAuthentication(const QString &account, const int authType);
     void SendTokenToAuth(const QString &account, const int authType, const QString &token);

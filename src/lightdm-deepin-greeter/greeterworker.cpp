@@ -66,7 +66,7 @@ GreeterWorker::GreeterWorker(SessionBaseModel *const model, QObject *parent)
     connect(m_resetSessionTimer, &QTimer::timeout, this, [ = ] {
         endAuthentication(m_account, AT_All);
         m_model->updateAuthState(AT_All, AS_Cancel, "Cancel");
-        destoryAuthentication(m_account);
+        destroyAuthentication(m_account);
         createAuthentication(m_account);
     });
 }
@@ -89,7 +89,7 @@ void GreeterWorker::initConnections()
         if (path == m_model->currentUser()->path()) {
             m_model->updateCurrentUser(m_lockInter->CurrentUser());
             m_model->updateAuthState(AT_All, AS_Cancel, "Cancel");
-            destoryAuthentication(m_account);
+            destroyAuthentication(m_account);
             if (!m_model->currentUser()->isNoPasswordLogin()) {
                 createAuthentication(m_model->currentUser()->name());
             } else {
@@ -129,7 +129,7 @@ void GreeterWorker::initConnections()
             }
         } else {
             endAuthentication(m_account, AT_All);
-            destoryAuthentication(m_account);
+            destroyAuthentication(m_account);
         }
     });
     /* org.freedesktop.login1.Manager */
@@ -140,7 +140,7 @@ void GreeterWorker::initConnections()
 
         if (isSleep) {
             endAuthentication(m_account, AT_All);
-            destoryAuthentication(m_account);
+            destroyAuthentication(m_account);
         } else {
             createAuthentication(m_model->currentUser()->name());
         }
@@ -149,7 +149,7 @@ void GreeterWorker::initConnections()
         qInfo() << "DBusLogin1Manager::SessionRemoved";
         if (m_model->updateCurrentUser(m_lockInter->CurrentUser())) {
             m_model->updateAuthState(AT_All, AS_Cancel, "Cancel");
-            destoryAuthentication(m_account);
+            destroyAuthentication(m_account);
             if (!m_model->currentUser()->isNoPasswordLogin()) {
                 createAuthentication(m_model->currentUser()->name());
             } else {
@@ -345,7 +345,7 @@ void GreeterWorker::switchToUser(std::shared_ptr<User> user)
     } else {
         setCurrentUser(user);
         m_model->updateAuthState(AT_All, AS_Cancel, "Cancel");
-        destoryAuthentication(m_account);
+        destroyAuthentication(m_account);
         m_model->updateCurrentUser(user);
         if (!user->isNoPasswordLogin()) {
             createAuthentication(user->name());
@@ -410,12 +410,12 @@ void GreeterWorker::createAuthentication(const QString &account)
  *
  * @param account
  */
-void GreeterWorker::destoryAuthentication(const QString &account)
+void GreeterWorker::destroyAuthentication(const QString &account)
 {
-    qDebug() << "GreeterWorker::destoryAuthentication:" << account;
+    qDebug() << "GreeterWorker::destroyAuthentication:" << account;
     switch (m_model->getAuthProperty().FrameworkState) {
     case Available:
-        m_authFramework->DestoryAuthController(account);
+        m_authFramework->DestroyAuthController(account);
         break;
     default:
         break;
@@ -548,7 +548,7 @@ void GreeterWorker::checkAccount(const QString &account)
         m_resetSessionTimer->stop();
         endAuthentication(m_account, AT_All);
         m_model->updateAuthState(AT_All, AS_Cancel, "Cancel");
-        destoryAuthentication(m_account);
+        destroyAuthentication(m_account);
         createAuthentication(user_ptr->name());
     }
 }
@@ -653,7 +653,7 @@ void GreeterWorker::authenticationComplete()
     startSessionSync();
 #endif
     endAuthentication(m_account, AT_All);
-    destoryAuthentication(m_account);
+    destroyAuthentication(m_account);
 }
 
 void GreeterWorker::onAuthFinished()
@@ -689,7 +689,7 @@ void GreeterWorker::onAuthStateChanged(const int type, const int state, const QS
                 break;
             case AS_Cancel:
                 m_model->updateAuthState(type, state, message);
-                destoryAuthentication(m_account);
+                destroyAuthentication(m_account);
                 break;
             default:
                 break;
@@ -766,7 +766,7 @@ void GreeterWorker::onAuthStateChanged(const int type, const int state, const QS
             }
             break;
         case AS_Cancel:
-            destoryAuthentication(m_account);
+            destroyAuthentication(m_account);
             break;
         default:
             break;

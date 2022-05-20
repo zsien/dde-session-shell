@@ -57,7 +57,7 @@ LockWorker::LockWorker(SessionBaseModel *const model, QObject *parent)
     m_resetSessionTimer->setSingleShot(true);
     connect(m_resetSessionTimer, &QTimer::timeout, this, [ = ] {
         endAuthentication(m_account, AT_All);
-        destoryAuthentication(m_account);
+        destroyAuthentication(m_account);
         createAuthentication(m_account);
     });
 }
@@ -118,7 +118,7 @@ void LockWorker::initConnections()
             createAuthentication(m_model->currentUser()->name());
         } else {
             endAuthentication(m_account, AT_All);
-            destoryAuthentication(m_account);
+            destroyAuthentication(m_account);
         }
     });
 
@@ -127,7 +127,7 @@ void LockWorker::initConnections()
         qInfo() << "DBusLogin1Manager::PrepareForSleep:" << isSleep;
         if (isSleep) {
             endAuthentication(m_account, AT_All);
-            destoryAuthentication(m_account);
+            destroyAuthentication(m_account);
         } else {
             createAuthentication(m_model->currentUser()->name());
         }
@@ -152,7 +152,7 @@ void LockWorker::initConnections()
         } else {
             m_resetSessionTimer->stop();
             endAuthentication(m_account, AT_All);
-            destoryAuthentication(m_model->currentUser()->name());
+            destroyAuthentication(m_model->currentUser()->name());
             setCurrentUser(m_model->currentUser());
         }
     });
@@ -257,13 +257,13 @@ void LockWorker::onAuthStateChanged(const int type, const int state, const QStri
             switch (state) {
             case AS_Success:
                 m_model->updateAuthState(type, state, message);
-                destoryAuthentication(m_account);
+                destroyAuthentication(m_account);
                 onUnlockFinished(true);
                 m_resetSessionTimer->stop();
                 break;
             case AS_Cancel:
                 m_model->updateAuthState(type, state, message);
-                destoryAuthentication(m_account);
+                destroyAuthentication(m_account);
                 break;
             default:
                 break;
@@ -348,7 +348,7 @@ void LockWorker::onAuthStateChanged(const int type, const int state, const QStri
             }
             break;
         case AS_Cancel:
-            destoryAuthentication(m_account);
+            destroyAuthentication(m_account);
             break;
         default:
             break;
@@ -455,7 +455,7 @@ void LockWorker::switchToUser(std::shared_ptr<User> user)
             createAuthentication(user->name());
         } else {
             endAuthentication(m_account, AT_All);
-            destoryAuthentication(m_account);
+            destroyAuthentication(m_account);
             createAuthentication(m_account);
         }
         return;
@@ -545,15 +545,15 @@ void LockWorker::createAuthentication(const QString &account)
  *
  * @param account
  */
-void LockWorker::destoryAuthentication(const QString &account)
+void LockWorker::destroyAuthentication(const QString &account)
 {
-    qInfo() << "LockWorker::destoryAuthentication:" << account;
+    qInfo() << "LockWorker::destroyAuthentication:" << account;
     switch (m_model->getAuthProperty().FrameworkState) {
     case Available:
-        m_authFramework->DestoryAuthController(account);
+        m_authFramework->DestroyAuthController(account);
         break;
     default:
-        m_authFramework->DestoryAuthenticate();
+        m_authFramework->DestroyAuthenticate();
         break;
     }
 }

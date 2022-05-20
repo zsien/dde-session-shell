@@ -57,7 +57,7 @@ DeepinAuthFramework::~DeepinAuthFramework()
     delete m_authenticateControllers;
     delete m_AES;
 
-    DestoryAuthenticate();
+    DestroyAuthenticate();
 }
 
 /**
@@ -72,7 +72,7 @@ void DeepinAuthFramework::CreateAuthenticate(const QString &account)
     }
     qInfo() << "Create PAM authenticate thread:" << account << m_PAMAuthThread;
     m_account = account;
-    DestoryAuthenticate();
+    DestroyAuthenticate();
     m_cancelAuth = false;
     m_waitToken = true;
     int rc = pthread_create(&m_PAMAuthThread, nullptr, &PAMAuthWorker, this);
@@ -264,12 +264,12 @@ void DeepinAuthFramework::UpdateAuthState(const int state, const QString &messag
 /**
  * @brief 结束 PAM 认证服务
  */
-void DeepinAuthFramework::DestoryAuthenticate()
+void DeepinAuthFramework::DestroyAuthenticate()
 {
     if (m_PAMAuthThread == 0) {
         return;
     }
-    qInfo() << "Destory PAM authenticate thread";
+    qInfo() << "Destroy PAM authenticate thread";
     m_cancelAuth = true;
     pthread_cancel(m_PAMAuthThread);
     pthread_join(m_PAMAuthThread, nullptr);
@@ -399,13 +399,13 @@ void DeepinAuthFramework::CreateAuthController(const QString &account, const int
  *
  * @param account 用户名
  */
-void DeepinAuthFramework::DestoryAuthController(const QString &account)
+void DeepinAuthFramework::DestroyAuthController(const QString &account)
 {
     if (!m_authenticateControllers->contains(account)) {
         return;
     }
     AuthControllerInter *authControllerInter = m_authenticateControllers->value(account);
-    qInfo() << "Destory Authenticate Sesssion:" << account << authControllerInter->path();
+    qInfo() << "Destroy Authenticate Session:" << account << authControllerInter->path();
     authControllerInter->End(AT_All);
     authControllerInter->Quit();
     m_authenticateControllers->remove(account);
