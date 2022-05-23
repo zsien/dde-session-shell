@@ -79,19 +79,12 @@ ControlWidget::ControlWidget(const SessionBaseModel *model, QWidget *parent)
     , m_switchUserBtn(new FlotingButton(this))
     , m_powerBtn(new FlotingButton(this))
     , m_sessionBtn(new FlotingButton(this))
-    , m_tipContentWidget(nullptr)
-    , m_sessionTip(nullptr)
-    , m_tipWidget(nullptr)
-#ifndef SHENWEI_PLATFORM
-    , m_tipsAni(nullptr)
-#endif
+    , m_keyboardBtn(nullptr)
     , m_contextMenu(new QMenu(this))
+    , m_tipContentWidget(nullptr)
     , m_tipsWidget(new TipsWidget(parent ? parent->window() : nullptr))
     , m_arrowRectWidget(new DArrowRectangle(DArrowRectangle::ArrowBottom, this))
     , m_kbLayoutListView(nullptr)
-    , m_keyboardBtn(nullptr)
-    , m_onboardBtnVisible(true)
-    , m_dconfig(DConfig::create(getDefaultConfigFileName(), getDefaultConfigFileName(), QString(), this))
     , m_sessionPopupWidget(nullptr)
 {
     setModel(model);
@@ -154,11 +147,6 @@ void ControlWidget::initKeyboardLayoutList()
     m_kbLayoutListView->setVisible(false);
     connect(m_kbLayoutListView, &KBLayoutListView::itemClicked, this, &ControlWidget::onItemClicked);
     connect(m_kbLayoutListView, &KBLayoutListView::sizeChange, this, &ControlWidget::resizeArrowWidget);
-}
-
-void ControlWidget::setVirtualKBVisible(bool visible)
-{
-    m_onboardBtnVisible = visible;
 }
 
 void ControlWidget::initUI()
@@ -238,8 +226,8 @@ void ControlWidget::initUI()
 void ControlWidget::initConnect()
 {
     connect(&module::ModulesLoader::instance(), &module::ModulesLoader::moduleFound, this, &ControlWidget::addModule);
-    connect(m_sessionBtn, &FlotingButton::clicked, this, &ControlWidget::showSessionPopup);
 
+    connect(m_sessionBtn, &FlotingButton::clicked, this, &ControlWidget::showSessionPopup);
     connect(m_sessionBtn, &FlotingButton::requestShowTips, this, &ControlWidget::showInfoTips);
     connect(m_sessionBtn, &FlotingButton::requestHideTips, this, &ControlWidget::hideInfoTips);
 
@@ -376,29 +364,6 @@ void ControlWidget::updateLayout()
     updateTapOrder();
 }
 
-void ControlWidget::showTips()
-{
-#ifndef SHENWEI_PLATFORM
-    m_tipsAni->setStartValue(QPoint(m_tipWidget->width(), 0));
-    m_tipsAni->setEndValue(QPoint());
-    m_tipsAni->start();
-#else
-    m_sessionTip->move(0, 0);
-#endif
-}
-
-void ControlWidget::hideTips()
-{
-#ifndef SHENWEI_PLATFORM
-    //在退出动画时候会出现白边，+1
-    m_tipsAni->setEndValue(QPoint(m_tipWidget->width() + 1, 0));
-    m_tipsAni->setStartValue(QPoint());
-    m_tipsAni->start();
-#else
-    m_sessionTip->move(m_tipWidget->width() + 1, 0);
-#endif
-}
-
 void ControlWidget::setUserSwitchEnable(const bool visible)
 {
     m_switchUserBtn->setVisible(visible);
@@ -414,51 +379,13 @@ void ControlWidget::setSessionSwitchEnable(const bool visible)
         return;
     }
 
-        m_sessionBtn->show();
+    m_sessionBtn->show();
 #ifndef SHENWEI_PLATFORM
-        m_sessionBtn->installEventFilter(this);
+    m_sessionBtn->installEventFilter(this);
 #else
-        m_sessionBtn->setProperty("normalIcon", ":/img/sessions/unknown_indicator_normal.svg");
-        m_sessionBtn->setProperty("hoverIcon", ":/img/sessions/unknown_indicator_hover.svg");
-        m_sessionBtn->setProperty("checkedIcon", ":/img/sessions/unknown_indicator_press.svg");
-
-#endif
-
-    if (!m_tipWidget) {
-        m_tipWidget = new QWidget;
-        m_tipWidget->setAccessibleName("TipWidget");
-        m_mainLayout->insertWidget(0, m_tipWidget);
-        m_mainLayout->setAlignment(m_tipWidget, Qt::AlignCenter);
-    }
-
-    if (!m_sessionTip) {
-        m_sessionTip = new QLabel(m_tipWidget);
-        m_sessionTip->setAccessibleName("SessionTip");
-        m_sessionTip->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-        m_sessionTip->installEventFilter(this);
-
-#ifndef SHENWEI_PLATFORM
-        m_sessionTip->setStyleSheet("color:white;"
-                                    "font-size:12px;");
-#else
-        QPalette pe;
-        pe.setColor(QPalette::WindowText, Qt::white);
-        m_sessionTip->setPalette(pe);
-#endif
-
-        QGraphicsDropShadowEffect *tipsShadow = new QGraphicsDropShadowEffect(m_sessionTip);
-        tipsShadow->setColor(Qt::white);
-        tipsShadow->setBlurRadius(4);
-        tipsShadow->setOffset(0, 0);
-        m_sessionTip->setGraphicsEffect(tipsShadow);
-
-        m_sessionTip->move(m_tipWidget->width(), 0);
-    }
-
-#ifndef SHENWEI_PLATFORM
-    if (!m_tipsAni) {
-        m_tipsAni = new QPropertyAnimation(m_sessionTip, "pos", this);
-    }
+    m_sessionBtn->setProperty("normalIcon", ":/img/sessions/unknown_indicator_normal.svg");
+    m_sessionBtn->setProperty("hoverIcon", ":/img/sessions/unknown_indicator_hover.svg");
+    m_sessionBtn->setProperty("checkedIcon", ":/img/sessions/unknown_indicator_press.svg");
 #endif
 
     updateTapOrder();
@@ -466,41 +393,32 @@ void ControlWidget::setSessionSwitchEnable(const bool visible)
 
 void ControlWidget::chooseToSession(const QString &session)
 {
-    if (m_sessionBtn && m_sessionTip) {
-        if (session.isEmpty())
-            return;
+    if (!m_sessionBtn || session.isEmpty()) {
+        return;
+    }
 
-        m_sessionTip->setText(session);
-        if (session == "deepin") {
-            m_sessionTip->setText("X11");
-        }
+    const QString sessionId = session.toLower();
+    QString normalIcon = QString(":/img/sessions/%1_indicator_normal.svg").arg(sessionId);
+    if (sessionId == "deepin") {
+        normalIcon = QString(":/img/sessions/%1_indicator_normal.svg").arg("x11");
+    }
 
-        m_sessionTip->adjustSize();
-        //当session长度改变时，应该移到它的width来隐藏
-        m_sessionTip->move(m_sessionTip->size().width() + 1, 0);
-        const QString sessionId = session.toLower();
-        QString normalIcon = QString(":/img/sessions/%1_indicator_normal.svg").arg(sessionId);
-        if (sessionId == "deepin") {
-            normalIcon = QString(":/img/sessions/%1_indicator_normal.svg").arg("x11");
-        }
-
-        if (QFile(normalIcon).exists()) {
+    if (QFile(normalIcon).exists()) {
 #ifndef SHENWEI_PLATFORM
-            m_sessionBtn->setIcon(QIcon::fromTheme(normalIcon));
+        m_sessionBtn->setIcon(QIcon::fromTheme(normalIcon));
 #else
-            m_sessionBtn->setProperty("normalIcon", normalIcon);
-            m_sessionBtn->setProperty("hoverIcon", hoverIcon);
-            m_sessionBtn->setProperty("checkedIcon", checkedIcon);
+        m_sessionBtn->setProperty("normalIcon", normalIcon);
+        m_sessionBtn->setProperty("hoverIcon", hoverIcon);
+        m_sessionBtn->setProperty("checkedIcon", checkedIcon);
 #endif
-        } else {
+    } else {
 #ifndef SHENWEI_PLATFORM
-            m_sessionBtn->setIcon(QIcon::fromTheme(":/img/sessions/unknown_indicator_normal.svg"));
+        m_sessionBtn->setIcon(QIcon::fromTheme(":/img/sessions/unknown_indicator_normal.svg"));
 #else
-            m_sessionBtn->setProperty("normalIcon", ":/img/sessions/unknown_indicator_normal.svg");
-            m_sessionBtn->setProperty("hoverIcon", ":/img/sessions/unknown_indicator_hover.svg");
-            m_sessionBtn->setProperty("checkedIcon", ":/img/sessions/unknown_indicator_press.svg");
+        m_sessionBtn->setProperty("normalIcon", ":/img/sessions/unknown_indicator_normal.svg");
+        m_sessionBtn->setProperty("hoverIcon", ":/img/sessions/unknown_indicator_hover.svg");
+        m_sessionBtn->setProperty("checkedIcon", ":/img/sessions/unknown_indicator_press.svg");
 #endif
-        }
     }
 }
 
@@ -642,19 +560,6 @@ void ControlWidget::showSessionPopup()
 bool ControlWidget::eventFilter(QObject *watched, QEvent *event)
 {
 #ifndef SHENWEI_PLATFORM
-    if (watched == m_sessionBtn) {
-        if (event->type() == QEvent::Enter)
-            showTips();
-        else if (event->type() == QEvent::Leave)
-            hideTips();
-    }
-
-    if (watched == m_sessionTip) {
-        if (event->type() == QEvent::Resize) {
-            m_tipWidget->setFixedSize(m_sessionTip->size());
-        }
-    }
-
     DFloatingButton *btn = dynamic_cast<DFloatingButton *>(watched);
     if (m_btnList.contains(btn)) {
         if (event->type() == QEvent::Enter) {

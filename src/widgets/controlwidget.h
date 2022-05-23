@@ -125,14 +125,11 @@ signals:
     void requestSwitchUser();
     void requestShutdown();
     void requestSwitchSession(const QString &session);
-    void requestSwitchVirtualKB();
-    void requestKeyboardLayout(const QPoint &pos);
     void requestShowModule(const QString &name);
 
 public slots:
     void addModule(dss::module::BaseModuleInterface *module);
     void removeModule(dss::module::BaseModuleInterface *module);
-    void setVirtualKBVisible(bool visible);
     void setUserSwitchEnable(const bool visible);
     void setSessionSwitchEnable(const bool visible);
     void chooseToSession(const QString &session);
@@ -152,8 +149,6 @@ protected:
 private:
     void initUI();
     void initConnect();
-    void showTips();
-    void hideTips();
     void updateLayout();
     void updateTapOrder();
 
@@ -169,25 +164,19 @@ private:
     FlotingButton *m_switchUserBtn;
     FlotingButton *m_powerBtn;
     FlotingButton *m_sessionBtn;
-    TipContentWidget *m_tipContentWidget;
-    QLabel *m_sessionTip;
-    QWidget *m_tipWidget;
-#ifndef SHENWEI_PLATFORM
-    QPropertyAnimation *m_tipsAni = nullptr;
-#endif
-    QMap<QString, QWidget *> m_modules;
-    QMenu *m_contextMenu;
-    TipsWidget *m_tipsWidget;
-    const SessionBaseModel *m_model;
+    FlotingButton *m_keyboardBtn;         // 键盘布局按钮
 
+    std::shared_ptr<User> m_curUser;
+    const SessionBaseModel *m_model;
+    QList<QMetaObject::Connection> m_connectionList;
+
+    QMenu *m_contextMenu;
+    QMap<QString, QWidget *> m_modules;
+
+    TipContentWidget *m_tipContentWidget;
+    TipsWidget *m_tipsWidget;
     DArrowRectangle *m_arrowRectWidget;
     KBLayoutListView *m_kbLayoutListView;   // 键盘布局列表
-    FlotingButton *m_keyboardBtn;         // 键盘布局按钮
-    std::shared_ptr<User> m_curUser;
-    QList<QMetaObject::Connection> m_connectionList;
-    bool m_onboardBtnVisible;
-    DTK_CORE_NAMESPACE::DConfig *m_dconfig;
-
     SessionPopupWidget *m_sessionPopupWidget;
 };
 
