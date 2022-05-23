@@ -148,6 +148,7 @@ void ResetPasswdWidget::onNewPasswordTextChanged(const QString &text)
     PwqualityManager::ERROR_TYPE error = PwqualityManager::instance()->verifyPassword(m_user->displayName(), text);
     // TODO 这里的error返回异常
     if (error != PwqualityManager::ERROR_TYPE::PW_NO_ERR) {
+        qDebug() << "password error type: " << error;
         m_newPasswdEdit->setAlert(true);
         m_newPasswdEdit->showAlertMessage(PwqualityManager::instance()->getErrorTips(error), m_newPasswdEdit, 2000);
     }
@@ -202,17 +203,19 @@ void ResetPasswdWidget::onOkClicked()
     const QString &newPassword = m_newPasswdEdit->text();
     const QString &repeatPassword = m_repeatPasswdEdit->text();
 
+    qDebug() << "start change user password, user: " << m_user->name();
     QProcess process;
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("LC_ALL", "C");
     process.setProcessEnvironment(env);
     process.setProcessChannelMode(QProcess::MergedChannels);
 
-    process.start("/bin/bash", QStringList() << "-c" << QString("passwd"));
+    // 登录界面修改密码时，当前用户是lightdm，需要先切换到对应的用户再修改用户的密码
+    process.start("/bin/bash", QStringList() << "-c" << QString("su - %1 -c \"passwd\"").arg(m_user->name()));
     if (!m_user->isPasswordValid()) {
-        process.write(QString("%1\n%2\n").arg(newPassword).arg(repeatPassword).toLatin1());
+        process.write(QString("%1\n%2\n%3\n").arg(oldPassword).arg(newPassword).arg(repeatPassword).toLatin1());
     } else {
-        process.write(QString("%1\n%2\n%3").arg(oldPassword).arg(newPassword).arg(repeatPassword).toLatin1());
+        process.write(QString("%1\n%2\n%3\n%4").arg(oldPassword).arg(oldPassword).arg(newPassword).arg(repeatPassword).toLatin1());
     }
 
     process.closeWriteChannel();
@@ -295,7 +298,9 @@ void ResetPasswdWidget::parseProcessResult(int exitCode, const QString &output)
         return;
     }
 
-    if (output.startsWith("Current Password: passwd:", Qt::CaseInsensitive)) {
+    qDebug() << "output: " << output;
+    if (output.startsWith("Current Password: passwd:", Qt::CaseInsensitive)
+            || output.contains("su: Authentication failure",Qt::CaseInsensitive)) {
         m_oldPasswdEdit->setAlert(true);
         m_oldPasswdEdit->showAlertMessage(tr("Wrong password"));
         return;
@@ -314,6 +319,7 @@ void ResetPasswdWidget::parseProcessResult(int exitCode, const QString &output)
         return;
     }
 
+    qDebug() << "password error type: " << error;
     m_newPasswdEdit->setAlert(true);
     m_newPasswdEdit->showAlertMessage(PwqualityManager::instance()->getErrorTips(error));
 }
