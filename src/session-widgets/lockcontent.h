@@ -85,24 +85,22 @@ protected:
 
 protected:
     SessionBaseModel *m_model;
-    ControlWidget *m_controlWidget;             // 右下角图标
-    QSharedPointer<ShutdownWidget> m_shutdownFrame;            // 关机界面
-    LogoWidget *m_logoWidget;                   // logo显示
-    TimeWidget *m_timeWidget;                   // 时间日期显示
-    MediaWidget *m_mediaWidget;                 // 多媒体信息显示
-    QWidget *m_virtualKB;                       // 键盘界面
-    QWidget *m_loginWidget;                     // 指向插件显示在屏幕中间位置的界面
-    UserFrameList *m_userListWidget;            // 账户展示区域
+    ControlWidget *m_controlWidget;                 // 右下角图标
+    QSharedPointer<ShutdownWidget> m_shutdownFrame; // 关机界面
+    LogoWidget *m_logoWidget;                       // logo显示
+    TimeWidget *m_timeWidget;                       // 时间日期显示
+    QSharedPointer<MediaWidget> m_mediaWidget;      // 多媒体信息显示
+    UserFrameList *m_userListWidget;                // 账户展示区域
 
     std::shared_ptr<User> m_user;
     QList<QMetaObject::Connection> m_currentUserConnects;
-    com::deepin::wm *m_wmInter;                 // 用户更新工作区壁纸
+    com::deepin::wm *m_wmInter;                     // 用户更新工作区壁纸
 
     SFAWidget *m_sfaWidget;
     MFAWidget *m_mfaWidget;
     AuthWidget *m_authWidget;
 
-    int m_lockFailTimes = 0;                    // 尝试锁屏时失败的次数
+    int m_lockFailTimes;                             // 尝试锁屏时失败的次数
     QLocalServer *m_localServer;
 };
 

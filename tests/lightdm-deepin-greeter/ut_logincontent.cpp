@@ -40,7 +40,6 @@ TEST_F(UT_LoginContent, ModeTest)
     m_content->onStatusChanged(SessionBaseModel::PowerMode);
     m_content->onStatusChanged(SessionBaseModel::ConfirmPasswordMode);
     m_content->onStatusChanged(SessionBaseModel::UserMode);
-    m_content->onStatusChanged(SessionBaseModel::SessionMode);
     m_content->onStatusChanged(SessionBaseModel::PowerMode);
     m_content->onStatusChanged(SessionBaseModel::ShutDownMode);
     m_content->restoreMode();

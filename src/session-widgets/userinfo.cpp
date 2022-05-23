@@ -238,7 +238,6 @@ NativeUser::NativeUser(const NativeUser &user)
 void NativeUser::initConnections()
 {
     connect(m_userInter, &UserInter::AutomaticLoginChanged, this, &NativeUser::updateAutomaticLogin);
-    connect(m_userInter, &UserInter::DesktopBackgroundsChanged, this, &NativeUser::updateDesktopBackgrounds);
     connect(m_userInter, &UserInter::FullNameChanged, this, &NativeUser::updateFullName);
     connect(m_userInter, &UserInter::GreeterBackgroundChanged, this, &NativeUser::updateGreeterBackground);
     connect(m_userInter, &UserInter::HistoryLayoutChanged, this, &NativeUser::updateKeyboardLayoutList);
@@ -356,27 +355,6 @@ void NativeUser::updateAutomaticLogin(const bool autoLoginState)
     }
     m_isAutomaticLogin = autoLoginState;
     emit autoLoginStateChanged(autoLoginState);
-}
-
-/**
- * @brief 更新桌面背景
- *
- * @param backgrounds
- */
-void NativeUser::updateDesktopBackgrounds(const QStringList &backgrounds)
-{
-    QSettings settings(DDESESSIONCC::CONFIG_FILE + m_name, QSettings::IniFormat);
-    settings.beginGroup("User");
-
-    int index = settings.value("Workspace").toInt();
-    //刚安装的系统中返回的Workspace为0
-    index = index <= 0 ? 1 : index;
-    if (backgrounds.size() >= index && index > 0) {
-        // m_desktopBackgrounds = toLocalFile(backgrounds.at(index - 1));
-        // emit desktopBackgroundChanged(m_desktopBackgrounds);
-    } else {
-        qDebug() << "DesktopBackgroundsChanged get error index:" << index << ", paths:" << backgrounds;
-    }
 }
 
 /**

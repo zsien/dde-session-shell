@@ -65,10 +65,6 @@ TEST_F(UT_SessionBaseModel, init)
     m_sessionBaseModel->onStatusChanged(SessionBaseModel::ModeStatus::UserMode);
     EXPECT_EQ(m_sessionBaseModel->currentModeState(), currentmodethr);
 
-    SessionBaseModel::ModeStatus currentmodefor = m_sessionBaseModel->currentModeState();
-    m_sessionBaseModel->onStatusChanged(SessionBaseModel::ModeStatus::SessionMode);
-    EXPECT_EQ(m_sessionBaseModel->currentModeState(), currentmodefor);
-
     SessionBaseModel::ModeStatus currentmodefiv = m_sessionBaseModel->currentModeState();
     m_sessionBaseModel->onStatusChanged(SessionBaseModel::ModeStatus::PowerMode);
     EXPECT_EQ(m_sessionBaseModel->currentModeState(), currentmodefiv);

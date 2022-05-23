@@ -39,13 +39,12 @@ public:
 
     enum ModeStatus {
         NoStatus,
-        PasswordMode,
-        ConfirmPasswordMode,
+        PasswordMode,           // 输入密码验证页面
+        ConfirmPasswordMode,    // 确认密码页面(一般是关机或者重启等操作需要验证用户密码)
         UserMode,
-        SessionMode,
         PowerMode,
-        ShutDownMode,
-        ResetPasswdMode
+        ShutDownMode,           // 关机界面
+        ResetPasswdMode         // 重设密码界面
     };
     Q_ENUM(ModeStatus)
 

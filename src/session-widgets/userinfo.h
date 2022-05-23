@@ -109,7 +109,6 @@ public:
 signals:
     void avatarChanged(const QString &);
     void autoLoginStateChanged(const bool);
-    void desktopBackgroundChanged(const QString &);
     void displayNameChanged(const QString &);
     void greeterBackgroundChanged(const QString &);
     void keyboardLayoutChanged(const QString &);
@@ -178,7 +177,6 @@ public:
 private slots:
     void updateAvatar(const QString &path);
     void updateAutomaticLogin(const bool autoLoginState);
-    void updateDesktopBackgrounds(const QStringList &backgrounds);
     void updateFullName(const QString &fullName);
     void updateGreeterBackground(const QString &path);
     void updateKeyboardLayout(const QString &keyboardLayout);

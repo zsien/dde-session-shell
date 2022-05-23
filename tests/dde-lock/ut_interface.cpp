@@ -58,7 +58,6 @@ TEST_F(UT_Interface, user)
     nativeUser->updateAutomaticLogin(false);
     QStringList backgrounds;
     backgrounds << "";
-    nativeUser->updateDesktopBackgrounds(backgrounds);
     nativeUser->updateFullName("");
     nativeUser->updateGreeterBackground("");
     nativeUser->updateKeyboardLayout("");

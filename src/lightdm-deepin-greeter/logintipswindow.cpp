@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "logintipswindow.h"
+#include "public_func.h"
 #include "constants.h"
 
 #include <DFontSizeManager>
@@ -33,74 +34,68 @@
 DWIDGET_USE_NAMESPACE
 LoginTipsWindow::LoginTipsWindow(QWidget *parent)
     : QWidget(parent)
+    , m_tips(findValueByQSettings<QString>(DDESESSIONCC::session_ui_configs, "Greeter", "tipsTitle", QString()))
+    , m_content(findValueByQSettings<QString>(DDESESSIONCC::session_ui_configs, "Greeter", "tipsContent", QString()))
 {
     initUI();
+
+    setAttribute(Qt::WA_DeleteOnClose);
 }
 
 void LoginTipsWindow::initUI()
 {
     setAccessibleName("LoginTipsWindow");
-    m_mainLayout = new QHBoxLayout(this);
 
-    QVBoxLayout *vLayout = new QVBoxLayout(this);
+    QVBoxLayout *vLayout = new QVBoxLayout;
 
-    // 提示内容布局
-    m_contentLabel = new QLabel();
-    m_contentLabel->setAccessibleName("ContentLabel");
-    m_contentLabel->setWordWrap(true);
-    QPalette t_palette = m_contentLabel->palette();
-    t_palette.setColor(QPalette::WindowText, Qt::white);
-    m_contentLabel->setPalette(t_palette);
-    m_contentLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    DFontSizeManager::instance()->bind(m_contentLabel, DFontSizeManager::T4);
-    m_contentLabel->setAlignment(Qt::AlignCenter);
-    m_contentLabel->setTextFormat(Qt::TextFormat::PlainText);
-
-    // 获取/usr/share/dde-session-shell/dde-session-shell.conf 配置信息
-    m_content = findValueByQSettings<QString>(DDESESSIONCC::session_ui_configs, "Greeter", "tipsContent", "");
-    m_contentLabel->setText(m_content);
-
-    // 提示标题布局
-    m_tipLabel = new QLabel();
-    m_tipLabel->setAccessibleName("TipLabel");
-    m_tipLabel->setAlignment(Qt::AlignHCenter);
-    QPalette palette = m_tipLabel->palette();
+    // 标题
+    QLabel *tipLabel = new QLabel(this);
+    tipLabel->setAccessibleName("TipLabel");
+    tipLabel->setAlignment(Qt::AlignHCenter);
+    QPalette palette = tipLabel->palette();
     palette.setColor(QPalette::WindowText, Qt::white);
-    m_tipLabel->setPalette(palette);
-    m_tipLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    QFont font = m_tipLabel->font();
+    tipLabel->setPalette(palette);
+    tipLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    QFont font = tipLabel->font();
     font.setBold(true);
-    m_tipLabel->setFont(font);
-    DFontSizeManager::instance()->bind(m_tipLabel, DFontSizeManager::T2, QFont::DemiBold);
-    m_tipLabel->setAlignment(Qt::AlignCenter);
-    m_tipLabel->setTextFormat(Qt::TextFormat::PlainText);
+    tipLabel->setFont(font);
+    tipLabel->setAlignment(Qt::AlignCenter);
+    tipLabel->setTextFormat(Qt::TextFormat::PlainText);
+    tipLabel->setText(m_tips);
+    DFontSizeManager::instance()->bind(tipLabel, DFontSizeManager::T2, QFont::DemiBold);
 
-    // 获取/usr/share/dde-session-shell/dde-session-shell.conf 配置信息
-    m_tips = findValueByQSettings<QString>(DDESESSIONCC::session_ui_configs, "Greeter", "tipsTitle", "");
-    m_tipLabel->setText(m_tips);
+    // 内容
+    QLabel *contentLabel = new QLabel(this);
+    contentLabel->setAccessibleName("ContentLabel");
+    contentLabel->setWordWrap(true);
+    QPalette contentPalette = contentLabel->palette();
+    contentPalette.setColor(QPalette::WindowText, Qt::white);
+    contentLabel->setPalette(contentPalette);
+    contentLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    contentLabel->setAlignment(Qt::AlignCenter);
+    contentLabel->setTextFormat(Qt::TextFormat::PlainText);
+    contentLabel->setText(m_content);
+    DFontSizeManager::instance()->bind(contentLabel, DFontSizeManager::T4);
 
     // 确认按钮
-    m_btn = new QPushButton();
-    m_btn->setFixedSize(90, 40);
-    m_btn->setObjectName("RequireSureButton");
-    m_btn->setText("OK");
+    QPushButton *confirmButton = new QPushButton(this);
+    confirmButton->setFixedSize(90, 40);
+    confirmButton->setObjectName("RequireSureButton");
+    confirmButton->setText("OK");
 
     vLayout->addStretch();
-    vLayout->addWidget(m_tipLabel, 0, Qt::AlignHCenter);
-    vLayout->addWidget(m_contentLabel, 0, Qt::AlignHCenter);
-    vLayout->addWidget(m_btn, 0, Qt::AlignHCenter);
+    vLayout->addWidget(tipLabel, 0, Qt::AlignHCenter);
+    vLayout->addWidget(contentLabel, 0, Qt::AlignHCenter);
+    vLayout->addWidget(confirmButton, 0, Qt::AlignHCenter);
     vLayout->addStretch();
 
-    m_mainLayout->addStretch();
-    m_mainLayout->addLayout(vLayout);
-    m_mainLayout->addStretch();
-    setLayout(m_mainLayout);
+    QHBoxLayout *mainLayout = new QHBoxLayout;
+    mainLayout->addStretch();
+    mainLayout->addLayout(vLayout);
+    mainLayout->addStretch();
+    setLayout(mainLayout);
 
-    connect(m_btn, &QPushButton::clicked, this, [ = ] {
-        // 点击确认后打开登录界面
-        emit closed();
-        this->close();
-    });
+    connect(confirmButton, &QPushButton::clicked, this, &LoginTipsWindow::closed);
 }
 
 bool LoginTipsWindow::isValid()

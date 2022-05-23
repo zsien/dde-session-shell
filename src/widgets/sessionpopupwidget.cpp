@@ -96,7 +96,8 @@ void SessionPopupWidget::addItem(const QString &icon, const QString &itemName)
     if (itemName != m_curSession) {
         Acticon = QIcon();
     } else {
-        Acticon = qobject_cast<DStyle *>(style())->standardIcon(DStyle::SP_MarkElement);
+        DStyle *dStyle = qobject_cast<DStyle *>(style());
+        Acticon = dStyle ? dStyle->standardIcon(DStyle::SP_MarkElement) : QIcon();
     }
 
     leftAction->setIcon(Acticon);
@@ -129,7 +130,8 @@ void SessionPopupWidget::updateSelectedState()
             continue;
         }
 
-        QIcon icon = qobject_cast<DStyle *>(style())->standardIcon(DStyle::SP_MarkElement);
+        DStyle *dStyle = qobject_cast<DStyle *>(style());
+        QIcon icon = dStyle ? dStyle->standardIcon(DStyle::SP_MarkElement) : QIcon();
         action->setIcon(icon);
         setCurrentIndex(item->index());
         update(item->index());

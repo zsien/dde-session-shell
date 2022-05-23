@@ -23,12 +23,8 @@ LockContent::LockContent(SessionBaseModel *const model, QWidget *parent)
     : SessionBaseWindow(parent)
     , m_model(model)
     , m_controlWidget(new ControlWidget(m_model))
-    , m_shutdownFrame(nullptr)
     , m_logoWidget(new LogoWidget(this))
     , m_timeWidget(new TimeWidget(this))
-    , m_mediaWidget(nullptr)
-    , m_virtualKB(nullptr)
-    , m_loginWidget(nullptr)
     , m_userListWidget(nullptr)
     , m_wmInter(new com::deepin::wm("com.deepin.wm", "/com/deepin/wm", QDBusConnection::sessionBus(), this))
     , m_sfaWidget(nullptr)
@@ -78,9 +74,8 @@ LockContent::LockContent(SessionBaseModel *const model, QWidget *parent)
 void LockContent::initUI()
 {
     m_timeWidget->setAccessibleName("TimeWidget");
-    setCenterTopWidget(m_timeWidget);
-    // 处理时间制跳转策略，获取到时间制再显示时间窗口
-    m_timeWidget->setVisible(false);
+    m_timeWidget->setVisible(false);            // 处理时间制跳转策略，获取到时间制再显示时间窗口
+    setTopWidget(m_timeWidget);
 
     m_logoWidget->setAccessibleName("LogoWidget");
     setLeftBottomWidget(m_logoWidget);
@@ -119,7 +114,7 @@ void LockContent::initConnections()
     connect(m_model, &SessionBaseModel::MFAFlagChanged, this, [this](const bool isMFA) {
         isMFA ? initMFAWidget() : initSFAWidget();
         // 当前中间窗口为空或者中间窗口就是验证窗口的时候显示验证窗口
-        if (!m_centerWidget || m_centerWidget == m_authWidget)
+        if (!centerWidget() || centerWidget() == m_authWidget)
             setCenterContent(m_authWidget, Qt::AlignTop, m_authWidget->getTopSpacing());
     });
 
@@ -177,7 +172,7 @@ void LockContent::initSFAWidget()
     connect(m_sfaWidget, &SFAWidget::requestCheckAccount, this, &LockContent::requestCheckAccount);
     connect(m_sfaWidget, &SFAWidget::authFinished, this, &LockContent::authFinished);
     connect(m_sfaWidget, &SFAWidget::updateParentLayout, this, [this] {
-        m_centerSpacerItem->changeSize(0, m_sfaWidget->getTopSpacing());
+        changeCenterSpaceSize(0, m_sfaWidget->getTopSpacing());
     });
 }
 
@@ -221,7 +216,6 @@ void LockContent::onCurrentUserChanged(std::shared_ptr<User> user)
     m_timeWidget->setShortTimeFormat(user->shortTimeFormat());
 
     m_currentUserConnects << connect(user.get(), &User::greeterBackgroundChanged, this, &LockContent::updateGreeterBackgroundPath, Qt::UniqueConnection)
-                          << connect(user.get(), &User::desktopBackgroundChanged, this, &LockContent::updateDesktopBackgroundPath, Qt::UniqueConnection)
                           << connect(user.get(), &User::use24HourFormatChanged, this, &LockContent::updateTimeFormat, Qt::UniqueConnection)
                           << connect(user.get(), &User::weekdayFormatChanged, m_timeWidget, &TimeWidget::setWeekdayFormatType)
                           << connect(user.get(), &User::shortDateFormatChanged, m_timeWidget, &TimeWidget::setShortDateFormat)
@@ -272,28 +266,29 @@ void LockContent::pushShutdownFrame()
 void LockContent::setMPRISEnable(const bool state)
 {
     if (!m_mediaWidget) {
-        m_mediaWidget = new MediaWidget;
+        m_mediaWidget.reset(new MediaWidget(this));
         m_mediaWidget->setAccessibleName("MediaWidget");
         m_mediaWidget->initMediaPlayer();
     }
 
     m_mediaWidget->setVisible(state);
-    setCenterBottomWidget(m_mediaWidget);
+    setCenterBottomWidget(m_mediaWidget.get());
 }
 
 void LockContent::onNewConnection()
 {
-    if (m_localServer->hasPendingConnections()) {
-        QLocalSocket *socket = m_localServer->nextPendingConnection();
-        connect(socket, &QLocalSocket::disconnected, this, &LockContent::onDisConnect);
-        connect(socket, &QLocalSocket::readyRead, this, [socket, this] {
-            auto content = socket->readAll();
-            if (content == "close") {
-                m_sfaWidget->syncPasswordResetPasswordVisibleChanged(QVariant::fromValue(true));
-                m_sfaWidget->syncResetPasswordUI();
-            }
-        });
-    }
+    if (!m_localServer->hasPendingConnections())
+        return;
+
+    QLocalSocket *socket = m_localServer->nextPendingConnection();
+    connect(socket, &QLocalSocket::disconnected, this, &LockContent::onDisConnect);
+    connect(socket, &QLocalSocket::readyRead, this, [socket, this] {
+        auto content = socket->readAll();
+        if (content == "close") {
+            m_sfaWidget->syncPasswordResetPasswordVisibleChanged(QVariant::fromValue(true));
+            m_sfaWidget->syncResetPasswordUI();
+        }
+    });
 }
 
 void LockContent::onDisConnect()
@@ -375,8 +370,7 @@ void LockContent::hideEvent(QHideEvent *event)
 void LockContent::resizeEvent(QResizeEvent *event)
 {
     if (SessionBaseModel::PasswordMode == m_model->currentModeState() || (SessionBaseModel::ConfirmPasswordMode == m_model->currentModeState())) {
-        m_centerSpacerItem->changeSize(0, m_authWidget->getTopSpacing());
-        m_centerVLayout->update();
+        changeCenterSpaceSize(0, m_authWidget->getTopSpacing());
     }
 
     return SessionBaseWindow::resizeEvent(event);
@@ -434,13 +428,10 @@ void LockContent::showModule(const QString &name)
 
     switch (module->type()) {
     case BaseModuleInterface::LoginType:
-        m_loginWidget = module->content();
-        setCenterContent(m_loginWidget);
         m_model->setCurrentModeState(SessionBaseModel::ModeStatus::PasswordMode);
         break;
     case BaseModuleInterface::TrayType:
-        m_loginWidget = module->content();
-        setCenterContent(m_loginWidget);
+        setCenterContent(module->content());
         break;
     }
 }

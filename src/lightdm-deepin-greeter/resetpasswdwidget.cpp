@@ -47,7 +47,7 @@ ResetPasswdWidget::ResetPasswdWidget(std::shared_ptr<User> user, QWidget *parent
     , m_lockBtn(new DIconButton(this))
     , m_avatar(new UserAvatar(this))
     , m_nameLabel(new DLabel(m_user->displayName(), this))
-    , m_tipsLabel(new DLabel(tr("Your password expired, please login gain."), this))
+    , m_tipsLabel(new DLabel(tr("Your password expired, please login again."), this))
     , m_oldPasswdEdit(new DPasswordEdit(this))
     , m_newPasswdEdit(new DPasswordEdit(this))
     , m_levelWidget(new PasswordLevelWidget(this))
@@ -292,13 +292,13 @@ bool ResetPasswdWidget::isInfoValid()
 
 void ResetPasswdWidget::parseProcessResult(int exitCode, const QString &output)
 {
+    qDebug() << "output: " << output;
     if (exitCode == 0) {
         // TODO 修改密码成功后，设置密码提示信息
         Q_EMIT changePasswordSuccessed();
         return;
     }
 
-    qDebug() << "output: " << output;
     if (output.startsWith("Current Password: passwd:", Qt::CaseInsensitive)
             || output.contains("su: Authentication failure",Qt::CaseInsensitive)) {
         m_oldPasswdEdit->setAlert(true);
