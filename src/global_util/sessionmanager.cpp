@@ -26,29 +26,47 @@
 
 static const QString DEFAULT_SESSION_NAME = "deepin";
 static const QString WAYLAND_SESSION_NAME = "Wayland";
+static const QString DISPLAY_X11_NAME     = "DDE-X11";
+static const QString DISPLAY_WAYLAND_NAME = "DDE-Wayland";
 
-const QString session_standard_name(const QString &realName)
+
+const QString displaySessionName(const QString &realName)
 {
-    const QStringList standard_icon_list = {
-        "deepin",
-        "fluxbox",
-        "gnome",
-        "plasma",
-        "ubuntu",
-        "xfce",
-        "wayland"
-    };
+    if (realName == DEFAULT_SESSION_NAME) {
+        return DISPLAY_X11_NAME;
+    } else if (realName == WAYLAND_SESSION_NAME) {
+        return DISPLAY_WAYLAND_NAME;
+    }
 
-    for (const auto &name : standard_icon_list) {
+    return realName;
+}
+
+const QString sessionIconName(const QString &realName)
+{
+    const QStringList standardIconList = {"deepin", "fluxbox", "gnome",
+                                          "plasma", "ubuntu", "xfce", "wayland"};
+    for (const auto &name : standardIconList) {
         if (realName.contains(name, Qt::CaseInsensitive)) {
-            if (realName == "deepin") {
+            if (realName == DEFAULT_SESSION_NAME) {
                 return "x11";
             } else {
                 return name;
             }
         }
     }
+
     return QStringLiteral("unknown");
+}
+
+const QString displayNameToSessionName(const QString &name)
+{
+    if (name == DISPLAY_X11_NAME) {
+        return DEFAULT_SESSION_NAME;
+    } else if (name == DISPLAY_WAYLAND_NAME) {
+        return WAYLAND_SESSION_NAME;
+    }
+
+    return name;
 }
 
 SessionManager &SessionManager::Reference()
@@ -105,7 +123,7 @@ QString SessionManager::currentSessionKey() const
 
 QString SessionManager::currentSession() const
 {
-    return session_standard_name(currentSessionKey());
+    return displaySessionName(currentSessionKey());
 }
 
 QMap<QString, QString> SessionManager::sessionInfo() const
@@ -115,8 +133,8 @@ QMap<QString, QString> SessionManager::sessionInfo() const
     int count = m_sessionModel->rowCount(QModelIndex());
     for (int i = 0; i < count; ++i) {
         const QString &sessionName = m_sessionModel->data(m_sessionModel->index(i), QLightDM::SessionsModel::KeyRole).toString();
-        const QString &displayName = session_standard_name(sessionName);
-        const QString icon = QString(":/img/sessions_icon/%1_normal.svg").arg(displayName);
+        const QString &displayName = displaySessionName(sessionName);
+        const QString icon = QString(":/img/sessions_icon/%1_normal.svg").arg(sessionIconName(sessionName));
         infos[displayName] = icon;
     }
 
@@ -137,8 +155,9 @@ void SessionManager::updateSession(const QString &userName)
     qDebug() << userName << "default session is: " << sessionName;
 }
 
-void SessionManager::switchSession(const QString &session)
+void SessionManager::switchSession(const QString &sessionName)
 {
+    QString session = displayNameToSessionName(sessionName);
     if (!WAYLAND_SESSION_NAME.compare(session, Qt::CaseInsensitive) && m_model->getSEType()) {
         // 在开启等保（高）的情况下不允许切换到wayland环境
         // TODO 合适的提示，以及合适的显示位置。
@@ -192,7 +211,7 @@ QString SessionManager::lastLoggedInSession(const QString &userName)
 bool SessionManager::isWaylandExisted()
 {
     const int count = m_sessionModel->rowCount(QModelIndex());
-    for (int i(0); i < count; ++i) {
+    for (int i = 0; i < count; ++i) {
         const QString &session_name = m_sessionModel->data(m_sessionModel->index(i), QLightDM::SessionsModel::KeyRole).toString();
         if (!WAYLAND_SESSION_NAME.compare(session_name, Qt::CaseInsensitive)) {
             m_isWaylandExisted = true;
