@@ -260,6 +260,7 @@ void LockContent::pushShutdownFrame()
     m_shutdownFrame->setFixedSize(size);
     m_shutdownFrame->move(0, 0);
     m_shutdownFrame->onStatusChanged(m_model->currentModeState());
+    onUserListChanged(m_model->isServerModel() ? m_model->loginedUserList() : m_model->userList());
     setCenterContent(m_shutdownFrame.get());
 }
 
@@ -299,9 +300,6 @@ void LockContent::onDisConnect()
 void LockContent::onStatusChanged(SessionBaseModel::ModeStatus status)
 {
     refreshLayout(status);
-
-    if(m_model->isServerModel())
-        onUserListChanged(m_model->loginedUserList());
 
     switch (status) {
     case SessionBaseModel::ModeStatus::PasswordMode:
