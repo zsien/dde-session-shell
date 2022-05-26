@@ -21,13 +21,11 @@
 
 #include "keyboardiconwidget.h"
 
-#include <QDebug>
 #include <QPainter>
 #include <QMouseEvent>
 
 KeyboardIconWidget::KeyboardIconWidget(QWidget *parent)
     : QWidget(parent)
-    , m_widgetHided(false)
 {
     setAttribute(Qt::WA_TranslucentBackground, true);
 }
@@ -57,23 +55,13 @@ void KeyboardIconWidget::paintEvent(QPaintEvent *event)
     QWidget::paintEvent(event);
 }
 
-void KeyboardIconWidget::showEvent(QShowEvent *event)
-{
-    // 避免第一次加载后，显示触发
-    if (m_widgetHided) {
-        Q_EMIT widgetShowed();
-        m_widgetHided = false;
-    }
-
-    QWidget::showEvent(event);
-}
-
 void KeyboardIconWidget::hideEvent(QHideEvent *event)
 {
+    Q_EMIT iconWidgetHided();
+
     if (this->topLevelWidget() && !topLevelWidget()->isVisible()) {
         // 通过判断顶层窗口隐藏来触发
-        Q_EMIT widgetHided();
-        m_widgetHided = true;
+        Q_EMIT topLevelWidgetHided();
     }
 
     QWidget::hideEvent(event);
@@ -84,7 +72,7 @@ void KeyboardIconWidget::mousePressEvent(QMouseEvent *event)
     if (event->button() == Qt::LeftButton) {
         QWidget *topLevelWidget = this->topLevelWidget();
         if (topLevelWidget) {
-            // 获取顶层窗口，虚拟键盘窗口中需要监听顶层窗口鼠标移出事件
+            // 获取顶层窗口，虚拟键盘窗口中需要知道顶层窗口以便移动位置
             Q_EMIT clicked(topLevelWidget);
         }
     }

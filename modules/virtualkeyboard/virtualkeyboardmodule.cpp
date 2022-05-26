@@ -65,8 +65,11 @@ void VirtualKeyboardModule::init()
     m_keyboardIconWidget->setIconPath(":/img/screen_keyboard_normal.svg");
 
     // 页面隐藏后，需要释放onboard进程
-    connect(m_keyboardIconWidget, &KeyboardIconWidget::widgetHided,
+    connect(m_keyboardIconWidget, &KeyboardIconWidget::topLevelWidgetHided,
             &VirtualKBInstance::Instance(), &VirtualKBInstance::stopVirtualKBProcess);
+
+    connect(m_keyboardIconWidget, &KeyboardIconWidget::iconWidgetHided,
+            &VirtualKBInstance::Instance(), &VirtualKBInstance::hideKeyboardWidget);
 
     connect(m_keyboardIconWidget, &KeyboardIconWidget::clicked,
             &VirtualKBInstance::Instance(), &VirtualKBInstance::showKeyboardWidget);

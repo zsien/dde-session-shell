@@ -30,23 +30,20 @@ class KeyboardIconWidget : public QWidget
 public:
     explicit KeyboardIconWidget(QWidget *parent = nullptr);
 
-signals:
-    void widgetHided();
-    void widgetShowed();
-    void clicked(QWidget *parent);
-
-public:
     void setIconPath(const QString &iconPath);
+
+signals:
+    void topLevelWidgetHided();
+    void iconWidgetHided();
+    void clicked(QWidget *parent);
 
 protected:
     virtual void paintEvent(QPaintEvent *event);
-    virtual void showEvent(QShowEvent *event);
     virtual void hideEvent(QHideEvent *event);
     virtual void mousePressEvent(QMouseEvent *event);
 
 private:
     QString m_iconPath;
-    bool m_widgetHided;
 };
 
 #endif // KEYBOARDICONWIDGET_H

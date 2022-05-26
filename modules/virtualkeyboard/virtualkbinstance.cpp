@@ -88,12 +88,7 @@ void VirtualKBInstance::showKeyboardWidget(QWidget *parent)
         return;
     }
 
-    if (m_parentWidget && m_parentWidget != parent) {
-        m_parentWidget->removeEventFilter(this);
-    }
-
     m_parentWidget = parent;
-    m_parentWidget->installEventFilter(this);
     if (!m_virtualKBWidget) {
         init();
         return;
@@ -109,16 +104,11 @@ void VirtualKBInstance::showKeyboardWidget(QWidget *parent)
     m_virtualKBWidget->move(point);
 }
 
-bool VirtualKBInstance::eventFilter(QObject *watched, QEvent *event)
+void VirtualKBInstance::hideKeyboardWidget()
 {
-    // 捕获顶层窗口，获取鼠标移出事件
-    if (watched == m_parentWidget && event->type() == QEvent::WindowDeactivate) {
-        if (m_virtualKBWidget && m_virtualKBWidget->isVisible()) {
-            m_virtualKBWidget->setVisible(false);
-        }
+    if (m_virtualKBWidget && m_virtualKBWidget->isVisible()) {
+        m_virtualKBWidget->setVisible(false);
     }
-
-    return QObject::eventFilter(watched, event);
 }
 
 VirtualKBInstance::VirtualKBInstance(QObject *parent)

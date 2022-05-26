@@ -37,10 +37,8 @@ public:
 
 public slots:
     void showKeyboardWidget(QWidget *parent);
+    void hideKeyboardWidget();
     void onVirtualKBProcessFinished(int exitCode);
-
-protected:
-    bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
     explicit VirtualKBInstance(QObject *parent = nullptr);
