@@ -40,8 +40,7 @@ private:
 
     QVBoxLayout *m_mainLayout;          // 主布局(垂直布局，将整个屏幕分为上、中、下三部分,其上下的margin为当前高度的33/1080)
     QHBoxLayout *m_topLayout;           // 上布局(水平布局)
-    QHBoxLayout *m_centerLayout;        // 中间布局
-    QVBoxLayout *m_centerVLayout;       // 中间布局2
+    QVBoxLayout *m_centerLayout;        // 中间布局
 
     // 以3:2:3的比例划分下布局区域
     QHBoxLayout *m_leftBottomLayout;    // 下布局-左侧布局

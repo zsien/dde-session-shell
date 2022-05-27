@@ -14,8 +14,7 @@ SessionBaseWindow::SessionBaseWindow(QWidget *parent)
     , m_bottomFrame(new QFrame(this))
     , m_mainLayout(new QVBoxLayout(this))
     , m_topLayout(new QHBoxLayout(this))
-    , m_centerLayout(new QHBoxLayout(this))
-    , m_centerVLayout(new QVBoxLayout(this))
+    , m_centerLayout(new QVBoxLayout(this))
     , m_leftBottomLayout(new QHBoxLayout(this))
     , m_centerBottomLayout(new QHBoxLayout(this))
     , m_rightBottomLayout(new QHBoxLayout(this))
@@ -93,6 +92,7 @@ void SessionBaseWindow::setCenterContent(QWidget * const widget, Qt::AlignmentFl
     }
     m_centerLayout->addWidget(widget, 0, align);
     m_centerSpacerItem->changeSize(0, spacerHeight);
+    m_centerLayout->update();
 
     m_centerWidget = widget;
     widget->show();
@@ -130,14 +130,11 @@ void SessionBaseWindow::initUI()
 
     m_centerLayout->setMargin(0);
     m_centerLayout->setSpacing(0);
-
-    m_centerVLayout->setMargin(0);
-    m_centerVLayout->setSpacing(0);
-    m_centerVLayout->addSpacerItem(m_centerSpacerItem);
-    m_centerVLayout->addLayout(m_centerLayout);
+    m_centerLayout->addSpacerItem(m_centerSpacerItem);
+    m_centerLayout->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
 
     m_centerFrame->setAccessibleName("CenterFrame");
-    m_centerFrame->setLayout(m_centerVLayout);
+    m_centerFrame->setLayout(m_centerLayout);
     m_centerFrame->setAutoFillBackground(false);
 
     m_leftBottomLayout->setMargin(0);
@@ -193,7 +190,7 @@ void SessionBaseWindow::changeCenterSpaceSize(int w, int h)
 {
     m_centerSpacerItem->changeSize(w, h);
 
-    m_centerVLayout->update();
+    m_centerLayout->update();
 }
 
 void SessionBaseWindow::resizeEvent(QResizeEvent *event)

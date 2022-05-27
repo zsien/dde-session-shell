@@ -40,8 +40,9 @@ MFAWidget::MFAWidget(QWidget *parent)
     setObjectName(QStringLiteral("MFAWidget"));
     setAccessibleName(QStringLiteral("MFAWidget"));
 
-    setGeometry(0, 0, 280, 372);
-    setMinimumSize(280, 372);
+    setGeometry(0, 0, 280, 176);
+    setMinimumSize(280, 176);
+    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 }
 
 void MFAWidget::initUI()

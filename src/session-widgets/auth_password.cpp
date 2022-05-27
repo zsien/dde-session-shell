@@ -65,6 +65,7 @@ AuthPassword::AuthPassword(QWidget *parent)
     initUI();
     initConnections();
 
+    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     m_passwordEdit->installEventFilter(this);
     setFocusProxy(m_passwordEdit);
 }
