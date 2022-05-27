@@ -98,17 +98,20 @@ void AuthWidget::initUI()
     QPalette palette = m_nameLabel->palette();
     palette.setColor(QPalette::WindowText, Qt::white);
     m_nameLabel->setPalette(palette);
+
     /* 用户名输入框 */
     m_accountEdit = new DLineEditEx(this);
     m_accountEdit->setContextMenuPolicy(Qt::NoContextMenu);
     m_accountEdit->lineEdit()->setAlignment(Qt::AlignCenter);
     m_accountEdit->setClearButtonEnabled(false);
     m_accountEdit->setPlaceholderText(tr("Account"));
+
     /* 密码过期提示 */
     m_expiredStateLabel->setAccessibleName("ExpiredStateLabel");
     m_expiredStateLabel->setWordWrap(true);
     m_expiredStateLabel->setAlignment(Qt::AlignHCenter);
-    m_expiredStateLabel->hide();
+    m_expiredStateLabel->setVisible(false);
+
     /* 解锁按钮 */
     m_lockButton = new DFloatingButton(this);
     if (m_model->appType() == Lock) {
@@ -116,6 +119,7 @@ void AuthWidget::initUI()
     } else {
         m_lockButton->setIcon(DStyle::SP_ArrowNext);
     }
+
     /* 模糊背景 */
     m_blurEffectWidget->setMaskColor(DBlurEffectWidget::LightColor);
     m_blurEffectWidget->setMaskAlpha(BlurTransparency);
@@ -395,12 +399,12 @@ void AuthWidget::updatePasswordExpiredState()
         this->setDisabled(false);
         m_expiredSpacerItem->changeSize(0, 0);
         m_expiredStateLabel->clear();
-        m_expiredStateLabel->hide();
+        m_expiredStateLabel->setVisible(false);
         break;
     case User::ExpiredSoon:
         this->setDisabled(false);
         m_expiredStateLabel->setText(tr("Your password will expire in %n days, please change it timely", "", m_user->expiredDayLeft()));
-        m_expiredStateLabel->show();
+        m_expiredStateLabel->setVisible(true);
         m_expiredSpacerItem->changeSize(0, EXPIRED_SPACER_ITEM_HEIGHT);
         break;
     case User::ExpiredAlready:
@@ -409,13 +413,13 @@ void AuthWidget::updatePasswordExpiredState()
             // 直接限制整个界面，除非下次打开此应用或此类被初始化
             this->setDisabled(true);
             m_expiredStateLabel->setText(tr("Password expired, please contact admin"));
-            m_expiredStateLabel->show();
+            m_expiredStateLabel->setVisible(true);
             m_expiredSpacerItem->changeSize(0, EXPIRED_SPACER_ITEM_HEIGHT);
         } else if (m_user && m_user->accountType() == User::AccountType::Admin) {
             // 已经在LoginContent处理了
         } else {
             m_expiredStateLabel->setText(tr("Password expired, please change"));
-            m_expiredStateLabel->show();
+            m_expiredStateLabel->setVisible(true);
             m_expiredSpacerItem->changeSize(0, EXPIRED_SPACER_ITEM_HEIGHT);
         }
         break;
@@ -527,6 +531,18 @@ void AuthWidget::showEvent(QShowEvent *event)
 {
     activateWindow();
     QWidget::showEvent(event);
+}
+
+void AuthWidget::paintEvent(QPaintEvent *event)
+{
+#ifdef QT_DEBUG
+    Q_UNUSED(event);
+
+    QPainter painter(this);
+    painter.fillRect(rect(), Qt::lightGray);
+#else
+    QWidget::paintEvent(event);
+#endif
 }
 
 int AuthWidget::getTopSpacing() const

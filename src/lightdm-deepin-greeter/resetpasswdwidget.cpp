@@ -88,7 +88,7 @@ void ResetPasswdWidget::initUI()
 
     m_levelWidget->reset();
     // TODO 后续调整
-//    m_levelWidget->setMaximumHeight(10);
+    //    m_levelWidget->setMaximumHeight(10);
 
     m_repeatPasswdEdit->setClearButtonEnabled(false);
     m_repeatPasswdEdit->setEchoMode(QLineEdit::Password);

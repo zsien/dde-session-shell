@@ -40,6 +40,8 @@
 
 #include <QSpacerItem>
 
+using namespace dss::module;
+
 const QSize AuthButtonSize(60, 36);
 const QSize AuthButtonIconSize(24, 24);
 
@@ -89,6 +91,7 @@ void SFAWidget::initUI()
     m_mainLayout->addItem(m_bioBottomSpacingHolder);
     m_mainLayout->addWidget(m_chooseAuthButtonBox, 0, Qt::AlignCenter);
     m_mainLayout->addItem(m_authTypeBottomSpacingHolder);
+
     m_mainLayout->addWidget(m_userAvatar);
     m_mainLayout->addWidget(m_nameLabel, 0, Qt::AlignVCenter);
     m_mainLayout->addWidget(m_accountEdit, 0, Qt::AlignVCenter);
@@ -188,7 +191,7 @@ void SFAWidget::setAuthType(const int type)
         m_frameDataBind->clearValue("SFSingleAuthState");
         m_frameDataBind->clearValue("SFSingleAuthMsg");
     }
-    if (dss::module::ModulesLoader::instance().findModulesByType(dss::module::BaseModuleInterface::LoginType).size() > 0) {
+    if (ModulesLoader::instance().findModulesByType(BaseModuleInterface::LoginType).size() > 0) {
         initCustomAuth();
     } else if (m_customAuth) {
         delete m_customAuth;
@@ -702,7 +705,7 @@ void SFAWidget::initCustomAuth()
 
     m_customAuth = new AuthCustom(this);
 
-    dss::module::LoginModuleInterface *module = dynamic_cast<dss::module::LoginModuleInterface *>(dss::module::ModulesLoader::instance().findModulesByType(0).values().first());
+    LoginModuleInterface *module = dynamic_cast<LoginModuleInterface *>(ModulesLoader::instance().findModulesByType(BaseModuleInterface::ModuleType::LoginType).values().first());
     module->init();
     m_customAuth->setModule(module);
     m_customAuth->hide();

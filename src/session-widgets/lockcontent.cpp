@@ -512,12 +512,10 @@ void LockContent::currentWorkspaceChanged()
     QDBusPendingCall call = m_wmInter->GetCurrentWorkspaceBackgroundForMonitor(QGuiApplication::primaryScreen()->name());
     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call, this);
     connect(watcher, &QDBusPendingCallWatcher::finished, [ = ] {
-        if (!call.isError())
-        {
+        if (!call.isError()) {
             QDBusReply<QString> reply = call.reply();
             updateWallpaper(reply.value());
-        } else
-        {
+        } else {
             qWarning() << "get current workspace background error: " << call.error().message();
             updateWallpaper("/usr/share/backgrounds/deepin/desktop.jpg");
         }
