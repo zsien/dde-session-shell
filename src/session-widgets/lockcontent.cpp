@@ -241,7 +241,9 @@ void LockContent::pushUserFrame()
     if(m_model->isServerModel())
         m_controlWidget->setUserSwitchEnable(false);
 
+    QSize size = getCenterContentSize();
     m_userListWidget->updateLayout();
+    m_userListWidget->setFixedSize(size);
     setCenterContent(m_userListWidget);
 }
 
