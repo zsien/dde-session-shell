@@ -210,8 +210,8 @@ void ResetPasswdWidget::onOkClicked()
     process.setProcessEnvironment(env);
     process.setProcessChannelMode(QProcess::MergedChannels);
 
-    // 登录界面修改密码时，当前用户是lightdm，需要先切换到对应的用户再修改用户的密码
-    process.start("/bin/bash", QStringList() << "-c" << QString("su - %1 -c \"passwd\"").arg(m_user->name()));
+    // 登录界面修改密码时，当前用户是lightdm，需要先切换到对应的用户再修改用户的密码(如果密码已经过期，直接提权就会触发修改密码的流程)
+    process.start("/bin/bash", QStringList() << "-c" << QString("su %1").arg(m_user->name()));
     if (!m_user->isPasswordValid()) {
         process.write(QString("%1\n%2\n%3\n").arg(oldPassword).arg(newPassword).arg(repeatPassword).toLatin1());
     } else {
