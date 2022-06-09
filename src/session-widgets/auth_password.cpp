@@ -434,10 +434,6 @@ void AuthPassword::setResetPasswordMessageVisible(const bool isVisible)
     if (m_resetPasswordMessageVisible == isVisible)
         return;
 
-    // 如果设置为显示重置按钮，但是实际上并没有锁定，直接退出，是是否锁定为准
-    if (isVisible && !isLocked())
-        return;
-
     m_resetPasswordMessageVisible = isVisible;
     emit resetPasswordMessageVisibleChanged(m_resetPasswordMessageVisible);
 }
