@@ -28,7 +28,8 @@ public:
 
 private:
     void initUI();
-    int calcCurrentHeight(const int height);
+    int autoScaledSize(const int height) const;
+    QMargins getMainLayoutMargins() const;
 
 protected:
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;

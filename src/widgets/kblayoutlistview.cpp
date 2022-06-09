@@ -101,7 +101,8 @@ void KBLayoutListView::updateSelectState(const QString &name)
             continue;
         }
 
-        QIcon icon = qobject_cast<DStyle *>(style())->standardIcon(DStyle::SP_MarkElement);
+        auto dstyle = qobject_cast<DStyle *>(style());
+        QIcon icon = dstyle ? dstyle->standardIcon(DStyle::SP_MarkElement) : QIcon();
         action->setIcon(icon);
         setCurrentIndex(item->index());
         update(item->index());

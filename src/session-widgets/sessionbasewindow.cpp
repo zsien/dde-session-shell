@@ -125,7 +125,7 @@ void SessionBaseWindow::initUI()
 
     m_TopFrame->setAccessibleName("CenterTopFrame");
     m_TopFrame->setLayout(m_topLayout);
-    m_TopFrame->setFixedHeight(calcCurrentHeight(LOCK_CONTENT_TOP_WIDGET_HEIGHT));
+    m_TopFrame->setFixedHeight(autoScaledSize(LOCK_CONTENT_TOPBOTTOM_WIDGET_HEIGHT));
     m_TopFrame->setAutoFillBackground(false);
 
     m_centerLayout->setMargin(0);
@@ -153,11 +153,10 @@ void SessionBaseWindow::initUI()
 
     m_bottomFrame->setAccessibleName("BottomFrame");
     m_bottomFrame->setLayout(bottomLayout);
-    m_bottomFrame->setFixedHeight(LOCK_CONTENT_TOP_WIDGET_HEIGHT);
+    m_bottomFrame->setFixedHeight(autoScaledSize(LOCK_CONTENT_TOPBOTTOM_WIDGET_HEIGHT));
     m_bottomFrame->setAutoFillBackground(false);
 
-    const int margin = calcCurrentHeight(LOCK_CONTENT_CENTER_LAYOUT_MARGIN);
-    m_mainLayout->setContentsMargins(0, margin, 0, margin);
+    m_mainLayout->setContentsMargins(getMainLayoutMargins());
     m_mainLayout->setSpacing(0);
     m_mainLayout->addWidget(m_TopFrame);
     m_mainLayout->addWidget(m_centerFrame);
@@ -195,9 +194,9 @@ void SessionBaseWindow::changeCenterSpaceSize(int w, int h)
 
 void SessionBaseWindow::resizeEvent(QResizeEvent *event)
 {
-    const int margin = calcCurrentHeight(LOCK_CONTENT_CENTER_LAYOUT_MARGIN);
-    m_mainLayout->setContentsMargins(0, margin, 0, margin);
-    m_TopFrame->setFixedHeight(calcCurrentHeight(LOCK_CONTENT_TOP_WIDGET_HEIGHT));
+    m_mainLayout->setContentsMargins(getMainLayoutMargins());
+    m_TopFrame->setFixedHeight(autoScaledSize(LOCK_CONTENT_TOPBOTTOM_WIDGET_HEIGHT));
+    m_bottomFrame->setFixedHeight(autoScaledSize(LOCK_CONTENT_TOPBOTTOM_WIDGET_HEIGHT));
 
     QFrame::resizeEvent(event);
 }
@@ -212,8 +211,26 @@ void SessionBaseWindow::setBottomFrameVisible(bool visible)
     m_bottomFrame->setVisible(visible);
 }
 
-int SessionBaseWindow::calcCurrentHeight(const int height)
+/**
+ * @brief SessionBaseWindow::autoScaledSize
+ * @param height
+ * @return 自动根据当前屏幕的高度，对height进行缩放，但返回值不会大于height
+ */
+int SessionBaseWindow::autoScaledSize(const int height) const
 {
     int h = static_cast<int>(((double) height / (double) BASE_SCREEN_HEIGHT) * topLevelWidget()->geometry().height());
     return qMin(h, height);
+}
+
+/**
+ * @brief SessionBaseWindow::getMainLayoutMargins
+ * @return 返回主界面布局的边距信息
+ */
+QMargins SessionBaseWindow::getMainLayoutMargins() const
+{
+    // margin占高度的33/1080,且最大为33
+    int margin = static_cast<int>(((double) LOCK_CONTENT_CENTER_LAYOUT_MARGIN / (double) BASE_SCREEN_HEIGHT) * topLevelWidget()->geometry().height());
+    margin = qMin(margin, LOCK_CONTENT_CENTER_LAYOUT_MARGIN);
+
+    return QMargins(0, margin, 0, margin);
 }
