@@ -44,9 +44,7 @@ Depends: ${shlibs:Depends}, ${misc:Depends}, ${dist:Depends},
  libssl1.1,
  libxcb-util0|libxcb-util1
 Provides: lightdm-greeter
-Recommends: onboard,
- dss-network-plugin,
- dde-network-dialog
+Recommends: onboard
 Conflicts: dde-workspace,
  deepin-notifications,
  dde-session-ui (<< 5.0.0),
