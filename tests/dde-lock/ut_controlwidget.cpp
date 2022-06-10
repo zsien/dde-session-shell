@@ -38,9 +38,6 @@ TEST_F(UT_ControlWidget, init)
     m_controlWidget->setSessionSwitchEnable(true);
     m_controlWidget->chooseToSession("");
     m_controlWidget->chooseToSession("aaaa");
-    m_controlWidget->rightKeySwitch();
 
-    m_controlWidget->rightKeySwitch();
-    m_controlWidget->leftKeySwitch();
     QTest::keyRelease(m_controlWidget, Qt::Key_0, Qt::KeyboardModifier::NoModifier);
 }

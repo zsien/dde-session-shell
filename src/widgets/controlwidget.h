@@ -129,12 +129,9 @@ signals:
 
 public slots:
     void addModule(dss::module::BaseModuleInterface *module);
-    void removeModule(dss::module::BaseModuleInterface *module);
     void setUserSwitchEnable(const bool visible);
     void setSessionSwitchEnable(const bool visible);
     void chooseToSession(const QString &session);
-    void leftKeySwitch();
-    void rightKeySwitch();
     void setKBLayoutVisible();
     void setKeyboardType(const QString& str);
     void setKeyboardList(const QStringList& str);
@@ -143,7 +140,6 @@ public slots:
     void showSessionPopup();
 
 protected:
-    bool eventFilter(QObject *watched, QEvent *event) Q_DECL_OVERRIDE;
     void keyReleaseEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
 
@@ -152,14 +148,14 @@ private:
     void initConnect();
     void updateLayout();
     void updateTapOrder();
+    int focusedBtnIndex();
 
 private slots:
     void showInfoTips();
     void hideInfoTips();
 
 private:
-    int m_index = 0;
-    QList<DFloatingButton *> m_btnList;
+    QList<FlotingButton *> m_showedBtnList;
 
     QHBoxLayout *m_mainLayout;
     FlotingButton *m_switchUserBtn;

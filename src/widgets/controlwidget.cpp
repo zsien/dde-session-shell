@@ -172,7 +172,6 @@ void ControlWidget::initUI()
     m_keyboardBtn->setBackgroundRole(DPalette::Button);
     m_keyboardBtn->setAutoExclusive(true);
     static_cast<QAbstractButton *>(m_keyboardBtn)->setText(QString());
-    m_keyboardBtn->installEventFilter(this);
     m_keyboardBtn->setTipText(tr("keyboard layout"));
 
     // 给显示文字的按钮设置样式
@@ -187,7 +186,6 @@ void ControlWidget::initUI()
     m_switchUserBtn->setFixedSize(BUTTON_SIZE);
     m_switchUserBtn->setAutoExclusive(true);
     m_switchUserBtn->setBackgroundRole(DPalette::Button);
-    m_switchUserBtn->installEventFilter(this);
     m_switchUserBtn->setTipText(tr("switch user"));
 
     m_powerBtn->setAccessibleName("PowerBtn");
@@ -196,13 +194,7 @@ void ControlWidget::initUI()
     m_powerBtn->setFixedSize(BUTTON_SIZE);
     m_powerBtn->setAutoExclusive(true);
     m_powerBtn->setBackgroundRole(DPalette::Button);
-    m_powerBtn->installEventFilter(this);
     m_powerBtn->setTipText(tr("shutdown"));
-
-    m_btnList.append(m_sessionBtn);
-    m_btnList.append(m_keyboardBtn);
-    m_btnList.append(m_switchUserBtn);
-    m_btnList.append(m_powerBtn);
 
     if (m_curUser->keyboardLayoutList().size() < 2)
         m_keyboardBtn->hide();
@@ -276,8 +268,6 @@ void ControlWidget::addModule(module::BaseModuleInterface *module)
     }
 
     m_modules.insert(trayModule->key(), button);
-    // button的顺序与layout插入顺序保持一直
-    m_btnList.insert(1, button);
 
     connect(button, &FlotingButton::requestShowMenu, this, [ = ] {
         const QString menuJson = trayModule->itemContextMenu();
@@ -329,25 +319,6 @@ void ControlWidget::addModule(module::BaseModuleInterface *module)
     updateLayout();
 }
 
-void ControlWidget::removeModule(module::BaseModuleInterface *module)
-{
-    if (module->type() != module::BaseModuleInterface::TrayType)
-        return;
-
-    module::TrayModuleInterface *trayModule = dynamic_cast<module::TrayModuleInterface *>(module);
-
-    QMap<QString, QWidget *>::const_iterator i = m_modules.constBegin();
-    while (i != m_modules.constEnd()) {
-        if (i.key() == trayModule->key()) {
-            m_modules.remove(i.key());
-            m_btnList.removeAll(dynamic_cast<DFloatingButton *>(i.value()));
-            updateLayout();
-            break;
-        }
-        ++i;
-    }
-}
-
 void ControlWidget::updateLayout()
 {
     QObjectList moduleWidgetList = m_mainLayout->children();
@@ -365,9 +336,6 @@ void ControlWidget::updateLayout()
 void ControlWidget::setUserSwitchEnable(const bool visible)
 {
     m_switchUserBtn->setVisible(visible);
-    if (m_btnList.indexOf(m_switchUserBtn) == m_index) {
-        m_index = 0;
-    }
 
     updateTapOrder();
 }
@@ -380,9 +348,8 @@ void ControlWidget::setSessionSwitchEnable(const bool visible)
     }
 
     m_sessionBtn->show();
-#ifndef SHENWEI_PLATFORM
-    m_sessionBtn->installEventFilter(this);
-#else
+
+#ifdef SHENWEI_PLATFORM
     m_sessionBtn->setProperty("normalIcon", ":/img/sessions/unknown_indicator_normal.svg");
     m_sessionBtn->setProperty("hoverIcon", ":/img/sessions/unknown_indicator_hover.svg");
     m_sessionBtn->setProperty("checkedIcon", ":/img/sessions/unknown_indicator_press.svg");
@@ -420,46 +387,6 @@ void ControlWidget::chooseToSession(const QString &session)
         m_sessionBtn->setProperty("checkedIcon", ":/img/sessions/unknown_indicator_press.svg");
 #endif
     }
-}
-
-void ControlWidget::leftKeySwitch()
-{
-    if (m_index == 0) {
-        m_index = m_btnList.length() - 1;
-    } else {
-        --m_index;
-    }
-
-    for (int i = m_btnList.size(); i != 0; --i) {
-        int index = (m_index + i) % m_btnList.size();
-
-        if (m_btnList[index]->isVisible()) {
-            m_index = index;
-            break;
-        }
-    }
-
-    m_btnList.at(m_index)->setFocus();
-}
-
-void ControlWidget::rightKeySwitch()
-{
-    if (m_index == m_btnList.size() - 1) {
-        m_index = 0;
-    } else {
-        ++m_index;
-    }
-
-    for (int i = 0; i < m_btnList.size(); ++i) {
-        int index = (m_index + i) % m_btnList.size();
-
-        if (m_btnList[index]->isVisible()) {
-            m_index = index;
-            break;
-        }
-    }
-
-    m_btnList.at(m_index)->setFocus();
 }
 
 void ControlWidget::setKBLayoutVisible()
@@ -557,56 +484,62 @@ void ControlWidget::showSessionPopup()
     m_arrowRectWidget->setVisible(!m_arrowRectWidget->isVisible());
 }
 
-bool ControlWidget::eventFilter(QObject *watched, QEvent *event)
-{
-#ifndef SHENWEI_PLATFORM
-    DFloatingButton *btn = dynamic_cast<DFloatingButton *>(watched);
-    if (m_btnList.contains(btn)) {
-        if (event->type() == QEvent::Enter) {
-            m_index = m_btnList.indexOf(btn);
-        }
-    }
-#else
-    Q_UNUSED(watched);
-    Q_UNUSED(event);
-#endif
-    return false;
-}
-
 void ControlWidget::keyReleaseEvent(QKeyEvent *event)
 {
-    switch (event->key()) {
-    case Qt::Key_Left:
-        leftKeySwitch();
-        break;
-    case Qt::Key_Right:
-        rightKeySwitch();
-        break;
-    case Qt::Key_Tab:
-        auto it = std::find_if(m_btnList.begin(), m_btnList.end(),
-                               [](DFloatingButton *btn) { return btn->hasFocus(); });
-        m_index = it != m_btnList.end() ? m_btnList.indexOf(it.i->t()) : 0;
-        break;
+    // 处理键盘上左右键焦点切换；本身支持左右焦点切换，但最左和最右切换的时候不能循环焦点，需单独处理
+    static int currentIndex = -1;
+    int key = event->key();
+    switch (key) {
+        case Qt::Key_Left:
+            if (currentIndex == 0 && m_showedBtnList.last()) {
+                m_showedBtnList.last()->setFocus();
+            }
+            break;
+        case Qt::Key_Right:
+            if ((currentIndex + 1) == m_showedBtnList.count() && m_showedBtnList.first()) {
+                m_showedBtnList.first()->setFocus();
+            }
+            break;
+        default:
+            break;
     }
+
+    if (key == Qt::Key_Tab || key == Qt::Key_Left || key == Qt::Key_Right) {
+        currentIndex = focusedBtnIndex();
+    }
+
+    QWidget::keyReleaseEvent(event);
 }
 
 void ControlWidget::updateTapOrder()
 {
-    // 找出所有按钮
-    QList<FlotingButton *> buttons;
+    // 找出所有显示的按钮
+    m_showedBtnList.clear();
     for(int i = 0; i < m_mainLayout->count(); ++i) {
         FlotingButton *btn = qobject_cast<FlotingButton *>(m_mainLayout->itemAt(i)->widget());
         if (btn && btn->isVisible()) {
-            buttons.append(btn);
+            m_showedBtnList.append(btn);
         }
     }
 
     // 按从左到右的顺序设置tab order
-    for (int i = 0; i < buttons.size(); ++i) {
-        if ((i + 1) < buttons.size()) {
-            setTabOrder(buttons[i], buttons[i + 1]);
+    for (int i = 0; i < m_showedBtnList.size(); ++i) {
+        if ((i + 1) < m_showedBtnList.size()) {
+            setTabOrder(m_showedBtnList[i], m_showedBtnList[i + 1]);
         }
     }
+}
+
+int ControlWidget::focusedBtnIndex()
+{
+    for (int index = 0; index < m_showedBtnList.count(); index++) {
+        FlotingButton *btn = m_showedBtnList.at(index);
+        if (btn && btn->hasFocus()) {
+            return index;
+        }
+    }
+
+    return -1;
 }
 
 void ControlWidget::showInfoTips()
