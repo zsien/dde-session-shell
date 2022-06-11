@@ -408,14 +408,20 @@ void AuthWidget::updatePasswordExpiredState()
         m_expiredSpacerItem->changeSize(0, EXPIRED_SPACER_ITEM_HEIGHT);
         break;
     case User::ExpiredAlready:
-        // 当前是标准用户且密码过期时，禁止登录、禁止跳转到“修改密码流程”、置灰密码输入框
-        if (m_user && m_user->accountType() == User::AccountType::Standard) {
+        // 当前是登录界面的标准用户且密码过期时，禁止登录、禁止跳转到“修改密码流程”、置灰密码输入框
+        if (m_model
+                && m_model->appType() == AuthCommon::AppType::Login
+                && m_user
+                && m_user->accountType() == User::AccountType::Standard) {
             // 直接限制整个界面，除非下次打开此应用或此类被初始化
             this->setDisabled(true);
             m_expiredStateLabel->setText(tr("Password expired, please contact admin"));
             m_expiredStateLabel->setVisible(true);
             m_expiredSpacerItem->changeSize(0, EXPIRED_SPACER_ITEM_HEIGHT);
-        } else if (m_user && m_user->accountType() == User::AccountType::Admin) {
+        } else if (m_model
+                   && m_model->appType() == AuthCommon::AppType::Login
+                   && m_user
+                   && m_user->accountType() == User::AccountType::Admin) {
             // 已经在LoginContent处理了
         } else {
             m_expiredStateLabel->setText(tr("Password expired, please change"));
