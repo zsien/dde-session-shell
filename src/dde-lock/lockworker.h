@@ -40,6 +40,7 @@ public slots:
     void destroyAuthentication(const QString &account);
     void startAuthentication(const QString &account, const int authType);
     void endAuthentication(const QString &account, const int authType);
+    void endAccountAuthentication(const QString &account, const int authType);
     void sendTokenToAuth(const QString &account, const int authType, const QString &token);
 
     void switchToUser(std::shared_ptr<User> user) override;
