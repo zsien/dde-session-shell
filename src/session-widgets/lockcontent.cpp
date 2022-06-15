@@ -115,7 +115,7 @@ void LockContent::initConnections()
         isMFA ? initMFAWidget() : initSFAWidget();
         // 当前中间窗口为空或者中间窗口就是验证窗口的时候显示验证窗口
         if (!centerWidget() || centerWidget() == m_authWidget)
-            setCenterContent(m_authWidget, Qt::AlignTop, m_authWidget->getTopSpacing());
+            setCenterContent(m_authWidget, Qt::AlignTop);
     });
 
     connect(m_wmInter, &__wm::WorkspaceSwitched, this, &LockContent::currentWorkspaceChanged);
@@ -171,9 +171,6 @@ void LockContent::initSFAWidget()
     connect(m_sfaWidget, &SFAWidget::requestEndAuthentication, this, &LockContent::requestEndAuthentication);
     connect(m_sfaWidget, &SFAWidget::requestCheckAccount, this, &LockContent::requestCheckAccount);
     connect(m_sfaWidget, &SFAWidget::authFinished, this, &LockContent::authFinished);
-    connect(m_sfaWidget, &SFAWidget::updateParentLayout, this, [this] {
-        changeCenterSpaceSize(0, m_sfaWidget->getTopSpacing());
-    });
 }
 
 /**
@@ -231,7 +228,7 @@ void LockContent::onCurrentUserChanged(std::shared_ptr<User> user)
 
 void LockContent::pushPasswordFrame()
 {
-    setCenterContent(m_authWidget, Qt::AlignTop, m_authWidget->getTopSpacing());
+    setCenterContent(m_authWidget, Qt::AlignTop);
 
     m_authWidget->syncResetPasswordUI();
 }
@@ -249,7 +246,7 @@ void LockContent::pushUserFrame()
 
 void LockContent::pushConfirmFrame()
 {
-    setCenterContent(m_authWidget, Qt::AlignTop, m_authWidget->getTopSpacing());
+    setCenterContent(m_authWidget, Qt::AlignTop);
 }
 
 void LockContent::pushShutdownFrame()
@@ -365,15 +362,6 @@ void LockContent::hideEvent(QHideEvent *event)
     if (!m_shutdownFrame.isNull())
         m_shutdownFrame->recoveryLayout();
     QFrame::hideEvent(event);
-}
-
-void LockContent::resizeEvent(QResizeEvent *event)
-{
-    if (SessionBaseModel::PasswordMode == m_model->currentModeState() || (SessionBaseModel::ConfirmPasswordMode == m_model->currentModeState())) {
-        changeCenterSpaceSize(0, m_authWidget->getTopSpacing());
-    }
-
-    return SessionBaseWindow::resizeEvent(event);
 }
 
 void LockContent::restoreMode()

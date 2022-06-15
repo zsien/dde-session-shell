@@ -22,7 +22,6 @@ public:
 
     inline QPointer<QWidget> centerWidget() { return m_centerWidget; }
     QSize getCenterContentSize();
-    void changeCenterSpaceSize(int w, int h);
     void setTopFrameVisible(bool visible);
     void setBottomFrameVisible(bool visible);
 
@@ -54,8 +53,6 @@ private:
     QWidget *m_leftBottomWidget;        // 下布局-左侧布局内容
     QWidget *m_centerBottomWidget;      // 下布局-中间布局内容
     QWidget *m_rightBottomWidget;       // 下布局-右侧布局内容
-
-    QSpacerItem *m_centerSpacerItem;
 };
 
 #endif // SESSIONBASEWINDOW_H

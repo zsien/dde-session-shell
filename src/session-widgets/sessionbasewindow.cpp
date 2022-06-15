@@ -23,7 +23,6 @@ SessionBaseWindow::SessionBaseWindow(QWidget *parent)
     , m_leftBottomWidget(nullptr)
     , m_centerBottomWidget(nullptr)
     , m_rightBottomWidget(nullptr)
-    , m_centerSpacerItem(new QSpacerItem(0, 0))
 {
     initUI();
 }
@@ -91,8 +90,6 @@ void SessionBaseWindow::setCenterContent(QWidget * const widget, Qt::AlignmentFl
         m_centerWidget->hide();
     }
     m_centerLayout->addWidget(widget, 0, align);
-    m_centerSpacerItem->changeSize(0, spacerHeight);
-    m_centerLayout->update();
 
     m_centerWidget = widget;
     widget->show();
@@ -130,8 +127,7 @@ void SessionBaseWindow::initUI()
 
     m_centerLayout->setMargin(0);
     m_centerLayout->setSpacing(0);
-    m_centerLayout->addSpacerItem(m_centerSpacerItem);
-    m_centerLayout->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
+    m_centerLayout->setAlignment(Qt::AlignCenter);
 
     m_centerFrame->setAccessibleName("CenterFrame");
     m_centerFrame->setLayout(m_centerLayout);
@@ -183,13 +179,6 @@ QSize SessionBaseWindow::getCenterContentSize()
     }
 
     return QSize(w, h);
-}
-
-void SessionBaseWindow::changeCenterSpaceSize(int w, int h)
-{
-    m_centerSpacerItem->changeSize(w, h);
-
-    m_centerLayout->update();
 }
 
 void SessionBaseWindow::resizeEvent(QResizeEvent *event)
