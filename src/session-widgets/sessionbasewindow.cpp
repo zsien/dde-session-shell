@@ -79,7 +79,7 @@ void SessionBaseWindow::setRightBottomWidget(QWidget * const widget)
 #endif
 }
 
-void SessionBaseWindow::setCenterContent(QWidget * const widget, Qt::AlignmentFlag align, int spacerHeight)
+void SessionBaseWindow::setCenterContent(QWidget * const widget, Qt::AlignmentFlag align, QMargins contentMargins)
 {
     if (!widget || m_centerWidget == widget) {
         return;
@@ -90,6 +90,7 @@ void SessionBaseWindow::setCenterContent(QWidget * const widget, Qt::AlignmentFl
         m_centerWidget->hide();
     }
     m_centerLayout->addWidget(widget, 0, align);
+    m_centerLayout->setContentsMargins(contentMargins);
 
     m_centerWidget = widget;
     widget->show();
