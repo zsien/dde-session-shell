@@ -17,6 +17,5 @@ TEST_F(UT_SessionManager, BasicTest)
 
     EXPECT_TRUE(sessionManager.sessionCount() >= 0);
     EXPECT_FALSE(sessionManager.currentSession().isEmpty());
-    EXPECT_FALSE(sessionManager.currentSessionKey().isEmpty());
     EXPECT_FALSE(sessionManager.sessionInfo().isEmpty());
 }

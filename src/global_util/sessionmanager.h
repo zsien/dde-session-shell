@@ -42,21 +42,20 @@ public:
 public:
     void setModel(SessionBaseModel * const model);
     int sessionCount() const;
-    QString currentSessionKey() const;
     QString currentSession() const;
     QMap<QString, QString> sessionInfo() const;
     void updateSession(const QString &userName);
     void switchSession(const QString &session);
 
 private:
-    int sessionIndex(const QString &sessionName) const;
-    QString lastLoggedInSession(const QString &userName);
-    bool isWaylandExisted();
-    QString defaultsession() const;
+    QString getSessionKey(const QString &sessionName) const;
+    QString lastLoggedInSession(const QString &userName) const;
+    bool isWaylandExisted() const;
+    QString defaultConfigSession() const;
 
 private:
     explicit SessionManager(QObject *parent = nullptr);
-    ~SessionManager();
+    ~SessionManager() override;
 
 private:
     SessionBaseModel *m_model;
@@ -64,7 +63,6 @@ private:
     QLightDM::UsersModel *m_userModel;
 
     bool m_allowSwitchingToWayland;
-    bool m_isWaylandExisted;
 };
 
 #endif // SESSIONWIDGET_H

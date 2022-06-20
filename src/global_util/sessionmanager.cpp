@@ -81,10 +81,9 @@ SessionManager::SessionManager(QObject *parent)
     , m_sessionModel(new QLightDM::SessionsModel(this))
     , m_userModel(new QLightDM::UsersModel(this))
     , m_allowSwitchingToWayland(getDConfigValue(getDefaultConfigFileName(), "allowSwitchingToWayland", false).toBool())
-    , m_isWaylandExisted(false)
 {
     // 判断显卡是否支持wayland
-    if (isWaylandExisted() && m_allowSwitchingToWayland) {
+    if (m_allowSwitchingToWayland && isWaylandExisted()) {
         QDBusInterface systemDisplayInter("com.deepin.system.Display", "/com/deepin/system/Display",
                 "com.deepin.system.Display", QDBusConnection::systemBus(), this);
         QDBusReply<bool> reply  = systemDisplayInter.call("SupportWayland");
@@ -109,21 +108,15 @@ void SessionManager::setModel(SessionBaseModel * const model)
 int SessionManager::sessionCount() const
 {
     int count = m_sessionModel->rowCount(QModelIndex());
-    if (m_isWaylandExisted && !m_allowSwitchingToWayland)
+    if (isWaylandExisted() && !m_allowSwitchingToWayland)
         --count;
 
     return count;
 }
 
-QString SessionManager::currentSessionKey() const
-{
-    int curIndex = sessionIndex(m_model->sessionKey());
-    return m_sessionModel->data(m_sessionModel->index(curIndex), QLightDM::SessionsModel::KeyRole).toString();
-}
-
 QString SessionManager::currentSession() const
 {
-    return displaySessionName(currentSessionKey());
+    return displaySessionName(m_model->sessionKey());
 }
 
 QMap<QString, QString> SessionManager::sessionInfo() const
@@ -133,6 +126,10 @@ QMap<QString, QString> SessionManager::sessionInfo() const
     int count = m_sessionModel->rowCount(QModelIndex());
     for (int i = 0; i < count; ++i) {
         const QString &sessionName = m_sessionModel->data(m_sessionModel->index(i), QLightDM::SessionsModel::KeyRole).toString();
+        // 系统中多于2个session（包含wayland）, 就算!m_allowSwitchingToWayland为真，也会导致Wayland的显示
+        if (!m_allowSwitchingToWayland && !WAYLAND_SESSION_NAME.compare(sessionName, Qt::CaseInsensitive))
+            continue;
+
         const QString &displayName = displaySessionName(sessionName);
         const QString icon = QString(":/img/sessions_icon/%1_normal.svg").arg(sessionIconName(sessionName));
         infos[displayName] = icon;
@@ -143,7 +140,7 @@ QMap<QString, QString> SessionManager::sessionInfo() const
 
 void SessionManager::updateSession(const QString &userName)
 {
-    QString defaultSession = defaultsession();
+    QString defaultSession = defaultConfigSession();
     QString sessionName = lastLoggedInSession(userName);
     // 上次登录的是wayland，但是此次登录已经禁止使用wayland，那么使用默认的桌面
     if ((!m_allowSwitchingToWayland && !WAYLAND_SESSION_NAME.compare(sessionName, Qt::CaseInsensitive)) ||
@@ -151,7 +148,7 @@ void SessionManager::updateSession(const QString &userName)
         sessionName = defaultSession;
     }
 
-    m_model->setSessionKey(currentSessionKey());
+    m_model->setSessionKey(getSessionKey(sessionName));
     qDebug() << userName << "default session is: " << sessionName;
 }
 
@@ -167,61 +164,56 @@ void SessionManager::switchSession(const QString &sessionName)
         return;
     }
 
-    int curIndex = sessionIndex(session);
-    QString sessionKey = m_sessionModel->data(m_sessionModel->index(curIndex),
-                                              QLightDM::SessionsModel::KeyRole).toString();
-    m_model->setSessionKey(sessionKey);
+    m_model->setSessionKey(getSessionKey(session));
 }
 
-int SessionManager::sessionIndex(const QString &sessionName) const
+QString SessionManager::getSessionKey(const QString &sessionName) const
 {
     const int count = m_sessionModel->rowCount(QModelIndex());
     Q_ASSERT(count);
-    int defaultSessionIndex = 0;
+    QString defaultSessionKey;
     for (int i = 0; i < count; ++i) {
-        const QString &sessionKey = m_sessionModel->data(m_sessionModel->index(i), QLightDM::SessionsModel::KeyRole).toString();
+        QString sessionKey = m_sessionModel->data(m_sessionModel->index(i), QLightDM::SessionsModel::KeyRole).toString();
         if (!sessionName.compare(sessionKey, Qt::CaseInsensitive)) {
-            return i;
+            return sessionKey;
         }
 
         if (!DEFAULT_SESSION_NAME.compare(sessionKey, Qt::CaseInsensitive)) {
-            defaultSessionIndex = i;
+            defaultSessionKey = sessionKey;
         }
     }
 
-    // NOTE: The current session does not exist
-    qWarning() << "The session does not exist, using the default value.";
-    return defaultSessionIndex;
+    // NOTE: The current sessionName does not exist
+    qWarning() << "The sessionName :%s does not exist, using the default value" << sessionName;
+    return defaultSessionKey;
 }
 
-QString SessionManager::lastLoggedInSession(const QString &userName)
+QString SessionManager::lastLoggedInSession(const QString &userName) const
 {
     for (int i = 0; i < m_userModel->rowCount(QModelIndex()); ++i) {
         if (userName == m_userModel->data(m_userModel->index(i), QLightDM::UsersModel::NameRole).toString()) {
             QString session = m_userModel->data(m_userModel->index(i), QLightDM::UsersModel::SessionRole).toString();
-            if (!session.isEmpty()) {
+            if (!session.isEmpty())
                 return session;
-            }
         }
     }
 
-    return defaultsession();
+    return defaultConfigSession();
 }
 
-bool SessionManager::isWaylandExisted()
+bool SessionManager::isWaylandExisted() const
 {
     const int count = m_sessionModel->rowCount(QModelIndex());
     for (int i = 0; i < count; ++i) {
         const QString &session_name = m_sessionModel->data(m_sessionModel->index(i), QLightDM::SessionsModel::KeyRole).toString();
-        if (!WAYLAND_SESSION_NAME.compare(session_name, Qt::CaseInsensitive)) {
-            m_isWaylandExisted = true;
-        }
+        if (!WAYLAND_SESSION_NAME.compare(session_name, Qt::CaseInsensitive))
+            return true;
     }
 
     return false;
 }
 
-QString SessionManager::defaultsession() const
+QString SessionManager::defaultConfigSession() const
 {
     return getDConfigValue(getDefaultConfigFileName(),"defaultSession", DEFAULT_SESSION_NAME).toString();
 }
