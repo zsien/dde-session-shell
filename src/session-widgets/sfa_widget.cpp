@@ -840,7 +840,7 @@ int SFAWidget::getTopSpacing() const
     // 需要额外增加的顶部间隔高度 = 屏幕高度*0.35 - 时间控件高度 - 布局间隔 - 生物认证按钮底部间隔
     // - 生物认证切换按钮底部间隔 - 生物认证图标高度(如果有生物认证因子) - 切换验证类型按钮高度（如果认证因子数量大于1)
     int deltaY = topHeight - calcCurrentHeight(LOCK_CONTENT_CENTER_LAYOUT_MARGIN)
-            - calcCurrentHeight(LOCK_CONTENT_TOPBOTTOM_WIDGET_HEIGHT)
+            - calcCurrentHeight(LOCK_CONTENT_BOTTOM_WIDGET_HEIGHT)
             - m_bioBottomSpacingHolder->sizeHint().height()
             - m_authTypeBottomSpacingHolder->sizeHint().height()
             - ((m_faceAuth || m_fingerprintAuth || m_irisAuth) ? BIO_AUTH_STATE_PLACE_HOLDER_HEIGHT : 0)

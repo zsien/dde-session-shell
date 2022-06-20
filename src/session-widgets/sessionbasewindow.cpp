@@ -79,7 +79,7 @@ void SessionBaseWindow::setRightBottomWidget(QWidget * const widget)
 #endif
 }
 
-void SessionBaseWindow::setCenterContent(QWidget * const widget, Qt::AlignmentFlag align, QMargins contentMargins)
+void SessionBaseWindow::setCenterContent(QWidget * const widget, Qt::AlignmentFlag align)
 {
     if (!widget || m_centerWidget == widget) {
         return;
@@ -89,8 +89,7 @@ void SessionBaseWindow::setCenterContent(QWidget * const widget, Qt::AlignmentFl
         m_centerLayout->removeWidget(m_centerWidget);
         m_centerWidget->hide();
     }
-    m_centerLayout->addWidget(widget, 0, align);
-    m_centerLayout->setContentsMargins(contentMargins);
+    m_centerLayout->addWidget(widget, 0);
 
     m_centerWidget = widget;
     widget->show();
@@ -123,7 +122,7 @@ void SessionBaseWindow::initUI()
 
     m_TopFrame->setAccessibleName("CenterTopFrame");
     m_TopFrame->setLayout(m_topLayout);
-    m_TopFrame->setFixedHeight(autoScaledSize(LOCK_CONTENT_TOPBOTTOM_WIDGET_HEIGHT));
+    m_TopFrame->setFixedHeight(autoScaledSize(LOCK_CONTENT_TOP_WIDGET_HEIGHT));
     m_TopFrame->setAutoFillBackground(false);
 
     m_centerLayout->setMargin(0);
@@ -150,7 +149,7 @@ void SessionBaseWindow::initUI()
 
     m_bottomFrame->setAccessibleName("BottomFrame");
     m_bottomFrame->setLayout(bottomLayout);
-    m_bottomFrame->setFixedHeight(autoScaledSize(LOCK_CONTENT_TOPBOTTOM_WIDGET_HEIGHT));
+    m_bottomFrame->setFixedHeight(autoScaledSize(LOCK_CONTENT_BOTTOM_WIDGET_HEIGHT));
     m_bottomFrame->setAutoFillBackground(false);
 
     m_mainLayout->setContentsMargins(getMainLayoutMargins());
@@ -185,8 +184,8 @@ QSize SessionBaseWindow::getCenterContentSize()
 void SessionBaseWindow::resizeEvent(QResizeEvent *event)
 {
     m_mainLayout->setContentsMargins(getMainLayoutMargins());
-    m_TopFrame->setFixedHeight(autoScaledSize(LOCK_CONTENT_TOPBOTTOM_WIDGET_HEIGHT));
-    m_bottomFrame->setFixedHeight(autoScaledSize(LOCK_CONTENT_TOPBOTTOM_WIDGET_HEIGHT));
+    m_TopFrame->setFixedHeight(autoScaledSize(LOCK_CONTENT_TOP_WIDGET_HEIGHT));
+    m_bottomFrame->setFixedHeight(autoScaledSize(LOCK_CONTENT_BOTTOM_WIDGET_HEIGHT));
 
     QFrame::resizeEvent(event);
 }

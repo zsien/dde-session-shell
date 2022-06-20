@@ -116,6 +116,7 @@ void ResetPasswdWidget::initUI()
     m_mainLayout->addWidget(m_okBtn, 0, Qt::AlignCenter);
 
     setLayout(m_mainLayout);
+    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     // 默认焦点处于旧密码输入框中
     m_oldPasswdEdit->setFocus();

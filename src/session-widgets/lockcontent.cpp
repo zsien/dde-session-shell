@@ -115,7 +115,7 @@ void LockContent::initConnections()
         isMFA ? initMFAWidget() : initSFAWidget();
         // 当前中间窗口为空或者中间窗口就是验证窗口的时候显示验证窗口
         if (!centerWidget() || centerWidget() == m_authWidget)
-            setCenterContent(m_authWidget, Qt::AlignTop, QMargins(0, m_authWidget->getTopSpacing(), 0, 0));
+            setCenterContent(m_authWidget);
     });
 
     connect(m_wmInter, &__wm::WorkspaceSwitched, this, &LockContent::currentWorkspaceChanged);
@@ -228,7 +228,7 @@ void LockContent::onCurrentUserChanged(std::shared_ptr<User> user)
 
 void LockContent::pushPasswordFrame()
 {
-    setCenterContent(m_authWidget, Qt::AlignTop, QMargins(0, m_authWidget->getTopSpacing(), 0, 0));
+    setCenterContent(m_authWidget);
 
     m_authWidget->syncResetPasswordUI();
 }
@@ -246,7 +246,7 @@ void LockContent::pushUserFrame()
 
 void LockContent::pushConfirmFrame()
 {
-    setCenterContent(m_authWidget, Qt::AlignTop, QMargins(0, m_authWidget->getTopSpacing(), 0, 0));
+    setCenterContent(m_authWidget);
 }
 
 void LockContent::pushShutdownFrame()

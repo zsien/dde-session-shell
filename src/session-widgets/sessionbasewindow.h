@@ -17,7 +17,7 @@ public:
     virtual void setLeftBottomWidget(QWidget *const widget) final;
     virtual void setCenterBottomWidget(QWidget *const widget) final;
     virtual void setRightBottomWidget(QWidget *const widget) final;
-    virtual void setCenterContent(QWidget *const widget, Qt::AlignmentFlag align = Qt::AlignCenter, QMargins contentMargins = QMargins()) final;
+    virtual void setCenterContent(QWidget *const widget, Qt::AlignmentFlag align = Qt::AlignCenter) final;
     virtual void setTopWidget(QWidget *const widget) final;
 
     inline QPointer<QWidget> centerWidget() { return m_centerWidget; }
