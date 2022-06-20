@@ -23,12 +23,7 @@
 #include "logintipswindow.h"
 #include "sessionmanager.h"
 #include "controlwidget.h"
-#include "resetpasswdwidget.h"
-
-#include <DFloatingMessage>
-#include <DMessageManager>
-
-DWIDGET_USE_NAMESPACE
+#include "changepasswordwidget.h"
 
 LoginContent::LoginContent(SessionBaseModel *const model, QWidget *parent)
     : LockContent(model, parent)
@@ -109,21 +104,11 @@ void LoginContent::pushLoginFrame()
  */
 void LoginContent::pushChangePasswordFrame()
 {
-    m_resetPasswordWidget.reset(new ResetPasswdWidget(m_model->currentUser(), this));
-    connect(m_resetPasswordWidget.get(), &ResetPasswdWidget::changePasswordSuccessed, this, [ = ] {
-        DFloatingMessage *message = new DFloatingMessage(DFloatingMessage::MessageType::TransientType);
-        QPalette pa;
-        pa.setColor(QPalette::Background, QColor(247, 247, 247, 51));
-        message->setPalette(pa);
-        message->setIcon(QIcon::fromTheme("dialog-ok"));
-        message->setMessage(tr("Password Change Success"));
-        message->setAttribute(Qt::WA_DeleteOnClose);
-        DMessageManager::instance()->sendMessage(this, message);
-
-        // TODO 这里是回到密码输入界面还是某个因子验证的界面
-        m_model->setCurrentModeState(SessionBaseModel::ModeStatus::PasswordMode);
-    });
-
+    m_resetPasswordWidget.reset(new ChangePasswordWidget(m_model->currentUser(), this));
+    connect(m_resetPasswordWidget.get(), &ChangePasswordWidget::changePasswordSuccessed, this, [ = ] {
+            // TODO 这里是回到密码输入界面还是某个因子验证的界面
+            m_model->setCurrentModeState(SessionBaseModel::ModeStatus::PasswordMode);
+        });
     setCenterContent(m_resetPasswordWidget.get());
 
     LockContent::onStatusChanged(m_model->currentModeState());

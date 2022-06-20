@@ -21,7 +21,7 @@ set(GREETER_TEST_SRCS
     ${PROJECT_SOURCE_DIR}/src/lightdm-deepin-greeter/logintipswindow.cpp
     ${PROJECT_SOURCE_DIR}/src/lightdm-deepin-greeter/pwqualitymanager.cpp
     ${PROJECT_SOURCE_DIR}/src/lightdm-deepin-greeter/passwordlevelwidget.cpp
-    ${PROJECT_SOURCE_DIR}/src/lightdm-deepin-greeter/resetpasswdwidget.cpp
+    ${PROJECT_SOURCE_DIR}/src/lightdm-deepin-greeter/changepasswordwidget.cpp
 )
 
 add_executable(${BIN_NAME}

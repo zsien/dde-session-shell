@@ -25,7 +25,7 @@
 #include "lockcontent.h"
 
 class LoginTipsWindow;
-class ResetPasswdWidget;
+class ChangePasswordWidget;
 class LoginContent : public LockContent
 {
     Q_OBJECT
@@ -41,7 +41,7 @@ public:
 
 private:
     QSharedPointer<LoginTipsWindow> m_loginTipsWindow;
-    QSharedPointer<ResetPasswdWidget> m_resetPasswordWidget;
+    QSharedPointer<ChangePasswordWidget> m_resetPasswordWidget;
 };
 
 #endif // LOGINCONTENT_H

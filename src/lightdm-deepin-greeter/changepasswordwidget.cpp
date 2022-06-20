@@ -19,7 +19,7 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "resetpasswdwidget.h"
+#include "changepasswordwidget.h"
 #include "dlineeditex.h"
 #include "useravatar.h"
 #include "pwqualitymanager.h"
@@ -31,15 +31,16 @@
 #include <DPasswordEdit>
 #include <DLabel>
 #include <DDesktopServices>
+#include <DFloatingMessage>
+#include <DMessageManager>
 
 DWIDGET_USE_NAMESPACE
-
 
 /**
  * @brief The ResetPasswdWidget class   重置密码界面
  * @note 管理员账户密码过期时，登录时会自动跳到此界面
  */
-ResetPasswdWidget::ResetPasswdWidget(std::shared_ptr<User> user, QWidget *parent)
+ChangePasswordWidget::ChangePasswordWidget(std::shared_ptr<User> user, QWidget *parent)
     : QWidget(parent)
     , m_user(user)
     , m_mainLayout(new QVBoxLayout(this))
@@ -60,7 +61,7 @@ ResetPasswdWidget::ResetPasswdWidget(std::shared_ptr<User> user, QWidget *parent
     initConnections();
 }
 
-void ResetPasswdWidget::initUI()
+void ChangePasswordWidget::initUI()
 {
     m_lockBtn->setPixmap(QIcon::fromTheme(":/misc/images/login_lock.svg").pixmap(24, 24));
     m_lockBtn->setFixedSize(24, 24);
@@ -120,19 +121,19 @@ void ResetPasswdWidget::initUI()
     m_oldPasswdEdit->setFocus();
 }
 
-void ResetPasswdWidget::initConnections()
+void ChangePasswordWidget::initConnections()
 {
-    connect(m_newPasswdEdit, &DLineEditEx::textChanged, this, &ResetPasswdWidget::onNewPasswordTextChanged);
+    connect(m_newPasswdEdit, &DLineEditEx::textChanged, this, &ChangePasswordWidget::onNewPasswordTextChanged);
 
-    connect(m_repeatPasswdEdit, &DLineEditEx::textChanged, this, &ResetPasswdWidget::onRepeatPasswordTextEdited);
-    connect(m_repeatPasswdEdit, &DLineEditEx::editingFinished, this, &ResetPasswdWidget::onRepeatPasswordEditFinished);
+    connect(m_repeatPasswdEdit, &DLineEditEx::textChanged, this, &ChangePasswordWidget::onRepeatPasswordTextEdited);
+    connect(m_repeatPasswdEdit, &DLineEditEx::editingFinished, this, &ChangePasswordWidget::onRepeatPasswordEditFinished);
 
-    connect(m_passwordHints, &DLineEdit::textEdited, this, &ResetPasswdWidget::onPasswordHintsChanged);
+    connect(m_passwordHints, &DLineEdit::textEdited, this, &ChangePasswordWidget::onPasswordHintsChanged);
 
-    connect(m_okBtn, &DPushButton::clicked, this, &ResetPasswdWidget::onOkClicked);
+    connect(m_okBtn, &DPushButton::clicked, this, &ChangePasswordWidget::onOkClicked);
 }
 
-void ResetPasswdWidget::onNewPasswordTextChanged(const QString &text)
+void ChangePasswordWidget::onNewPasswordTextChanged(const QString &text)
 {
     if (text.isEmpty()) {
         m_newPasswdEdit->hideAlertMessage();
@@ -153,7 +154,7 @@ void ResetPasswdWidget::onNewPasswordTextChanged(const QString &text)
     }
 }
 
-void ResetPasswdWidget::onRepeatPasswordTextEdited(const QString &text)
+void ChangePasswordWidget::onRepeatPasswordTextEdited(const QString &text)
 {
     Q_UNUSED(text)
     if (!m_repeatPasswdEdit->isAlert())
@@ -164,7 +165,7 @@ void ResetPasswdWidget::onRepeatPasswordTextEdited(const QString &text)
     m_repeatPasswdEdit->setAlert(false);
 }
 
-void ResetPasswdWidget::onRepeatPasswordEditFinished()
+void ChangePasswordWidget::onRepeatPasswordEditFinished()
 {
     if (sender() != m_repeatPasswdEdit)
         return;
@@ -176,7 +177,7 @@ void ResetPasswdWidget::onRepeatPasswordEditFinished()
     }
 }
 
-void ResetPasswdWidget::onPasswordHintsChanged(const QString &text)
+void ChangePasswordWidget::onPasswordHintsChanged(const QString &text)
 {
     // 限制最长14个字符
     if (text.size() > 14) {
@@ -192,7 +193,7 @@ void ResetPasswdWidget::onPasswordHintsChanged(const QString &text)
     }
 }
 
-void ResetPasswdWidget::onOkClicked()
+void ChangePasswordWidget::onOkClicked()
 {
     if (!isInfoValid()) {
         return;
@@ -210,7 +211,8 @@ void ResetPasswdWidget::onOkClicked()
     process.setProcessChannelMode(QProcess::MergedChannels);
 
     // 登录界面修改密码时，当前用户是lightdm，需要先切换到对应的用户再修改用户的密码(如果密码已经过期，直接提权就会触发修改密码的流程)
-    process.start("/bin/bash", QStringList() << "-c" << QString("su %1").arg(m_user->name()));
+    // 修改完密码删除keyring文件，避免弹窗(此处keyring无法解锁，登录后会解锁一次，但使用的是修改后的密码会解锁失败)
+    process.start("/bin/bash", QStringList() << "-c" << QString("su %1 -c \"rm /home/%2/.local/share/keyrings/login.keyring\"").arg(m_user->name()).arg(m_user->name()));
     if (!m_user->isPasswordValid()) {
         process.write(QString("%1\n%2\n%3\n").arg(oldPassword).arg(newPassword).arg(repeatPassword).toLatin1());
     } else {
@@ -228,7 +230,7 @@ void ResetPasswdWidget::onOkClicked()
 }
 
 // 检查输入内容是否有效
-bool ResetPasswdWidget::isInfoValid()
+bool ChangePasswordWidget::isInfoValid()
 {
     m_oldPasswdEdit->setAlert(false);
     m_oldPasswdEdit->hideAlertMessage();
@@ -289,12 +291,25 @@ bool ResetPasswdWidget::isInfoValid()
     return true;
 }
 
-void ResetPasswdWidget::parseProcessResult(int exitCode, const QString &output)
+void ChangePasswordWidget::parseProcessResult(int exitCode, const QString &output)
 {
     qDebug() << "output: " << output;
     if (exitCode == 0) {
-        // TODO 修改密码成功后，设置密码提示信息
         Q_EMIT changePasswordSuccessed();
+
+        // 提示修改成功
+        DFloatingMessage *message = new DFloatingMessage(DFloatingMessage::MessageType::TransientType);
+        QPalette pa;
+        pa.setColor(QPalette::Background, QColor(247, 247, 247, 51));
+        message->setPalette(pa);
+        message->setIcon(QIcon::fromTheme("dialog-ok"));
+        message->setMessage(tr("Password Change Success"));
+        message->setAttribute(Qt::WA_DeleteOnClose);
+        DMessageManager::instance()->sendMessage(qobject_cast<QWidget *>(parent()), message);
+
+        // 更新密码提示信息
+        UserInter userInter("com.deepin.daemon.Accounts", m_user->path(), QDBusConnection::systemBus(), this);
+        userInter.SetPasswordHint(m_passwordHints->lineEdit()->text());
         return;
     }
 
@@ -323,7 +338,7 @@ void ResetPasswdWidget::parseProcessResult(int exitCode, const QString &output)
     m_newPasswdEdit->showAlertMessage(PwqualityManager::instance()->getErrorTips(error));
 }
 
-void ResetPasswdWidget::paintEvent(QPaintEvent *event)
+void ChangePasswordWidget::paintEvent(QPaintEvent *event)
 {
 #ifdef QT_DEBUG
     Q_UNUSED(event);

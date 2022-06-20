@@ -19,8 +19,8 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef RESETPASSWDWIDGET_H
-#define RESETPASSWDWIDGET_H
+#ifndef CHANGEPASSWORDWIDGET_H
+#define CHANGEPASSWORDWIDGET_H
 
 #include <QWidget>
 
@@ -41,14 +41,11 @@ class DLabel;
 DWIDGET_END_NAMESPACE
 DWIDGET_USE_NAMESPACE
 
-class ResetPasswdWidget : public QWidget
+class ChangePasswordWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ResetPasswdWidget(std::shared_ptr<User> user, QWidget *parent = nullptr);
-
-Q_SIGNALS:
-    void changePasswordSuccessed();
+    explicit ChangePasswordWidget(std::shared_ptr<User> user, QWidget *parent = nullptr);
 
 private Q_SLOTS:
     void onNewPasswordTextChanged(const QString &text);
@@ -56,6 +53,9 @@ private Q_SLOTS:
     void onRepeatPasswordEditFinished();
     void onPasswordHintsChanged(const QString &text);
     void onOkClicked();
+
+Q_SIGNALS:
+    void changePasswordSuccessed();
 
 private:
     void initUI();
@@ -82,4 +82,4 @@ private:
     DPushButton *m_okBtn;
 };
 
-#endif // RESETPASSWDWIDGET_H
+#endif // CHANGEPASSWORDWIDGET_H

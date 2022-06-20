@@ -194,7 +194,7 @@ set(GREETER_SRCS
     src/lightdm-deepin-greeter/logintipswindow.cpp
     src/lightdm-deepin-greeter/pwqualitymanager.cpp
     src/lightdm-deepin-greeter/passwordlevelwidget.cpp
-    src/lightdm-deepin-greeter/resetpasswdwidget.cpp
+    src/lightdm-deepin-greeter/changepasswordwidget.cpp
 )
 add_executable(lightdm-deepin-greeter
     ${GREETER_SRCS}
