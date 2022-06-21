@@ -27,6 +27,8 @@
 #include <QProcess>
 #include <QResizeEvent>
 
+const static QSize VIRTUAL_KB_SIZE = QSize(600, 200);
+
 VirtualKBInstance &VirtualKBInstance::Instance()
 {
     static VirtualKBInstance virtualKB;
@@ -59,7 +61,7 @@ void VirtualKBInstance::init()
             QWindow *w = QWindow::fromWinId(static_cast<WId>(xid));
             m_virtualKBWidget = QWidget::createWindowContainer(w);
             m_virtualKBWidget->setAccessibleName("VirtualKBWidget");
-            m_virtualKBWidget->setFixedSize(600, 200);
+            m_virtualKBWidget->setFixedSize(VIRTUAL_KB_SIZE);
             m_virtualKBWidget->hide();
 
             QTimer::singleShot(300, [=] {
@@ -69,7 +71,7 @@ void VirtualKBInstance::init()
 
         connect(m_virtualKBProcess, QOverload<int>::of(&QProcess::finished),
                 this, &VirtualKBInstance::onVirtualKBProcessFinished);
-        m_virtualKBProcess->start("onboard", QStringList() << "-e" << "--layout" << "Small" << "--size" << "60x5" << "-a");
+        m_virtualKBProcess->start("onboard", QStringList() << "-e" << "--layout" << "Small" << "--size" << "600x200" << "-a");
     }
 }
 
@@ -96,12 +98,16 @@ void VirtualKBInstance::showKeyboardWidget(QWidget *parent)
 
     m_virtualKBWidget->setParent(parent);
     m_virtualKBWidget->setVisible(!m_virtualKBWidget->isVisible());
-    m_virtualKBWidget->raise();
 
-    // 关联了父窗口后，移动位置是相对父窗口移动，而不是扩展屏幕的位置坐标
-    QPoint point = QPoint((parent->width() - m_virtualKBWidget->width()) / 2,
-                                parent->height() - m_virtualKBWidget->height() - 50);
-    m_virtualKBWidget->move(point);
+    if (m_virtualKBWidget->isVisible()) {
+        m_virtualKBWidget->raise();
+        m_virtualKBWidget->resize(VIRTUAL_KB_SIZE);
+
+        // 关联了父窗口后，移动位置是相对父窗口移动，而不是扩展屏幕的位置坐标
+        QPoint point = QPoint((parent->width() - m_virtualKBWidget->width()) / 2,
+                              parent->height() - m_virtualKBWidget->height() - 50);
+        m_virtualKBWidget->move(point);
+    }
 }
 
 void VirtualKBInstance::hideKeyboardWidget()
