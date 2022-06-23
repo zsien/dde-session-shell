@@ -50,10 +50,13 @@ VirtualKeyboardModule::~VirtualKeyboardModule()
 
 bool VirtualKeyboardModule::isNeedInitPlugin() const
 {
+    // wayland下不显示虚拟键盘（无法获取onboard界面的winId，导致异常）
+    bool isInWayland = qgetenv("XDG_SESSION_TYPE").toLower().contains("wayland");
+
     // 根据配置，是否需要init插件
     DConfig *dConfig = DConfig::create(getDefaultConfigFileName(), getDefaultConfigFileName());
     dConfig->deleteLater();
-    return (dConfig && !dConfig->value("hideOnboard", false).toBool());
+    return (!isInWayland && dConfig && !dConfig->value("hideOnboard", false).toBool());
 }
 
 void VirtualKeyboardModule::init()
