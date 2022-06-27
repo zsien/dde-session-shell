@@ -324,3 +324,15 @@ void ResetPasswdWidget::parseProcessResult(int exitCode, const QString &output)
     m_newPasswdEdit->setAlert(true);
     m_newPasswdEdit->showAlertMessage(PwqualityManager::instance()->getErrorTips(error));
 }
+
+void ResetPasswdWidget::paintEvent(QPaintEvent *event)
+{
+#ifdef QT_DEBUG
+    Q_UNUSED(event);
+
+    QPainter painter(this);
+    painter.fillRect(rect(), Qt::red);
+#else
+    return QWidget::paintEvent(event);
+#endif
+}

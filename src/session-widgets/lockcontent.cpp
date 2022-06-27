@@ -115,7 +115,7 @@ void LockContent::initConnections()
         isMFA ? initMFAWidget() : initSFAWidget();
         // 当前中间窗口为空或者中间窗口就是验证窗口的时候显示验证窗口
         if (!centerWidget() || centerWidget() == m_authWidget)
-            setCenterContent(m_authWidget);
+            setCenterContent(m_authWidget, Qt::AlignTop, m_authWidget->getTopSpacing());
     });
 
     connect(m_wmInter, &__wm::WorkspaceSwitched, this, &LockContent::currentWorkspaceChanged);
@@ -171,6 +171,9 @@ void LockContent::initSFAWidget()
     connect(m_sfaWidget, &SFAWidget::requestEndAuthentication, this, &LockContent::requestEndAuthentication);
     connect(m_sfaWidget, &SFAWidget::requestCheckAccount, this, &LockContent::requestCheckAccount);
     connect(m_sfaWidget, &SFAWidget::authFinished, this, &LockContent::authFinished);
+    connect(m_sfaWidget, &SFAWidget::updateParentLayout, this, [this] {
+        changeCenterSpaceSize(0, m_sfaWidget->getTopSpacing());
+    });
 }
 
 /**
@@ -228,7 +231,7 @@ void LockContent::onCurrentUserChanged(std::shared_ptr<User> user)
 
 void LockContent::pushPasswordFrame()
 {
-    setCenterContent(m_authWidget);
+    setCenterContent(m_authWidget, Qt::AlignTop | Qt::AlignHCenter, m_authWidget->getTopSpacing());
 
     m_authWidget->syncResetPasswordUI();
 }
@@ -238,25 +241,21 @@ void LockContent::pushUserFrame()
     if(m_model->isServerModel())
         m_controlWidget->setUserSwitchEnable(false);
 
-    QSize size = getCenterContentSize();
     m_userListWidget->updateLayout();
-    m_userListWidget->setFixedSize(size);
     setCenterContent(m_userListWidget);
 }
 
 void LockContent::pushConfirmFrame()
 {
-    setCenterContent(m_authWidget);
+    setCenterContent(m_authWidget, Qt::AlignTop | Qt::AlignHCenter, m_authWidget->getTopSpacing());
 }
 
 void LockContent::pushShutdownFrame()
 {
     //设置关机选项界面大小为中间区域的大小,并移动到左上角，避免显示后出现移动现象
-    QSize size = getCenterContentSize();
     m_shutdownFrame.reset(new ShutdownWidget(this));
     m_shutdownFrame->setAccessibleName("ShutdownFrame");
     m_shutdownFrame->setModel(m_model);
-    m_shutdownFrame->setFixedSize(size);
     m_shutdownFrame->move(0, 0);
     m_shutdownFrame->onStatusChanged(m_model->currentModeState());
     onUserListChanged(m_model->isServerModel() ? m_model->loginedUserList() : m_model->userList());
@@ -347,21 +346,32 @@ void LockContent::mouseReleaseEvent(QMouseEvent *event)
 
     m_model->setCurrentModeState(SessionBaseModel::ModeStatus::PasswordMode);
 
-    SessionBaseWindow::mouseReleaseEvent(event);
+    return SessionBaseWindow::mouseReleaseEvent(event);
 }
 
 void LockContent::showEvent(QShowEvent *event)
 {
+    SessionBaseWindow::showEvent(event);
+
     onStatusChanged(m_model->currentModeState());
     tryGrabKeyboard();
-    QFrame::showEvent(event);
 }
 
 void LockContent::hideEvent(QHideEvent *event)
 {
     if (!m_shutdownFrame.isNull())
         m_shutdownFrame->recoveryLayout();
-    QFrame::hideEvent(event);
+
+    return SessionBaseWindow::hideEvent(event);
+}
+
+void LockContent::resizeEvent(QResizeEvent *event)
+{
+    if (SessionBaseModel::PasswordMode == m_model->currentModeState() || (SessionBaseModel::ConfirmPasswordMode == m_model->currentModeState())) {
+        changeCenterSpaceSize(0, m_authWidget->getTopSpacing());
+    }
+
+    return SessionBaseWindow::resizeEvent(event);
 }
 
 void LockContent::restoreMode()

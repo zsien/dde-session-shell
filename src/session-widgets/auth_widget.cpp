@@ -555,7 +555,7 @@ void AuthWidget::paintEvent(QPaintEvent *event)
 int AuthWidget::getTopSpacing() const
 {
     const int topHeight = static_cast<int>(topLevelWidget()->geometry().height() * AUTH_WIDGET_TOP_SPACING_PERCENT);
-    const int deltaY = topHeight - calcCurrentHeight(LOCK_CONTENT_BOTTOM_WIDGET_HEIGHT)
+    const int deltaY = topHeight - calcCurrentHeight(LOCK_CONTENT_TOPBOTTOM_WIDGET_HEIGHT)
             - calcCurrentHeight(LOCK_CONTENT_CENTER_LAYOUT_MARGIN);
 
     return qMax(15, deltaY);

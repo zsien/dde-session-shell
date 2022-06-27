@@ -123,8 +123,7 @@ void LoginContent::pushChangePasswordFrame()
         // TODO 这里是回到密码输入界面还是某个因子验证的界面
         m_model->setCurrentModeState(SessionBaseModel::ModeStatus::PasswordMode);
     });
-    QSize size = getCenterContentSize();
-    m_resetPasswordWidget->setMaximumSize(size);
+
     setCenterContent(m_resetPasswordWidget.get());
 
     LockContent::onStatusChanged(m_model->currentModeState());

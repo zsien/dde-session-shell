@@ -23,6 +23,7 @@ SessionBaseWindow::SessionBaseWindow(QWidget *parent)
     , m_leftBottomWidget(nullptr)
     , m_centerBottomWidget(nullptr)
     , m_rightBottomWidget(nullptr)
+    , m_centerSpacerItem(new QSpacerItem(0, 0))
 {
     initUI();
 }
@@ -79,7 +80,7 @@ void SessionBaseWindow::setRightBottomWidget(QWidget * const widget)
 #endif
 }
 
-void SessionBaseWindow::setCenterContent(QWidget * const widget, Qt::AlignmentFlag align)
+void SessionBaseWindow::setCenterContent(QWidget * const widget, Qt::Alignment align, int spacerHeight)
 {
     if (!widget || m_centerWidget == widget) {
         return;
@@ -89,7 +90,12 @@ void SessionBaseWindow::setCenterContent(QWidget * const widget, Qt::AlignmentFl
         m_centerLayout->removeWidget(m_centerWidget);
         m_centerWidget->hide();
     }
-    m_centerLayout->addWidget(widget, 0);
+
+    m_centerSpacerItem->changeSize(0, spacerHeight);
+    m_centerLayout->setAlignment(align);
+    m_centerLayout->addWidget(widget);
+    m_centerLayout->invalidate();
+    m_centerLayout->update();
 
     m_centerWidget = widget;
     widget->show();
@@ -122,12 +128,13 @@ void SessionBaseWindow::initUI()
 
     m_TopFrame->setAccessibleName("CenterTopFrame");
     m_TopFrame->setLayout(m_topLayout);
-    m_TopFrame->setFixedHeight(autoScaledSize(LOCK_CONTENT_TOP_WIDGET_HEIGHT));
+    m_TopFrame->setFixedHeight(autoScaledSize(LOCK_CONTENT_TOPBOTTOM_WIDGET_HEIGHT));
     m_TopFrame->setAutoFillBackground(false);
 
     m_centerLayout->setMargin(0);
     m_centerLayout->setSpacing(0);
-    m_centerLayout->setAlignment(Qt::AlignCenter);
+    m_centerLayout->addSpacerItem(m_centerSpacerItem);
+    m_centerLayout->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
 
     m_centerFrame->setAccessibleName("CenterFrame");
     m_centerFrame->setLayout(m_centerLayout);
@@ -149,7 +156,7 @@ void SessionBaseWindow::initUI()
 
     m_bottomFrame->setAccessibleName("BottomFrame");
     m_bottomFrame->setLayout(bottomLayout);
-    m_bottomFrame->setFixedHeight(autoScaledSize(LOCK_CONTENT_BOTTOM_WIDGET_HEIGHT));
+    m_bottomFrame->setFixedHeight(autoScaledSize(LOCK_CONTENT_TOPBOTTOM_WIDGET_HEIGHT));
     m_bottomFrame->setAutoFillBackground(false);
 
     m_mainLayout->setContentsMargins(getMainLayoutMargins());
@@ -181,11 +188,19 @@ QSize SessionBaseWindow::getCenterContentSize()
     return QSize(w, h);
 }
 
+void SessionBaseWindow::changeCenterSpaceSize(int w, int h)
+{
+    m_centerSpacerItem->changeSize(w, h);
+
+    m_centerLayout->invalidate();
+    m_centerLayout->update();
+}
+
 void SessionBaseWindow::resizeEvent(QResizeEvent *event)
 {
     m_mainLayout->setContentsMargins(getMainLayoutMargins());
-    m_TopFrame->setFixedHeight(autoScaledSize(LOCK_CONTENT_TOP_WIDGET_HEIGHT));
-    m_bottomFrame->setFixedHeight(autoScaledSize(LOCK_CONTENT_BOTTOM_WIDGET_HEIGHT));
+    m_TopFrame->setFixedHeight(autoScaledSize(LOCK_CONTENT_TOPBOTTOM_WIDGET_HEIGHT));
+    m_bottomFrame->setFixedHeight(autoScaledSize(LOCK_CONTENT_TOPBOTTOM_WIDGET_HEIGHT));
 
     QFrame::resizeEvent(event);
 }

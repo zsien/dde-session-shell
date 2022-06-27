@@ -17,11 +17,12 @@ public:
     virtual void setLeftBottomWidget(QWidget *const widget) final;
     virtual void setCenterBottomWidget(QWidget *const widget) final;
     virtual void setRightBottomWidget(QWidget *const widget) final;
-    virtual void setCenterContent(QWidget *const widget, Qt::AlignmentFlag align = Qt::AlignCenter) final;
+    virtual void setCenterContent(QWidget *const widget, Qt::Alignment align = Qt::AlignCenter, int spacerHeight = 0) final;
     virtual void setTopWidget(QWidget *const widget) final;
 
     inline QPointer<QWidget> centerWidget() { return m_centerWidget; }
     QSize getCenterContentSize();
+    void changeCenterSpaceSize(int w, int h);
     void setTopFrameVisible(bool visible);
     void setBottomFrameVisible(bool visible);
 
@@ -53,6 +54,8 @@ private:
     QWidget *m_leftBottomWidget;        // 下布局-左侧布局内容
     QWidget *m_centerBottomWidget;      // 下布局-中间布局内容
     QWidget *m_rightBottomWidget;       // 下布局-右侧布局内容
+
+    QSpacerItem *m_centerSpacerItem;
 };
 
 #endif // SESSIONBASEWINDOW_H

@@ -64,6 +64,9 @@ private:
     bool isInfoValid();
     void parseProcessResult(int exitCode, const QString &output);
 
+protected:
+    void paintEvent(QPaintEvent *event) override;
+
 private:
     std::shared_ptr<User> m_user;
 
