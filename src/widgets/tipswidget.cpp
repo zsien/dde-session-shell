@@ -12,6 +12,8 @@ TipsWidget::TipsWidget(QWidget *parent)
     setShadowXOffset(0);
     setArrowWidth(18);
     setArrowHeight(10);
+
+    setWindowFlags(windowFlags() | Qt::ToolTip);
 }
 
 void TipsWidget::setContent(QWidget *content)
