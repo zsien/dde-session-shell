@@ -30,7 +30,6 @@
 
 #include <DPasswordEdit>
 #include <DLabel>
-#include <DIconButton>
 #include <DDesktopServices>
 
 DWIDGET_USE_NAMESPACE
@@ -44,7 +43,7 @@ ResetPasswdWidget::ResetPasswdWidget(std::shared_ptr<User> user, QWidget *parent
     : QWidget(parent)
     , m_user(user)
     , m_mainLayout(new QVBoxLayout(this))
-    , m_lockBtn(new DIconButton(this))
+    , m_lockBtn(new DLabel(this))
     , m_avatar(new UserAvatar(this))
     , m_nameLabel(new DLabel(m_user->displayName(), this))
     , m_tipsLabel(new DLabel(tr("Your password expired, please login again."), this))
@@ -63,9 +62,8 @@ ResetPasswdWidget::ResetPasswdWidget(std::shared_ptr<User> user, QWidget *parent
 
 void ResetPasswdWidget::initUI()
 {
-    m_lockBtn->setFlat(true);
-    m_lockBtn->setIcon(QIcon::fromTheme(":/misc/images/login_lock.svg"));
-    m_lockBtn->setIconSize(QSize(24, 24));
+    m_lockBtn->setPixmap(QIcon::fromTheme(":/misc/images/login_lock.svg").pixmap(24, 24));
+    m_lockBtn->setFixedSize(24, 24);
     m_avatar->setFocusPolicy(Qt::NoFocus);
     m_avatar->setIcon(m_user->avatar());
     m_avatar->setAvatarSize(UserAvatar::AvatarLargeSize);
@@ -104,15 +102,15 @@ void ResetPasswdWidget::initUI()
 
     m_mainLayout->setContentsMargins(10, 0, 10, 0);
     m_mainLayout->setSpacing(10);
-    m_mainLayout->addWidget(m_lockBtn, 0, Qt::AlignVCenter);
-    m_mainLayout->addWidget(m_avatar, 0, Qt::AlignVCenter);
-    m_mainLayout->addWidget(m_nameLabel, 0, Qt::AlignVCenter);
-    m_mainLayout->addWidget(m_tipsLabel, 0, Qt::AlignVCenter);
-    m_mainLayout->addWidget(m_oldPasswdEdit, 0, Qt::AlignVCenter);
-    m_mainLayout->addWidget(m_newPasswdEdit, 0, Qt::AlignVCenter);
+    m_mainLayout->addWidget(m_lockBtn, 0, Qt::AlignCenter);
+    m_mainLayout->addWidget(m_avatar, 0, Qt::AlignCenter);
+    m_mainLayout->addWidget(m_nameLabel, 0, Qt::AlignCenter);
+    m_mainLayout->addWidget(m_tipsLabel, 0, Qt::AlignCenter);
+    m_mainLayout->addWidget(m_oldPasswdEdit, 0, Qt::AlignCenter);
+    m_mainLayout->addWidget(m_newPasswdEdit, 0, Qt::AlignCenter);
     m_mainLayout->addWidget(m_levelWidget, 0, Qt::AlignRight | Qt::AlignVCenter);
-    m_mainLayout->addWidget(m_repeatPasswdEdit, 0, Qt::AlignVCenter);
-    m_mainLayout->addWidget(m_passwordHints, 0, Qt::AlignVCenter);
+    m_mainLayout->addWidget(m_repeatPasswdEdit, 0, Qt::AlignCenter);
+    m_mainLayout->addWidget(m_passwordHints, 0, Qt::AlignCenter);
     m_mainLayout->addWidget(m_okBtn, 0, Qt::AlignCenter);
 
     setLayout(m_mainLayout);

@@ -38,7 +38,6 @@ class PasswordLevelWidget;
 DWIDGET_BEGIN_NAMESPACE
 class DPasswordEdit;
 class DLabel;
-class DIconButton;
 DWIDGET_END_NAMESPACE
 DWIDGET_USE_NAMESPACE
 
@@ -71,7 +70,7 @@ private:
     std::shared_ptr<User> m_user;
 
     QVBoxLayout *m_mainLayout;
-    DIconButton *m_lockBtn;
+    DLabel *m_lockBtn;
     UserAvatar *m_avatar;
     DLabel *m_nameLabel;
     DLabel *m_tipsLabel;
