@@ -27,9 +27,25 @@ AuthInterface::AuthInterface(SessionBaseModel *const model, QObject *parent)
     , m_loginUserList(0)
 {
     if (m_login1Inter->isValid()) {
-       QString session_self = m_login1Inter->GetSessionByPID(0).value().path();
-       m_login1SessionSelf = new Login1SessionSelf("org.freedesktop.login1", session_self, QDBusConnection::systemBus(), this);
-       m_login1SessionSelf->setSync(false);
+        QString sessionSelf;
+        if (m_model->appType() == AppType::Lock) {
+            // v23上m_login1Inter->GetSessionByPID(0)接口已不可用，使用org.deepin.Session获取
+            QDBusInterface inter("org.deepin.Session", "/org/deepin/Session",
+                                 "org.deepin.Session", QDBusConnection::sessionBus());
+            QDBusReply<QString> reply = inter.call("GetSessionPath");
+            if (reply.isValid())
+                sessionSelf = reply.value();
+            else
+                qWarning() << "org.deepin.Session get session path has error!";
+        } else {
+            // AppType::Login
+            sessionSelf = m_login1Inter->GetSessionByPID(0).value().path();
+        }
+
+        if (!sessionSelf.isEmpty()) {
+            m_login1SessionSelf = new Login1SessionSelf("org.freedesktop.login1", sessionSelf, QDBusConnection::systemBus(), this);
+            m_login1SessionSelf->setSync(false);
+        }
     } else {
         qWarning() << "m_login1Inter:" << m_login1Inter->lastError().type();
     }
