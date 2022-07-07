@@ -13,7 +13,7 @@ TipsWidget::TipsWidget(QWidget *parent)
     setArrowWidth(18);
     setArrowHeight(10);
 
-    setWindowFlags(windowFlags() | Qt::ToolTip);
+    setWindowFlags(windowFlags() | Qt::ToolTip | Qt::WindowDoesNotAcceptFocus);
 }
 
 void TipsWidget::setContent(QWidget *content)
