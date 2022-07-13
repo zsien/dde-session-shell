@@ -41,7 +41,7 @@ Depends: ${shlibs:Depends}, ${misc:Depends}, ${dist:Depends},
  startdde (>=5.8.9),
  x11-xserver-utils,
  deepin-authenticate(>=1.2.27),
- libssl1.1,
+ libssl3,
  libxcb-util0|libxcb-util1
 Provides: lightdm-greeter
 Recommends: onboard,
