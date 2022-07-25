@@ -212,7 +212,7 @@ void ChangePasswordWidget::onOkClicked()
 
     // 登录界面修改密码时，当前用户是lightdm，需要先切换到对应的用户再修改用户的密码(如果密码已经过期，直接提权就会触发修改密码的流程)
     // 修改完密码删除keyring文件，避免弹窗(此处keyring无法解锁，登录后会解锁一次，但使用的是修改后的密码会解锁失败)
-    process.start("/bin/bash", QStringList() << "-c" << QString("su %1 -c \"rm /home/%2/.local/share/keyrings/login.keyring\"").arg(m_user->name()).arg(m_user->name()));
+    process.start("/bin/bash", QStringList() << "-c" << QString("su %1 -c \"rm -f /home/%2/.local/share/keyrings/login.keyring\"").arg(m_user->name()).arg(m_user->name()));
     if (!m_user->isPasswordValid()) {
         process.write(QString("%1\n%2\n%3\n").arg(oldPassword).arg(newPassword).arg(repeatPassword).toLatin1());
     } else {
