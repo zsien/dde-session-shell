@@ -1,3 +1,21 @@
+dde-session-shell (6.0.2) unstable; urgency=medium
+
+  [ TagBuilder ]
+  * fix: 修复wayland环境下自动待机唤醒后锁屏界面解锁后会切换到登陆界面的问题。(Bug: 143619)(Influence: 登录锁屏界面虚拟键盘的显示。)
+  * fix: 修复登陆框在有无生物认证的情况下头像高度不一致的情况(Bug: 141905)(Influence: 界面显示)
+  * fix: 修复密码框部分情况下抖动的问题(Bug: 142343)(Influence: 密码框抖动)
+  * chore: 默认允许切换wayland。(Task: 156593)(Influence: 登录界面显示可切换wayland按钮。)
+  * fix: 修复锁屏界面切换用户被切换的用户仍创建认证的问题。(Bug: 141817)(Influence: 锁屏切换用户，被切用户占用认证（如占用指纹，导致切到另一用户指纹提示被占用）)
+  * fix: 修复重置密码界面锁定图标概率性显示边框的问题(Task: 112769)(Influence: 界面显示)
+  * fix: 修复密码框部分情况下抖动的问题(Bug: 142343)(Influence: 密码框抖动)
+  * fix: 修复系统自动待机唤醒直接进入桌面后按物理电源键没有响应的问题。(Bug: 142141)(Influence: 锁屏状态错误，导致其他读应用取状态错误。)
+  * feat: recompile(Influence: recompile)
+  * chore: openssl依赖修改(Task: 164647)(Influence: 登录认证)
+  * fix: 重置密码程序启动并连接成功时锁屏界面才释放独占键盘(Bug: 143503)(Influence: 重置密码过程中按快捷键不会切走锁屏)
+  * fix: 修复重置密码后进入桌面弹keyring弹窗的问题(Bug: 141575)(Influence: keyring弹窗)
+
+ -- caixiangrong <caixiangrong@uniontech.com>  Mon, 25 Jul 2022 14:16:38 +0800
+
 dde-session-shell (6.0.1) unstable; urgency=medium
 
   * release 6.0.1
