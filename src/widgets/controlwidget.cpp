@@ -27,7 +27,6 @@
 #include "sessionbasemodel.h"
 #include "kblayoutlistview.h"
 
-#include "mediawidget.h"
 #include "modules_loader.h"
 #include "tray_module_interface.h"
 #include "tipswidget.h"
@@ -35,17 +34,16 @@
 #include "tipcontentwidget.h"
 #include "sessionpopupwidget.h"
 #include "sessionmanager.h"
+#include "userlistpopupwidget.h"
 
 #include <DFloatingButton>
 #include <DArrowRectangle>
 #include <DPushButton>
-#include <dimagebutton.h>
 #include <DConfig>
 
 #include <QEvent>
 #include <QGraphicsDropShadowEffect>
 #include <QHBoxLayout>
-#include <QPainter>
 #include <QWheelEvent>
 #include <QMenu>
 
@@ -86,6 +84,7 @@ ControlWidget::ControlWidget(const SessionBaseModel *model, QWidget *parent)
     , m_arrowRectWidget(new DArrowRectangle(DArrowRectangle::ArrowBottom, this))
     , m_kbLayoutListView(nullptr)
     , m_sessionPopupWidget(nullptr)
+    , m_userListPopupWidget(nullptr)
 {
     setModel(model);
     initUI();
@@ -223,7 +222,7 @@ void ControlWidget::initConnect()
     connect(m_sessionBtn, &FlotingButton::requestShowTips, this, &ControlWidget::showInfoTips);
     connect(m_sessionBtn, &FlotingButton::requestHideTips, this, &ControlWidget::hideInfoTips);
 
-    connect(m_switchUserBtn, &FlotingButton::clicked, this, &ControlWidget::requestSwitchUser);
+    connect(m_switchUserBtn, &FlotingButton::clicked, this, &ControlWidget::showUserListPopupWidget);
     connect(m_switchUserBtn, &FlotingButton::requestShowTips, this, &ControlWidget::showInfoTips);
     connect(m_switchUserBtn, &FlotingButton::requestHideTips, this, &ControlWidget::hideInfoTips);
 
@@ -481,6 +480,31 @@ void ControlWidget::showSessionPopup()
     QPoint pos = mapToGlobal(m_sessionBtn->pos()) - QPoint((m_sessionPopupWidget->width() - m_sessionBtn->width())/2,
                                                            m_sessionPopupWidget->height() + 10);
     m_arrowRectWidget->setGeometry(QRect(pos, m_sessionPopupWidget->size() + QSize(0, 10)));
+    m_arrowRectWidget->setVisible(!m_arrowRectWidget->isVisible());
+}
+
+void ControlWidget::showUserListPopupWidget()
+{
+    if (!m_userListPopupWidget) {
+        m_userListPopupWidget = new UserListPopupWidget(m_model, this);
+        connect(m_userListPopupWidget, &UserListPopupWidget::requestSwitchToUser, [ this ](std::shared_ptr<User> user) {
+            m_arrowRectWidget->hide();
+            Q_EMIT requestSwitchUser(user);
+        });
+    }
+
+    QWidget *content = m_arrowRectWidget->getContent();
+    if (!content) {
+        m_arrowRectWidget->setContent(m_userListPopupWidget);
+    } else if (content != m_userListPopupWidget) {
+        content->setVisible(false);
+        m_arrowRectWidget->setContent(m_userListPopupWidget);
+    }
+
+    // 算上三角形的高度
+    QPoint pos = mapToGlobal(m_switchUserBtn->pos()) - QPoint((m_userListPopupWidget->width() - m_switchUserBtn->width()) / 2,
+                                                              m_userListPopupWidget->height() + 10);
+    m_arrowRectWidget->setGeometry(QRect(pos, m_userListPopupWidget->size() + QSize(0, 10)));
     m_arrowRectWidget->setVisible(!m_arrowRectWidget->isVisible());
 }
 

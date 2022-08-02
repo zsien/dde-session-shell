@@ -96,9 +96,9 @@ void LockContent::initUI()
 void LockContent::initConnections()
 {
     connect(m_model, &SessionBaseModel::currentUserChanged, this, &LockContent::onCurrentUserChanged);
-    connect(m_controlWidget, &ControlWidget::requestSwitchUser, this, [ = ] {
-        m_model->setCurrentModeState(SessionBaseModel::ModeStatus::UserMode);
-        emit requestEndAuthentication(m_model->currentUser()->name(), AT_All);
+    connect(m_controlWidget, &ControlWidget::requestSwitchUser, this, [ = ] (std::shared_ptr<User> user) {
+        Q_EMIT requestEndAuthentication(m_model->currentUser()->name(), AT_All);
+        Q_EMIT requestSwitchToUser(user);
     });
     connect(m_controlWidget, &ControlWidget::requestShutdown, this, [ = ] {
         m_model->setCurrentModeState(SessionBaseModel::ModeStatus::PowerMode);

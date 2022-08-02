@@ -63,6 +63,7 @@ class KBLayoutListView;
 class TipsWidget;
 class TipContentWidget;
 class SessionPopupWidget;
+class UserListPopupWidget;
 
 const int BlurRadius = 15;
 const int BlurTransparency = 70;
@@ -122,7 +123,7 @@ public:
     void initKeyboardLayoutList();
 
 signals:
-    void requestSwitchUser();
+    void requestSwitchUser(std::shared_ptr<User> user);
     void requestShutdown();
     void requestSwitchSession(const QString &session);
     void requestShowModule(const QString &name);
@@ -138,6 +139,7 @@ public slots:
     void onItemClicked(const QString& str);
     void resizeArrowWidget();
     void showSessionPopup();
+    void showUserListPopupWidget();
 
 protected:
     void keyReleaseEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
@@ -175,6 +177,7 @@ private:
     DArrowRectangle *m_arrowRectWidget;
     KBLayoutListView *m_kbLayoutListView;   // 键盘布局列表
     SessionPopupWidget *m_sessionPopupWidget;
+    UserListPopupWidget *m_userListPopupWidget;
 };
 
 #endif // CONTROLWIDGET_H
