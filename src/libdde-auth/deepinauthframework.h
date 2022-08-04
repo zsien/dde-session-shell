@@ -4,10 +4,11 @@
 #include <QObject>
 #include <QPointer>
 
-#include <com_deepin_daemon_authenticate.h>
-#include <com_deepin_daemon_authenticate_session2.h>
 #include <memory>
 #include <openssl/aes.h>
+
+#include "authenticate_interface.h"
+#include "authenticatesession2_interface.h"
 
 #define AUTHRNTICATESERVICE "com.deepin.daemon.Authenticate"
 #define AUTHRNTICATEINTERFACE "com.deepin.daemon.Authenticate.Session"

@@ -11,7 +11,7 @@
 #include "sessionbasewindow.h"
 #include "systemmonitor.h"
 
-#include <com_deepin_wm.h>
+#include "wm_interface.h"
 
 class AuthWidget;
 class MFAWidget;

@@ -7,7 +7,8 @@
 #include <QMap>
 #include <functional>
 #include <QTimer>
-#include <com_deepin_system_systemdisplay.h>
+
+#include "systemdisplay_interface.h"
 
 using SystemDisplayInter = com::deepin::system::Display;
 

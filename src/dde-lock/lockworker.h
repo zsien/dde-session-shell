@@ -7,21 +7,22 @@
 #include "dbuslogin1manager.h"
 #include "deepinauthframework.h"
 #include "sessionbasemodel.h"
-#include "switchos_interface.h"
+#include "huaweiswitchos_interface.h"
 #include "userinfo.h"
+
+#include "accounts_interface.h"
+#include "logined_interface.h"
+#include "accountsuser_interface.h"
+#include "sessionmanager_interface.h"
 
 #include <QObject>
 #include <QWidget>
 
-#include <com_deepin_daemon_accounts.h>
-#include <com_deepin_daemon_accounts_user.h>
-#include <com_deepin_daemon_logined.h>
-#include <com_deepin_sessionmanager.h>
-
-using AccountsInter = com::deepin::daemon::Accounts;
-using UserInter = com::deepin::daemon::accounts::User;
-using LoginedInter = com::deepin::daemon::Logined;
+using AccountsInter = org::deepin::daemon::Accounts1;
+using UserInter = org::deepin::daemon::accounts1::User;
+using LoginedInter = org::deepin::daemon::Logined;
 using SessionManagerInter = com::deepin::SessionManager;
+using HuaWeiSwitchOSInterface = com::huawei::switchos;
 
 class SessionBaseModel;
 class LockWorker : public Auth::AuthInterface

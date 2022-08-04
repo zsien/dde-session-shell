@@ -1,23 +1,22 @@
 <interface name="com.deepin.daemon.Authenticate">
     <property name="SupportedFlags" type="i" access="read"/>
-    <property name="FailureCount" type="s" access="read"/>
-    <signal name="Status">
-        <arg name="id" type="s" direction="out"/>
-        <arg name="code" type="i" direction="out"/>
-        <arg name="msg" type="s" direction="out"/>
+    <property name="FrameworkState" type="i" access="read"/>
+    <property name="SupportEncrypts" type="s" access="read"/>
+    <signal name="LimitUpdated">
+        <arg type="s"/>
     </signal>
+    <method name="PreOneKeyLogin">
+        <arg name="flag" type="i" direction="in"/>
+        <arg name="result" type="s" direction="out"/>
+    </method>
+    <method name="GetLimits">
+        <arg name="username" type="s" direction="in"/>
+        <arg name="limits" type="s" direction="out"/>
+    </method>
     <method name="Authenticate">
         <arg name="username" type="s" direction="in"/>
-        <arg name="flag" type="i" direction="in"/>
-        <arg name="timeout" type="i" direction="in"/>
-        <arg name="id" type="s" direction="out"/>
-    </method>
-    <method name="CancelAuthenticate">
-        <arg name="id" type="s" direction="in"/>
-    </method>
-    <method name="SetPassword">
-        <arg name="id" type="s" direction="in"/>
-        <arg name="password" type="s" direction="in"/>
+        <arg name="authFlags" type="i" direction="in"/>
+        <arg name="appType" type="i" direction="in"/>
+        <arg name="path" type="s" direction="out"/>
     </method>
 </interface>
-

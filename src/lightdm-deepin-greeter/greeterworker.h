@@ -7,11 +7,12 @@
 #include "deepinauthframework.h"
 #include "sessionbasemodel.h"
 
+#include "soundthemeplayer_interface.h"
+
 #include <QLightDM/Greeter>
 #include <QLightDM/SessionsModel>
-#include <QObject>
 
-#include <com_deepin_api_soundthemeplayer.h>
+#include <QObject>
 
 using SoundThemePlayerInter = com::deepin::api::SoundThemePlayer;
 

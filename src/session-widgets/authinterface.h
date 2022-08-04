@@ -5,22 +5,22 @@
 #include "constants.h"
 #include "dbuslogin1manager.h"
 
-#include <com_deepin_daemon_accounts.h>
-#include <com_deepin_daemon_logined.h>
-#include <com_deepin_daemon_authenticate.h>
-#include <org_freedesktop_login1_session_self.h>
-#include <com_deepin_daemon_powermanager.h>
-#include <org_freedesktop_dbus.h>
+#include "authenticate_interface.h"
+#include "accounts_interface.h"
+#include "logined_interface.h"
+#include "powermanager_interface.h"
+#include "freedesktopdbus_interface.h"
+#include "login1sessionself_interface.h"
 
 #include <QJsonArray>
 #include <QObject>
 #include <QGSettings>
 #include <memory>
 
-using AccountsInter = com::deepin::daemon::Accounts;
-using LoginedInter = com::deepin::daemon::Logined;
+using AccountsInter = org::deepin::daemon::Accounts1;
+using LoginedInter = org::deepin::daemon::Logined;
 using Login1SessionSelf = org::freedesktop::login1::Session;
-using PowerManagerInter = com::deepin::daemon::PowerManager;
+using PowerManagerInter = org::deepin::daemon::PowerManager1;
 using DBusObjectInter = org::freedesktop::DBus;
 
 using com::deepin::daemon::Authenticate;

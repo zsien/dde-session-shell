@@ -25,11 +25,11 @@
 #include "constants.h"
 #include "public_func.h"
 
+#include "accountsuser_interface.h"
+
 #include <QObject>
 
-#include <com_deepin_daemon_accounts_user.h>
-
-using UserInter = com::deepin::daemon::accounts::User;
+using UserInter = org::deepin::daemon::accounts1::User;
 
 class User : public QObject
 {

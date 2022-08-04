@@ -31,7 +31,7 @@ WarningContent::WarningContent(SessionBaseModel * const model, const SessionBase
     , m_login1Inter(new DBusLogin1Manager("org.freedesktop.login1", "/org/freedesktop/login1", QDBusConnection::systemBus(), this))
     , m_powerAction(action)
 {
-    m_inhibitorBlacklists << "NetworkManager" << "ModemManager" << "com.deepin.daemon.Power";
+    m_inhibitorBlacklists << "NetworkManager" << "ModemManager" << "org.deepin.daemon.Power1";
     setTopFrameVisible(false);
     setBottomFrameVisible(false);
 }

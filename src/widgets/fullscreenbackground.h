@@ -31,9 +31,9 @@
 #include <QLoggingCategory>
 Q_DECLARE_LOGGING_CATEGORY(DDE_SS)
 
-#include <com_deepin_daemon_imageeffect.h>
+#include "imageeffect_interface.h"
 
-using ImageEffectInter = com::deepin::daemon::ImageEffect;
+using ImageEffectInter = org::deepin::daemon::ImageEffect1;
 
 class BlackWidget;
 class SessionBaseModel;

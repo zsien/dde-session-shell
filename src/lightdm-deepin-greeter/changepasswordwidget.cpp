@@ -308,7 +308,7 @@ void ChangePasswordWidget::parseProcessResult(int exitCode, const QString &outpu
         DMessageManager::instance()->sendMessage(qobject_cast<QWidget *>(parent()), message);
 
         // 更新密码提示信息
-        UserInter userInter("com.deepin.daemon.Accounts", m_user->path(), QDBusConnection::systemBus(), this);
+        UserInter userInter("org.deepin.daemon.Accounts1", m_user->path(), QDBusConnection::systemBus(), this);
         userInter.SetPasswordHint(m_passwordHints->lineEdit()->text());
         return;
     }

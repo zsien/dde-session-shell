@@ -3,13 +3,13 @@
 
 #include "authcommon.h"
 #include "userinfo.h"
+#include "mfainfolist.h"
 
 #include <DSysInfo>
 
 #include <QObject>
 
 #include <memory>
-#include <types/mfainfolist.h>
 
 using namespace AuthCommon;
 

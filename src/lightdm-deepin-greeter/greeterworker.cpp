@@ -4,19 +4,20 @@
 #include "keyboardmonitor.h"
 #include "userinfo.h"
 
+#include "systempower_interface.h"
+
 #include <DSysInfo>
 
 #include <QGSettings>
 
-#include <com_deepin_system_systempower.h>
 #include <pwd.h>
 
-#define LOCKSERVICE_PATH "/com/deepin/dde/LockService"
-#define LOCKSERVICE_NAME "com.deepin.dde.LockService"
+#define LOCKSERVICE_PATH "/org/deepin/dde/LockService1"
+#define LOCKSERVICE_NAME "org.deepin.dde.LockService1"
 #define SECURITYENHANCE_PATH "/com/deepin/daemon/SecurityEnhance"
 #define SECURITYENHANCE_NAME "com.deepin.daemon.SecurityEnhance"
 
-using PowerInter = com::deepin::system::Power;
+using PowerInter = org::deepin::system::Power1;
 using namespace Auth;
 using namespace AuthCommon;
 DCORE_USE_NAMESPACE
@@ -272,7 +273,7 @@ void GreeterWorker::initConfiguration()
 
     // 当这个配置不存在是，如果是不是笔记本就打开小键盘，否则就关闭小键盘 0关闭键盘 1打开键盘 2默认值（用来判断是不是有这个key）
     if (m_model->currentUser() != nullptr && getNumLockState(m_model->currentUser()->name()) == NUM_LOCK_UNKNOWN) {
-        PowerInter powerInter("com.deepin.system.Power", "/com/deepin/system/Power", QDBusConnection::systemBus(), this);
+        PowerInter powerInter("org.deepin.system.Power1", "/org/deepin/system/Power1", QDBusConnection::systemBus(), this);
         if (powerInter.hasBattery()) {
             saveNumlockState(m_model->currentUser(), false);
         } else {
@@ -560,7 +561,7 @@ void GreeterWorker::checkDBusServer(bool isValid)
     } else {
         // FIXME: 我不希望这样做，但是QThread::msleep会导致无限递归
         QTimer::singleShot(300, this, [ = ] {
-            qWarning() << "com.deepin.daemon.Accounts is not start, rechecking!";
+            qWarning() << "org.deepin.daemon.Accounts1 is not start, rechecking!";
             checkDBusServer(m_accountsInter->isValid());
         });
     }

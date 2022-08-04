@@ -57,7 +57,7 @@ class DBusHotzone: public QDBusAbstractInterface
         if (3 != arguments.count())
             return;
         QString interfaceName = msg.arguments().at(0).toString();
-        if (interfaceName !="com.deepin.daemon.Zone")
+        if (interfaceName != staticInterfaceName())
             return;
         QVariantMap changedProps = qdbus_cast<QVariantMap>(arguments.at(1).value<QDBusArgument>());
         QStringList keys = changedProps.keys();
@@ -73,7 +73,7 @@ class DBusHotzone: public QDBusAbstractInterface
    }
 public:
     static inline const char *staticInterfaceName()
-    { return "com.deepin.daemon.Zone"; }
+    { return "org.deepin.daemon.Zone1"; }
 
 public:
     DBusHotzone(const QString &service, const QString &path, const QDBusConnection &connection, QObject *parent = 0);
