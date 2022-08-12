@@ -34,7 +34,7 @@ class QStandardItemModel;
 /*!
  * \brief The UserListPopupWidget class
  */
-class UserListPopupWidget : public QListView
+class UserListPopupWidget : public DListView
 {
     Q_OBJECT
 public:

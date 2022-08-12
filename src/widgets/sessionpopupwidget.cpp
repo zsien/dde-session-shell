@@ -26,11 +26,14 @@
 
 const int ITEM_WIDTH = 180;
 const int ITEM_HEIGHT = 34;
+const int ITEM_SPACING = 2;
+
 SessionPopupWidget::SessionPopupWidget(QWidget *parent)
     : DListView(parent)
     , m_model(new QStandardItemModel(this))
 {
     initUI();
+
     // enter键盘响应
     connect(this, &SessionPopupWidget::activated, this, &SessionPopupWidget::itemClicked);
     connect(this, &SessionPopupWidget::clicked, this, &SessionPopupWidget::itemClicked);
@@ -45,7 +48,7 @@ void SessionPopupWidget::setSessionInfo(const QMap<QString, QString> &infos, con
         addItem(it.value(), it.key());
     }
 
-    resize(ITEM_WIDTH, ITEM_HEIGHT*m_model->rowCount());
+    resize(ITEM_WIDTH, ITEM_HEIGHT * m_model->rowCount() + m_model->rowCount() * 2 * ITEM_SPACING);
 }
 
 void SessionPopupWidget::updateCurrentSession(const QString &curSession)
@@ -60,25 +63,15 @@ void SessionPopupWidget::updateCurrentSession(const QString &curSession)
 
 void SessionPopupWidget::initUI()
 {
-    setAccessibleName(QStringLiteral("sessionlistview"));
-
-    QPalette pal = palette();
-    pal.setColor(DPalette::Base, QColor(235, 235, 235, int(0.05 * 255)));
-    pal.setColor(QPalette::Active, QPalette::Highlight, QColor(235, 235, 235, int(0.15 * 255)));
-    setPalette(pal);
-
+    setAccessibleName(QStringLiteral("sessionListview"));
     setFrameShape(QFrame::NoFrame);
     setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
-    setResizeMode(QListView::Adjust);
     setViewportMargins(0, 0, 0, 0);
     setItemSpacing(0);
+    setSpacing(ITEM_SPACING);
     setItemSize(QSize(ITEM_WIDTH, ITEM_HEIGHT));
-
-    QMargins itemMargins(this->itemMargins());
-    itemMargins.setLeft(8);
-    setItemMargins(itemMargins);
 
     setModel(m_model);
 }
@@ -91,17 +84,17 @@ void SessionPopupWidget::addItem(const QString &icon, const QString &itemName)
     item->setText(itemName);
 
     QSize iconSize(12, 10);
-    auto leftAction = new DViewItemAction(Qt::AlignVCenter, iconSize, iconSize, true);
-    QIcon Acticon;
+    auto rightAction = new DViewItemAction(Qt::AlignVCenter, iconSize, iconSize, true);
+    QIcon actIcon;
     if (itemName != m_curSession) {
-        Acticon = QIcon();
+        actIcon = QIcon();
     } else {
         DStyle *dStyle = qobject_cast<DStyle *>(style());
-        Acticon = dStyle ? dStyle->standardIcon(DStyle::SP_MarkElement) : QIcon();
+        actIcon = dStyle ? dStyle->standardIcon(DStyle::SP_MarkElement) : QIcon();
     }
 
-    leftAction->setIcon(Acticon);
-    item->setActionList(Qt::Edge::LeftEdge, { leftAction });
+    rightAction->setIcon(actIcon);
+    item->setActionList(Qt::Edge::RightEdge, { rightAction });
 
     m_model->appendRow(item);
 }
@@ -123,7 +116,7 @@ void SessionPopupWidget::updateSelectedState()
 {
     for (int i = 0; i < m_model->rowCount(); i++) {
         auto item = static_cast<DStandardItem *>(m_model->item(i));
-        auto action = item->actionList(Qt::Edge::LeftEdge).first();
+        auto action = item->actionList(Qt::Edge::RightEdge).first();
         if (item->text() != m_curSession) {
             action->setIcon(QIcon());
             update(item->index());

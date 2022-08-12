@@ -35,9 +35,9 @@
 #include "sessionpopupwidget.h"
 #include "sessionmanager.h"
 #include "userlistpopupwidget.h"
+#include "roundpopupwidget.h"
 
 #include <DFloatingButton>
-#include <DArrowRectangle>
 #include <DPushButton>
 #include <DConfig>
 
@@ -81,7 +81,7 @@ ControlWidget::ControlWidget(const SessionBaseModel *model, QWidget *parent)
     , m_contextMenu(new QMenu(this))
     , m_tipContentWidget(nullptr)
     , m_tipsWidget(new TipsWidget(parent ? parent->window() : nullptr))
-    , m_arrowRectWidget(new DArrowRectangle(DArrowRectangle::ArrowBottom, this))
+    , m_roundPopupWidget(new RoundPopupWidget(this))
     , m_kbLayoutListView(nullptr)
     , m_sessionPopupWidget(nullptr)
     , m_userListPopupWidget(nullptr)
@@ -125,27 +125,8 @@ void ControlWidget::initKeyboardLayoutList()
     if (!languageList.isEmpty())
         static_cast<QAbstractButton *>(m_keyboardBtn)->setText(languageList.at(0));
 
-    // 无特效模式时，让窗口圆角
-    m_arrowRectWidget->setProperty("_d_radius_force", true);
-    m_arrowRectWidget->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::WindowStaysOnTopHint);
-    m_arrowRectWidget->setMargin(0);
-    m_arrowRectWidget->setShadowBlurRadius(20);
-    m_arrowRectWidget->setRadius(6);
-    m_arrowRectWidget->setShadowYOffset(2);
-    m_arrowRectWidget->setShadowXOffset(0);
-    m_arrowRectWidget->setArrowWidth(18);
-    m_arrowRectWidget->setArrowHeight(10);
-    m_arrowRectWidget->setMinimumWidth(DDESESSIONCC::KEYBOARDLAYOUT_WIDTH);
-    m_arrowRectWidget->setMaximumSize(DDESESSIONCC::KEYBOARDLAYOUT_WIDTH, DDESESSIONCC::LAYOUTBUTTON_HEIGHT * 7);
-    m_arrowRectWidget->setFocusPolicy(Qt::NoFocus);
-
-    QPalette pal = m_arrowRectWidget->palette();
-    pal.setColor(DPalette::Inactive, DPalette::Base, QColor(235, 235, 235, int(0.05 * 255)));
-    setPalette(pal);
-
     m_kbLayoutListView->setVisible(false);
     connect(m_kbLayoutListView, &KBLayoutListView::itemClicked, this, &ControlWidget::onItemClicked);
-    connect(m_kbLayoutListView, &KBLayoutListView::sizeChange, this, &ControlWidget::resizeArrowWidget);
 }
 
 void ControlWidget::initUI()
@@ -390,22 +371,12 @@ void ControlWidget::chooseToSession(const QString &session)
 
 void ControlWidget::setKBLayoutVisible()
 {
-    DFloatingButton *layoutButton = static_cast<DFloatingButton *>(sender());
-    if (!layoutButton)
+    FlotingButton *clickedButton = static_cast<FlotingButton *>(sender());
+    if (!clickedButton)
         return;
 
-    QWidget *content = m_arrowRectWidget->getContent();
-    if (!content) {
-        m_arrowRectWidget->setContent(m_kbLayoutListView);
-    } else if (content != m_kbLayoutListView) {
-        content->setVisible(false);
-        m_arrowRectWidget->setContent(m_kbLayoutListView);
-    }
-
-    // 算上三角形的高度
-    QPoint pos = mapToGlobal(layoutButton->pos()) - QPoint((m_kbLayoutListView->width() - layoutButton->width())/2, m_kbLayoutListView->height() + 10);
-    m_arrowRectWidget->setGeometry(QRect(pos, m_kbLayoutListView->size() + QSize(0, 10)));
-    m_arrowRectWidget->setVisible(!m_arrowRectWidget->isVisible());
+    m_roundPopupWidget->setContent(m_kbLayoutListView);
+    showPopupWidget(clickedButton);
 }
 
 void ControlWidget::setKeyboardType(const QString &str)
@@ -443,14 +414,8 @@ void ControlWidget::onItemClicked(const QString &str)
         currentText = currentText.split("/").last();
 
     static_cast<QAbstractButton *>(m_keyboardBtn)->setText(currentText);
-    m_arrowRectWidget->hide();
+    m_roundPopupWidget->hide();
     m_curUser->setKeyboardLayout(str);
-}
-
-void ControlWidget::resizeArrowWidget()
-{
-    if (m_arrowRectWidget)
-        m_arrowRectWidget->setFixedSize(m_kbLayoutListView->size() + QSize(0, 10));
 }
 
 void ControlWidget::showSessionPopup()
@@ -458,7 +423,7 @@ void ControlWidget::showSessionPopup()
     if (!m_sessionPopupWidget) {
         m_sessionPopupWidget = new SessionPopupWidget(this);
         connect(m_sessionPopupWidget, &SessionPopupWidget::sessionItemClicked, [this](QString session) {
-            m_arrowRectWidget->hide();
+            m_roundPopupWidget->hide();
             Q_EMIT requestSwitchSession(session);
         });
 
@@ -468,19 +433,8 @@ void ControlWidget::showSessionPopup()
         m_sessionPopupWidget->updateCurrentSession(SessionManager::Reference().currentSession());
     }
 
-    QWidget *content = m_arrowRectWidget->getContent();
-    if (!content) {
-        m_arrowRectWidget->setContent(m_sessionPopupWidget);
-    } else if (content != m_sessionPopupWidget) {
-        content->setVisible(false);
-        m_arrowRectWidget->setContent(m_sessionPopupWidget);
-    }
-
-    // 算上三角形的高度
-    QPoint pos = mapToGlobal(m_sessionBtn->pos()) - QPoint((m_sessionPopupWidget->width() - m_sessionBtn->width())/2,
-                                                           m_sessionPopupWidget->height() + 10);
-    m_arrowRectWidget->setGeometry(QRect(pos, m_sessionPopupWidget->size() + QSize(0, 10)));
-    m_arrowRectWidget->setVisible(!m_arrowRectWidget->isVisible());
+    m_roundPopupWidget->setContent(m_sessionPopupWidget);
+    showPopupWidget(m_sessionBtn);
 }
 
 void ControlWidget::showUserListPopupWidget()
@@ -488,24 +442,13 @@ void ControlWidget::showUserListPopupWidget()
     if (!m_userListPopupWidget) {
         m_userListPopupWidget = new UserListPopupWidget(m_model, this);
         connect(m_userListPopupWidget, &UserListPopupWidget::requestSwitchToUser, [ this ](std::shared_ptr<User> user) {
-            m_arrowRectWidget->hide();
+            m_roundPopupWidget->hide();
             Q_EMIT requestSwitchUser(user);
         });
     }
 
-    QWidget *content = m_arrowRectWidget->getContent();
-    if (!content) {
-        m_arrowRectWidget->setContent(m_userListPopupWidget);
-    } else if (content != m_userListPopupWidget) {
-        content->setVisible(false);
-        m_arrowRectWidget->setContent(m_userListPopupWidget);
-    }
-
-    // 算上三角形的高度
-    QPoint pos = mapToGlobal(m_switchUserBtn->pos()) - QPoint((m_userListPopupWidget->width() - m_switchUserBtn->width()) / 2,
-                                                              m_userListPopupWidget->height() + 10);
-    m_arrowRectWidget->setGeometry(QRect(pos, m_userListPopupWidget->size() + QSize(0, 10)));
-    m_arrowRectWidget->setVisible(!m_arrowRectWidget->isVisible());
+    m_roundPopupWidget->setContent(m_userListPopupWidget);
+    showPopupWidget(m_switchUserBtn);
 }
 
 void ControlWidget::keyReleaseEvent(QKeyEvent *event)
@@ -597,4 +540,32 @@ void ControlWidget::showEvent(QShowEvent *event)
     updateTapOrder();
 
     QWidget::showEvent(event);
+}
+
+void ControlWidget::showPopupWidget(const FlotingButton *clickedBtn)
+{
+    if (!m_roundPopupWidget || !clickedBtn || !topLevelWidget())
+        return;
+
+    if (m_roundPopupWidget->isVisible()) {
+        m_roundPopupWidget->setVisible(false);
+        return;
+    }
+
+    // 设计弹窗离右边距和底部按钮距离
+    const int rightMargin = 10;
+    const int bottomMargin = 10;
+
+    QPoint pos = mapToGlobal(clickedBtn->pos()) - QPoint((m_roundPopupWidget->width() - clickedBtn->width()) / 2 - rightMargin,
+                                                              m_roundPopupWidget->height() + bottomMargin);
+
+    // 保证页面显示没超出显示屏幕范围
+    QRect topWidgetRect = topLevelWidget()->frameGeometry();
+    if ((pos.x() + m_roundPopupWidget->width() + rightMargin) > (topWidgetRect.x() + topWidgetRect.width())) {
+        int leftMoveValue = pos.x() + m_roundPopupWidget->width() + rightMargin - (topWidgetRect.x() + topWidgetRect.width());
+        pos.setX(pos.x() - leftMoveValue);
+    }
+
+    m_roundPopupWidget->setGeometry(QRect(pos, m_roundPopupWidget->size()));
+    m_roundPopupWidget->setVisible(true);
 }

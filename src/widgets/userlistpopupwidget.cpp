@@ -37,7 +37,7 @@ const int ITEM_SPACING = 5;
 const int MAX_HEIGHT = ITEM_HEIGHT * MAX_ROW + (MAX_ROW * 2) * ITEM_SPACING;
 
 UserListPopupWidget::UserListPopupWidget(const SessionBaseModel *model, QWidget *parent)
-    : QListView(parent)
+    : DListView(parent)
     , m_model(model)
     , m_userItemDelegate(new UserItemDelegate(this))
     , m_userItemModel(new QStandardItemModel(this))

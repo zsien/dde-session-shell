@@ -45,10 +45,6 @@ class BaseModuleInterface;
 
 DWIDGET_USE_NAMESPACE
 
-DWIDGET_BEGIN_NAMESPACE
-class DArrowRectangle;
-DWIDGET_END_NAMESPACE
-
 DCORE_BEGIN_NAMESPACE
 class DConfig;
 DCORE_END_NAMESPACE
@@ -64,6 +60,7 @@ class TipsWidget;
 class TipContentWidget;
 class SessionPopupWidget;
 class UserListPopupWidget;
+class RoundPopupWidget;
 
 const int BlurRadius = 15;
 const int BlurTransparency = 70;
@@ -137,7 +134,6 @@ public slots:
     void setKeyboardType(const QString& str);
     void setKeyboardList(const QStringList& str);
     void onItemClicked(const QString& str);
-    void resizeArrowWidget();
     void showSessionPopup();
     void showUserListPopupWidget();
 
@@ -151,6 +147,7 @@ private:
     void updateLayout();
     void updateTapOrder();
     int focusedBtnIndex();
+    void showPopupWidget(const FlotingButton *clickedBtn);
 
 private slots:
     void showInfoTips();
@@ -172,12 +169,13 @@ private:
     QMenu *m_contextMenu;
     QMap<QString, QWidget *> m_modules;
 
-    TipContentWidget *m_tipContentWidget;
-    TipsWidget *m_tipsWidget;
-    DArrowRectangle *m_arrowRectWidget;
-    KBLayoutListView *m_kbLayoutListView;   // 键盘布局列表
-    SessionPopupWidget *m_sessionPopupWidget;
-    UserListPopupWidget *m_userListPopupWidget;
+    TipContentWidget *m_tipContentWidget;       // 显示按钮文字tip
+    TipsWidget *m_tipsWidget;                   // 显示插件提供widget tip
+
+    RoundPopupWidget *m_roundPopupWidget;       // 圆角弹窗
+    KBLayoutListView *m_kbLayoutListView;       // 键盘布局列表
+    SessionPopupWidget *m_sessionPopupWidget;   // session 列表
+    UserListPopupWidget *m_userListPopupWidget; // 用户列表
 };
 
 #endif // CONTROLWIDGET_H
