@@ -483,7 +483,7 @@ void SessionBaseModel::updateLoginedUserList(const QString &list)
                 // 排除非正常登录用户
                 continue;
             }
-            const QString path = QString("/com/deepin/daemon/Accounts/User") + QString::number(uid);
+            const QString path = QString("/org/deepin/daemon/Accounts1/User") + QString::number(uid);
             if (!m_loginedUsers->contains(path)) {
                 // 对于通过自定义窗口输入的账户(域账户), 此时账户还没添加进来，导致下面m_users->value(path)为空指针，调用会导致程序奔溃
                 // 因此在登录时，对于新增的账户，调用addUser先将账户添加进来，然后再去更新对应账户的登录状态
