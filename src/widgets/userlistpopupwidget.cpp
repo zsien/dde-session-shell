@@ -25,6 +25,7 @@
 #include <DFontSizeManager>
 
 #include <QMap>
+#include <QKeyEvent>
 #include <QStandardItem>
 
 DWIDGET_USE_NAMESPACE
@@ -46,6 +47,52 @@ UserListPopupWidget::UserListPopupWidget(const SessionBaseModel *model, QWidget 
     initConnections();
 
     loadUsers();
+}
+
+void UserListPopupWidget::keyPressEvent(QKeyEvent *event)
+{
+    const QModelIndex currentIndex = this->currentIndex();
+    int row = currentIndex.row();
+    QModelIndex targetIndex;
+
+    switch (event->key()) {
+    case Qt::Key_Up:
+        if (row)
+            targetIndex = currentIndex.sibling(row - 1, 0);
+        else
+            targetIndex = currentIndex.sibling(m_userItemModel->rowCount() - 1, 0);
+        break;
+    case Qt::Key_Down:
+        if ((row + 1) != m_userItemModel->rowCount())
+            targetIndex = currentIndex.sibling(row + 1, 0);
+        else
+            targetIndex = currentIndex.sibling(0, 0);
+        break;
+    case Qt::Key_Enter:
+    case Qt::Key_Return:
+        if (currentIndex.isValid()) {
+            Q_EMIT clicked(currentIndex);
+        }
+        break;
+    }
+
+    if (targetIndex.isValid()) {
+        blockSignals(true);
+        setCurrentIndex(targetIndex);
+        blockSignals(false);
+
+        // 更新避免选中背景色上下移动后有残影
+        update();
+    }
+
+    QWidget::keyPressEvent(event);
+}
+
+void UserListPopupWidget::showEvent(QShowEvent *event)
+{
+    setFocus();
+
+    QWidget::showEvent(event);
 }
 
 void UserListPopupWidget::handlerBeforeAddUser(const std::shared_ptr<User> &user)

@@ -43,6 +43,10 @@ public:
 signals:
     void requestSwitchToUser(std::shared_ptr<User> user);
 
+protected:
+    void keyPressEvent(QKeyEvent *event);
+    void showEvent(QShowEvent *event);
+
 private slots:
     void userInfoChanged();
     void currentUserChanged(const std::shared_ptr<User> &user);

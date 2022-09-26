@@ -47,9 +47,7 @@ void UserItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     QPen pen;
     QRect rect = option.rect;
 
-    painter->setRenderHint(QPainter::Antialiasing, true);
-
-    if (option.state.testFlag(QStyle::State_MouseOver)) {
+    if (option.state.testFlag(QStyle::State_MouseOver) || option.state.testFlag(QStyle::State_Selected)) {
         // 鼠标悬停背景色
         QColor hoverColor(0, 129, 255, int(0.9 * 255));
         pen.setColor(hoverColor);
@@ -66,6 +64,8 @@ void UserItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
     // 绘制背景颜色
     painter->drawRoundedRect(rect, RADIUS_VALUE, RADIUS_VALUE);
+
+    painter->setRenderHint(QPainter::Antialiasing, true);
 
     UserItemData userData = index.data(StaticUserDataRole).value<UserItemData>();
 
