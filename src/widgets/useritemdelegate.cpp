@@ -1,4 +1,4 @@
-/*
+ /*
  * Copyright (C) 2021 ~ 2022 Uniontech Software Technology Co.,Ltd.
  *
  * Author:     zhaoyingzhen <zhaoyingzhen@uniontech.com>
@@ -47,7 +47,7 @@ void UserItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     QPen pen;
     QRect rect = option.rect;
 
-    if (option.state.testFlag(QStyle::State_MouseOver) || option.state.testFlag(QStyle::State_Selected)) {
+    if (option.state.testFlag(QStyle::State_Selected)) {
         // 鼠标悬停背景色
         QColor hoverColor(0, 129, 255, int(0.9 * 255));
         pen.setColor(hoverColor);
@@ -76,7 +76,7 @@ void UserItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     if (userData.isLogined)
         drawLoginedState(painter, rect);
 
-    if (option.state.testFlag(QStyle::State_MouseOver)) {
+    if (option.state.testFlag(QStyle::State_Selected)) {
         pen.setColor(Qt::white);
     } else {
         pen.setColor(Qt::black);

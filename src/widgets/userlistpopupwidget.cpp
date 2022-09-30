@@ -49,6 +49,20 @@ UserListPopupWidget::UserListPopupWidget(const SessionBaseModel *model, QWidget 
     loadUsers();
 }
 
+void UserListPopupWidget::mouseMoveEvent(QMouseEvent *event)
+{
+    QModelIndex index = indexAt(event->pos());
+    if (index.isValid()) {
+        blockSignals(true);
+        setCurrentIndex(index);
+        blockSignals(false);
+
+        update();
+    }
+
+    DListView::mouseMoveEvent(event);
+}
+
 void UserListPopupWidget::keyPressEvent(QKeyEvent *event)
 {
     const QModelIndex currentIndex = this->currentIndex();
@@ -85,7 +99,7 @@ void UserListPopupWidget::keyPressEvent(QKeyEvent *event)
         update();
     }
 
-    QWidget::keyPressEvent(event);
+    DListView::keyPressEvent(event);
 }
 
 void UserListPopupWidget::showEvent(QShowEvent *event)
@@ -173,10 +187,13 @@ void UserListPopupWidget::setItemData(QStandardItem *item, const User *user)
 
 void UserListPopupWidget::initUI()
 {
+    setMouseTracking(true);
+
     setFrameShape(QFrame::NoFrame);
     setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    setEditTriggers(QAbstractItemView::NoEditTriggers);
     setViewportMargins(0, 0, 0, 0);
     setMaximumHeight(MAX_HEIGHT);
     setSpacing(ITEM_SPACING);

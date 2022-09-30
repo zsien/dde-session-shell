@@ -44,6 +44,7 @@ signals:
     void requestSwitchToUser(std::shared_ptr<User> user);
 
 protected:
+    void mouseMoveEvent(QMouseEvent *e);
     void keyPressEvent(QKeyEvent *event);
     void showEvent(QShowEvent *event);
 
