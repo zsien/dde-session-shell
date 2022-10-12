@@ -62,7 +62,7 @@ bool VirtualKeyboardModule::isNeedInitPlugin() const
 void VirtualKeyboardModule::init()
 {
     m_tipContentWidget = new TipContentWidget();
-    m_tipContentWidget->setText(tr("virtual keyboard"));
+    m_tipContentWidget->setText(tr("Onboard"));
 
     m_keyboardIconWidget = new KeyboardIconWidget();
     m_keyboardIconWidget->setIconPath(":/img/screen_keyboard_normal.svg");

@@ -326,11 +326,11 @@ QString UserListPopupWidget::accountStrType(int accountType) const
     // 0:标准用户 1:管理员 2:域账户
     switch (accountType) {
         case User::Standard:
-            return tr("standard");
+            return tr("Standard User");
         case User::Admin:
-            return tr("admin");
+            return tr("Administrator");
         case User::Other:
-            return tr("other");
+            return tr("Other Users");
         default:
             return "";
     }

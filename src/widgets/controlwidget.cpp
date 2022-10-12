@@ -143,7 +143,7 @@ void ControlWidget::initUI()
     m_sessionBtn->setAutoExclusive(true);
     m_sessionBtn->setBackgroundRole(DPalette::Button);
     m_sessionBtn->hide();
-    m_sessionBtn->setTipText(tr("session"));
+    m_sessionBtn->setTipText(tr("Desktop Environment and Display Protocol"));
 
     m_keyboardBtn = new FlotingButton(this);
     m_keyboardBtn->setAccessibleName("KeyboardLayoutBtn");
@@ -152,7 +152,7 @@ void ControlWidget::initUI()
     m_keyboardBtn->setBackgroundRole(DPalette::Button);
     m_keyboardBtn->setAutoExclusive(true);
     static_cast<QAbstractButton *>(m_keyboardBtn)->setText(QString());
-    m_keyboardBtn->setTipText(tr("keyboard layout"));
+    m_keyboardBtn->setTipText(tr("Keyboard Layout"));
 
     // 给显示文字的按钮设置样式
     QPalette pal = m_keyboardBtn->palette();
@@ -166,7 +166,7 @@ void ControlWidget::initUI()
     m_switchUserBtn->setFixedSize(BUTTON_SIZE);
     m_switchUserBtn->setAutoExclusive(true);
     m_switchUserBtn->setBackgroundRole(DPalette::Button);
-    m_switchUserBtn->setTipText(tr("switch user"));
+    m_switchUserBtn->setTipText(tr("Switch User"));
 
     m_powerBtn->setAccessibleName("PowerBtn");
     m_powerBtn->setIcon(QIcon(":/img/bottom_actions/shutdown_normal.svg"));
@@ -174,7 +174,7 @@ void ControlWidget::initUI()
     m_powerBtn->setFixedSize(BUTTON_SIZE);
     m_powerBtn->setAutoExclusive(true);
     m_powerBtn->setBackgroundRole(DPalette::Button);
-    m_powerBtn->setTipText(tr("shutdown"));
+    m_powerBtn->setTipText(tr("Power"));
 
     if (m_curUser->keyboardLayoutList().size() < 2)
         m_keyboardBtn->hide();

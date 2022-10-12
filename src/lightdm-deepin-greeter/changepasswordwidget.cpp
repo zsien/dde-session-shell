@@ -47,13 +47,13 @@ ChangePasswordWidget::ChangePasswordWidget(std::shared_ptr<User> user, QWidget *
     , m_lockBtn(new DLabel(this))
     , m_avatar(new UserAvatar(this))
     , m_nameLabel(new DLabel(m_user->displayName(), this))
-    , m_tipsLabel(new DLabel(tr("Your password expired, please login again."), this))
+    , m_tipsLabel(new DLabel(tr("Your password has expired. Please change it and log in again."), this))
     , m_oldPasswdEdit(new DPasswordEdit(this))
     , m_newPasswdEdit(new DPasswordEdit(this))
     , m_levelWidget(new PasswordLevelWidget(this))
     , m_repeatPasswdEdit(new DPasswordEdit(this))
     , m_passwordHints(new DLineEditEx(this))
-    , m_okBtn(new DPushButton(tr("Confirm"), this))
+    , m_okBtn(new DPushButton(tr("Save"), this))
 {
     setAccessibleName("ResetPasswdWidget");
 
@@ -77,13 +77,13 @@ void ChangePasswordWidget::initUI()
     m_oldPasswdEdit->setEchoMode(QLineEdit::Password);
     m_oldPasswdEdit->setContextMenuPolicy(Qt::NoContextMenu);
     m_oldPasswdEdit->lineEdit()->setAlignment(Qt::AlignCenter);
-    m_oldPasswdEdit->setPlaceholderText(tr("Input old passoword"));
+    m_oldPasswdEdit->setPlaceholderText(tr("Old password"));
 
     m_newPasswdEdit->setClearButtonEnabled(false);
     m_newPasswdEdit->setEchoMode(QLineEdit::Password);
     m_newPasswdEdit->setContextMenuPolicy(Qt::NoContextMenu);
     m_newPasswdEdit->lineEdit()->setAlignment(Qt::AlignCenter);
-    m_newPasswdEdit->setPlaceholderText(tr("Input new password"));
+    m_newPasswdEdit->setPlaceholderText(tr("New password"));
 
     m_levelWidget->reset();
     // TODO 后续调整
@@ -93,13 +93,13 @@ void ChangePasswordWidget::initUI()
     m_repeatPasswdEdit->setEchoMode(QLineEdit::Password);
     m_repeatPasswdEdit->setContextMenuPolicy(Qt::NoContextMenu);
     m_repeatPasswdEdit->lineEdit()->setAlignment(Qt::AlignCenter);
-    m_repeatPasswdEdit->setPlaceholderText(tr("Input new passowrd again"));
+    m_repeatPasswdEdit->setPlaceholderText(tr("Repeat new password"));
 
     m_passwordHints->setClearButtonEnabled(false);
     m_passwordHints->setEchoMode(QLineEdit::Normal);
     m_passwordHints->setContextMenuPolicy(Qt::NoContextMenu);
     m_passwordHints->lineEdit()->setAlignment(Qt::AlignCenter);
-    m_passwordHints->setPlaceholderText(tr("Password hints"));
+    m_passwordHints->setPlaceholderText(tr("Password hint (Optional)"));
 
     m_mainLayout->setContentsMargins(10, 0, 10, 0);
     m_mainLayout->setSpacing(10);
@@ -303,7 +303,7 @@ void ChangePasswordWidget::parseProcessResult(int exitCode, const QString &outpu
         pa.setColor(QPalette::Background, QColor(247, 247, 247, 51));
         message->setPalette(pa);
         message->setIcon(QIcon::fromTheme("dialog-ok"));
-        message->setMessage(tr("Password Change Success"));
+        message->setMessage(tr("Password changed"));
         message->setAttribute(Qt::WA_DeleteOnClose);
         DMessageManager::instance()->sendMessage(qobject_cast<QWidget *>(parent()), message);
 

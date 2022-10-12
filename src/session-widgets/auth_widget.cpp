@@ -413,7 +413,7 @@ void AuthWidget::updatePasswordExpiredState()
             if (m_user && m_user->accountType() == User::AccountType::Standard) {
                 // 直接限制整个界面，除非下次打开此应用或此类被初始化
                 this->setDisabled(true);
-                m_expiredStateLabel->setText(tr("Password expired, please contact admin"));
+                m_expiredStateLabel->setText(tr("Your password has expired. Please contact the administrator to change it."));
                 m_expiredStateLabel->setVisible(true);
                 m_expiredSpacerItem->changeSize(0, EXPIRED_SPACER_ITEM_HEIGHT);
             } else if ( m_user && m_user->accountType() == User::AccountType::Admin) {
@@ -421,9 +421,9 @@ void AuthWidget::updatePasswordExpiredState()
             }
         } else if (m_model && m_model->appType() == AuthCommon::AppType::Lock) {
             if (m_user && m_user->accountType() == User::AccountType::Standard) {
-                m_expiredStateLabel->setText(tr("Password expired, please contact admin"));
+                m_expiredStateLabel->setText(tr("Your password has expired. Please contact the administrator to change it."));
             } else if ( m_user && m_user->accountType() == User::AccountType::Admin) {
-                m_expiredStateLabel->setText(tr("Password expired, please change"));
+                m_expiredStateLabel->setText(tr("Your password has expired. Please change it."));
             }
 
             m_expiredStateLabel->setVisible(true);
