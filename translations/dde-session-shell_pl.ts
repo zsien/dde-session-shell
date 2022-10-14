@@ -11,11 +11,11 @@
     </message>
     <message numerus="yes">
         <source>Verification failed, %n chances left</source>
-        <translation><numerusform>Weryfikacja nie powiodła się, pozostała %n próba</numerusform><numerusform>Weryfikacja nie powiodła się, pozostały %n próby</numerusform><numerusform>Weryfikacja nie powiodła się, pozostało %n prób </numerusform><numerusform>Weryfikacja nie powiodła się, pozostało %n prób </numerusform></translation>
+        <translation><numerusform>Weryfikacja nie powiodła się, pozostała %n próba</numerusform><numerusform>Weryfikacja nie powiodła się, pozostały %n próby</numerusform><numerusform>Weryfikacja nie powiodła się, pozostało %n prób</numerusform><numerusform>Weryfikacja nie powiodła się, pozostało %n prób</numerusform></translation>
     </message>
     <message>
         <source>Verification failed, only one chance left</source>
-        <translation>Weryfikacja nie powiodła się, pozostała tylko jedna szansa </translation>
+        <translation>Weryfikacja nie powiodła się, pozostała tylko jedna próba</translation>
     </message>
     <message>
         <source>Verify your Face ID</source>
@@ -27,14 +27,14 @@
     </message>
     <message>
         <source>Device unavailable!</source>
-        <translation type="unfinished"/>
+        <translation>Urządzenie niedostępne!</translation>
     </message>
 </context>
 <context>
     <name>AuthFingerprint</name>
     <message>
         <source>Verify your fingerprint</source>
-        <translation>Zweryfikuj odcisk palca </translation>
+        <translation>Zweryfikuj odcisk palca</translation>
     </message>
     <message>
         <source>Verification successful</source>
@@ -42,11 +42,11 @@
     </message>
     <message numerus="yes">
         <source>Verification failed, %n chances left</source>
-        <translation><numerusform>Weryfikacja nie powiodła się, pozostała %n próba </numerusform><numerusform>Weryfikacja nie powiodła się, pozostały %n próby </numerusform><numerusform>Weryfikacja nie powiodła się, pozostało %n prób </numerusform><numerusform>Weryfikacja nie powiodła się, pozostało %n prób </numerusform></translation>
+        <translation><numerusform>Weryfikacja nie powiodła się, pozostała %n próba</numerusform><numerusform>Weryfikacja nie powiodła się, pozostały %n próby</numerusform><numerusform>Weryfikacja nie powiodła się, pozostało %n prób</numerusform><numerusform>Weryfikacja nie powiodła się, pozostało %n prób</numerusform></translation>
     </message>
     <message>
         <source>Verification failed, only one chance left</source>
-        <translation>Weryfikacja nie powiodła się, pozostała tylko jedna szansa </translation>
+        <translation>Weryfikacja nie powiodła się, pozostała tylko jedna próba</translation>
     </message>
     <message>
         <source>Fingerprint locked, use password please</source>
@@ -65,11 +65,11 @@
     </message>
     <message numerus="yes">
         <source>Verification failed, %n chances left</source>
-        <translation><numerusform>Weryfikacja nie powiodła się, pozostała %n próba</numerusform><numerusform>Weryfikacja nie powiodła się, pozostały %n próby</numerusform><numerusform>Weryfikacja nie powiodła się, pozostało %n prób </numerusform><numerusform>Weryfikacja nie powiodła się, pozostało %n prób </numerusform></translation>
+        <translation><numerusform>Weryfikacja nie powiodła się, pozostała %n próba</numerusform><numerusform>Weryfikacja nie powiodła się, pozostały %n próby</numerusform><numerusform>Weryfikacja nie powiodła się, pozostało %n prób</numerusform><numerusform>Weryfikacja nie powiodła się, pozostało %n prób</numerusform></translation>
     </message>
     <message>
         <source>Verification failed, only one chance left</source>
-        <translation>Weryfikacja nie powiodła się, pozostała tylko jedna szansa </translation>
+        <translation>Weryfikacja nie powiodła się, pozostała tylko jedna próba</translation>
     </message>
     <message>
         <source>Verify your Iris ID</source>
@@ -88,15 +88,15 @@
     </message>
     <message numerus="yes">
         <source>Verification failed, %n chances left</source>
-        <translation><numerusform>Weryfikacja nie powiodła się, pozostała %n próba</numerusform><numerusform>Weryfikacja nie powiodła się, pozostały %n próby</numerusform><numerusform>Weryfikacja nie powiodła się, pozostało %n prób </numerusform><numerusform>Weryfikacja nie powiodła się, pozostało %n prób </numerusform></translation>
+        <translation><numerusform>Weryfikacja nie powiodła się, pozostała %n próba</numerusform><numerusform>Weryfikacja nie powiodła się, pozostały %n próby</numerusform><numerusform>Weryfikacja nie powiodła się, pozostało %n prób</numerusform><numerusform>Weryfikacja nie powiodła się, pozostało %n prób</numerusform></translation>
     </message>
     <message>
         <source>Verification failed, only one chance left</source>
-        <translation>Weryfikacja nie powiodła się, pozostała tylko jedna szansa </translation>
+        <translation>Weryfikacja nie powiodła się, pozostała tylko jedna próba</translation>
     </message>
     <message>
         <source>Wrong Password</source>
-        <translation>Nieprawidłowe hasło</translation>
+        <translation>Błędne hasło</translation>
     </message>
     <message>
         <source>Password</source>
@@ -108,7 +108,7 @@
     </message>
     <message numerus="yes">
         <source>Please try again %n minutes later</source>
-        <translation><numerusform>Spróbuj ponownie za %n minute</numerusform><numerusform>Spróbuj ponownie za %n minuty</numerusform><numerusform>Spróbuj ponownie za %n minut</numerusform><numerusform>Spróbuj ponownie za %n minut</numerusform></translation>
+        <translation><numerusform>Spróbuj ponownie za %n minutę</numerusform><numerusform>Spróbuj ponownie za %n minuty</numerusform><numerusform>Spróbuj ponownie za %n minut</numerusform><numerusform>Spróbuj ponownie za %n minut</numerusform></translation>
     </message>
     <message>
         <source>Reset Password</source>
@@ -127,7 +127,7 @@
     </message>
     <message numerus="yes">
         <source>Please try again %n minutes later</source>
-        <translation><numerusform>Spróbuj ponownie za %n minute</numerusform><numerusform>Spróbuj ponownie za %n minuty</numerusform><numerusform>Spróbuj ponownie za %n minut</numerusform><numerusform>Spróbuj ponownie za %n minut</numerusform></translation>
+        <translation><numerusform>Spróbuj ponownie za %n minutę</numerusform><numerusform>Spróbuj ponownie za %n minuty</numerusform><numerusform>Spróbuj ponownie za %n minut</numerusform><numerusform>Spróbuj ponownie za %n minut</numerusform></translation>
     </message>
     <message>
         <source>Reset Password</source>
@@ -150,11 +150,11 @@
     </message>
     <message>
         <source>Verification failed, only one chance left</source>
-        <translation>Weryfikacja nie powiodła się, pozostała tylko jedna szansa </translation>
+        <translation>Weryfikacja nie powiodła się, pozostała tylko jedna próba</translation>
     </message>
     <message>
         <source>Wrong PIN</source>
-        <translation>Nieprawidłowy PIN</translation>
+        <translation>Błędny PIN</translation>
     </message>
     <message>
         <source>UKey is required</source>
@@ -166,7 +166,7 @@
     </message>
     <message numerus="yes">
         <source>Please try again %n minute(s) later</source>
-        <translation><numerusform>Spróbuj ponownie za %n minute</numerusform><numerusform>Spróbuj ponownie za %n minuty</numerusform><numerusform>Spróbuj ponownie za %n minut</numerusform><numerusform>Spróbuj ponownie za %n minut</numerusform></translation>
+        <translation><numerusform>Spróbuj ponownie za %n minutę</numerusform><numerusform>Spróbuj ponownie za %n minuty</numerusform><numerusform>Spróbuj ponownie za %n minut</numerusform><numerusform>Spróbuj ponownie za %n minut</numerusform></translation>
     </message>
     <message>
         <source>Please try again 1 minute later</source>
@@ -174,7 +174,7 @@
     </message>
     <message numerus="yes">
         <source>Please try again %n minutes later</source>
-        <translation><numerusform>Spróbuj ponownie za %n minute</numerusform><numerusform>Spróbuj ponownie za %n minuty</numerusform><numerusform>Spróbuj ponownie za %n minut</numerusform><numerusform>Spróbuj ponownie za %n minut</numerusform></translation>
+        <translation><numerusform>Spróbuj ponownie za %n minutę</numerusform><numerusform>Spróbuj ponownie za %n minuty</numerusform><numerusform>Spróbuj ponownie za %n minut</numerusform><numerusform>Spróbuj ponownie za %n minut</numerusform></translation>
     </message>
 </context>
 <context>
@@ -188,8 +188,78 @@
         <translation><numerusform>Twoje hasło wygaśnie za %n dzień, proszę zmień je jak najszybciej</numerusform><numerusform>Twoje hasło wygaśnie za %n dni, proszę zmień je jak najszybciej</numerusform><numerusform>Twoje hasło wygaśnie za %n dni, proszę zmień je jak najszybciej</numerusform><numerusform>Twoje hasło wygaśnie za %n dni, proszę zmień je jak najszybciej</numerusform></translation>
     </message>
     <message>
-        <source>Password expired, please change</source>
-        <translation>Hasło wygasło, proszę zmień je</translation>
+        <source>Your password has expired. Please contact the administrator to change it.</source>
+        <translation>Twoje hasło wygasło. Skontaktuj się z administratorem, aby je zmienić.</translation>
+    </message>
+    <message>
+        <source>Your password has expired. Please change it.</source>
+        <translation>Twoje hasło wygasło. Prosimy je zmienić.</translation>
+    </message>
+</context>
+<context>
+    <name>ChangePasswordWidget</name>
+    <message>
+        <source>Your password has expired. Please change it and log in again.</source>
+        <translation>Twoje hasło wygasło. Zmień je i zaloguj się ponownie.</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Zapisz</translation>
+    </message>
+    <message>
+        <source>Old password</source>
+        <translation>Stare hasło</translation>
+    </message>
+    <message>
+        <source>New password</source>
+        <translation>Nowe hasło</translation>
+    </message>
+    <message>
+        <source>Repeat new password</source>
+        <translation>Powtórz nowe hasło</translation>
+    </message>
+    <message>
+        <source>Password hint (Optional)</source>
+        <translation>Wskazówka do hasła (Opcjonalne)</translation>
+    </message>
+    <message>
+        <source>Passwords do not match</source>
+        <translation>Hasła nie pasują do siebie</translation>
+    </message>
+    <message>
+        <source>The hint is visible to all users. Do not include the password here.</source>
+        <translation>Wskazówka będzie widoczna dla wszystkich użytkowników. Nie wprowadzaj tutaj swojego hasła.</translation>
+    </message>
+    <message>
+        <source>New password should differ from the current one</source>
+        <translation>Nowe hasło powinno różnić się od bieżącego</translation>
+    </message>
+    <message>
+        <source>Password changed</source>
+        <translation>Hasło zostało zmienione</translation>
+    </message>
+    <message>
+        <source>Wrong password</source>
+        <translation>Błędne hasło</translation>
+    </message>
+</context>
+<context>
+    <name>ControlWidget</name>
+    <message>
+        <source>Desktop Environment and Display Protocol</source>
+        <translation>Środowisko pulpitowe i protokół wyświetlania</translation>
+    </message>
+    <message>
+        <source>Keyboard Layout</source>
+        <translation>Układ klawiatury</translation>
+    </message>
+    <message>
+        <source>Switch User</source>
+        <translation>Przełącz użytkownika</translation>
+    </message>
+    <message>
+        <source>Power</source>
+        <translation>Zasilanie</translation>
     </message>
 </context>
 <context>
@@ -200,7 +270,7 @@
     </message>
     <message>
         <source>Wrong Password</source>
-        <translation>Nieprawidłowe Hasło</translation>
+        <translation>Błędne hasło</translation>
     </message>
 </context>
 <context>
@@ -229,7 +299,7 @@
     </message>
     <message>
         <source>Failed to match fingerprint</source>
-        <translation>Błąd porównania odcisków palcy</translation>
+        <translation>Nie udało się dopasować odcisku palca</translation>
     </message>
 </context>
 <context>
@@ -248,10 +318,69 @@
     </message>
 </context>
 <context>
-    <name>SessionWidget</name>
+    <name>PasswordLevelWidget</name>
     <message>
-        <source>You have enabled the high system security level, thus cannot switch to the Wayland mode, please disable the high security level in Security Center and try again.</source>
-        <translation>Wysoki poziom został włączony, z tego powodu nie jesteś w stanie przełączyć się na sesję Wayland. Wyłącz wysoki poziom zabezpieczeń w Centrum Bezpieczeństwa, a następnie spróbuj ponownie.</translation>
+        <source>Weak</source>
+        <translation>Słabe</translation>
+    </message>
+    <message>
+        <source>Medium</source>
+        <translation>Średnie</translation>
+    </message>
+    <message>
+        <source>Strong</source>
+        <translation>Mocne</translation>
+    </message>
+</context>
+<context>
+    <name>PwqualityManager</name>
+    <message>
+        <source>Password cannot be empty</source>
+        <translation>Pole na hasło nie może być puste</translation>
+    </message>
+    <message>
+        <source>Password must have at least %1 characters</source>
+        <translation>Hasło musi zawierać co najmniej %1 znaków</translation>
+    </message>
+    <message>
+        <source>Password must be no more than %1 characters</source>
+        <translation>Hasło nie może zawierać więcej niż %1 znaków</translation>
+    </message>
+    <message>
+        <source>Password can only contain English letters (case-sensitive), numbers or special symbols (~`!@#$%^&amp;*()-_+=|\{}[]:&quot;&apos;&lt;&gt;,.?/)</source>
+        <translation>Hasło musi zawierać tylko litery angielskie (z rozróżnieniem wielkich i małych), cyfry lub symbole specjalne (~`!@#$%^&amp;*()-_+=|\{}[]:&quot;&apos;&lt;&gt;,.?/)</translation>
+    </message>
+    <message>
+        <source>No more than %1 palindrome characters please</source>
+        <translation>Nie więcej niż %1 znaki palindromowe</translation>
+    </message>
+    <message>
+        <source>No more than %1 monotonic characters please</source>
+        <translation>Nie więcej niż %1 znaki monotoniczne</translation>
+    </message>
+    <message>
+        <source>No more than %1 repeating characters please</source>
+        <translation>Nie więcej niż %1 powtarzające się znaki</translation>
+    </message>
+    <message>
+        <source>Password must contain uppercase letters, lowercase letters, numbers and symbols (~`!@#$%^&amp;*()-_+=|\{}[]:&quot;&apos;&lt;&gt;,.?/)</source>
+        <translation>Hasło musi zawierać wielkie litery, małe litery, cyfry i symbole (~`!@#$%^&amp;*()-_+=|\{}[]:&quot;&apos;&lt;&gt;,.?/)</translation>
+    </message>
+    <message>
+        <source>Password must not contain more than 4 palindrome characters</source>
+        <translation>Hasło nie może zawierać więcej niż 4 znaki palindromowe</translation>
+    </message>
+    <message>
+        <source>Do not use common words and combinations as password</source>
+        <translation>Nie używaj popularnych słów i kombinacji jako hasła</translation>
+    </message>
+    <message>
+        <source>Create a strong password please</source>
+        <translation>Utwórz silne hasło</translation>
+    </message>
+    <message>
+        <source>It does not meet password rules</source>
+        <translation>Nie spełnia zasad dotyczących haseł</translation>
     </message>
 </context>
 <context>
@@ -281,12 +410,12 @@
         <translation>Wyloguj</translation>
     </message>
     <message>
-        <source>Switch user</source>
-        <translation>Zmień użytkownika</translation>
-    </message>
-    <message>
         <source>Switch system</source>
         <translation>System przełączników</translation>
+    </message>
+    <message>
+        <source>Switch user</source>
+        <translation>Zmień użytkownika</translation>
     </message>
 </context>
 <context>
@@ -294,6 +423,28 @@
     <message>
         <source>Start system monitor</source>
         <translation>Uruchom monitor systemu</translation>
+    </message>
+</context>
+<context>
+    <name>UserListPopupWidget</name>
+    <message>
+        <source>Standard User</source>
+        <translation>Standardowy użytkownik</translation>
+    </message>
+    <message>
+        <source>Administrator</source>
+        <translation>Administrator</translation>
+    </message>
+    <message>
+        <source>Other Users</source>
+        <translation>Inni użytkownicy</translation>
+    </message>
+</context>
+<context>
+    <name>VirtualKeyboardModule</name>
+    <message>
+        <source>Onboard</source>
+        <translation>Klawiatura ekranowa</translation>
     </message>
 </context>
 <context>
@@ -324,7 +475,7 @@
     </message>
     <message>
         <source>Shut down</source>
-        <translation>Zamknij</translation>
+        <translation>Wyłącz</translation>
     </message>
     <message>
         <source>Reboot</source>
@@ -336,7 +487,7 @@
     </message>
     <message>
         <source>Hibernate</source>
-        <translation>Hibernować</translation>
+        <translation>Hibernacja</translation>
     </message>
     <message>
         <source>Log out</source>
@@ -344,11 +495,11 @@
     </message>
     <message>
         <source>Are you sure you want to shut down?</source>
-        <translation>Czy na pewno chcesz zamknąć?</translation>
+        <translation>Czy na pewno chcesz wyłączyć?</translation>
     </message>
     <message>
         <source>Are you sure you want to reboot?</source>
-        <translation>Czy na pewno chcesz uruchomić ponownie komputer?</translation>
+        <translation>Czy na pewno chcesz uruchomić ponownie?</translation>
     </message>
     <message>
         <source>Are you sure you want to log out?</source>
