@@ -1,3 +1,20 @@
+dde-session-shell (6.0.3) unstable; urgency=medium
+
+  [ Deepin Packages Builder ]
+  * fix: 修复修改密码提示异常的问题(Bug: 141575)(Influence: 修改密码功能)
+  * chore: 更新changelog(Task: 160471)(Influence: 版本号)
+  * fix: 修复锁屏界面输入正确密码后会再次进入锁屏界面的问题。(Bug: 149269)(Influence: 无)
+  * feat: 修改登录锁屏右下角切换用户形式为用户列表。(Task: 124693)(Influence: 登录锁屏右下角切换用户按钮功能，以及切换用户。)
+  * feat: 修改登录锁屏右下角功能按鈕弹框为圆角。(Task: 179023)(Influence: 登录锁屏右下角功能按钮弹窗及相应功能。)
+  * chore: 同步V23 deepin-daemon 服务名称修改(Influence: 登录锁屏全量功能)
+  * fix: 修复登录锁屏出现多一个账户的问题。(Bug: 157241)(Influence: 无影响。)
+  * fix: 修复登录锁屏点击切换用户按钮后，通过键盘上下键可以移动无选中显示和回车无效的问题。(Bug: 154309)(Influence: 无影响。)
+  * fix: 修复登录锁屏切换用户列表鼠标hover和键盘上下键多个item都有选中背景的问题。(Bug: 162253)(Influence: 无影响。)
+  * chore: 修改部分英文提示语及配置文件(Influence: 登录锁屏界面文案显示。)
+  * chore: 更新翻译文件(Influence: 无。)
+
+ -- baodi <baodi@uniontech.com>  Wed, 19 Oct 2022 11:47:05 +0800
+
 dde-session-shell (6.0.2) unstable; urgency=medium
 
   [ TagBuilder ]
