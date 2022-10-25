@@ -11,7 +11,7 @@
     </message>
     <message numerus="yes">
         <source>Verification failed, %n chances left</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>Verification failed, %n chances left</numerusform><numerusform>Verification failed, %n chances left</numerusform></translation>
     </message>
     <message>
         <source>Verification failed, only one chance left</source>
@@ -42,7 +42,7 @@
     </message>
     <message numerus="yes">
         <source>Verification failed, %n chances left</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>Verification failed, %n chances left</numerusform><numerusform>Verification failed, %n chances left</numerusform></translation>
     </message>
     <message>
         <source>Verification failed, only one chance left</source>
@@ -65,7 +65,7 @@
     </message>
     <message numerus="yes">
         <source>Verification failed, %n chances left</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>Verification failed, %n chances left</numerusform><numerusform>Verification failed, %n chances left</numerusform></translation>
     </message>
     <message>
         <source>Verification failed, only one chance left</source>
@@ -88,7 +88,7 @@
     </message>
     <message numerus="yes">
         <source>Verification failed, %n chances left</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>Verification failed, %n chances left</numerusform><numerusform>Verification failed, %n chances left</numerusform></translation>
     </message>
     <message>
         <source>Verification failed, only one chance left</source>
@@ -108,7 +108,7 @@
     </message>
     <message numerus="yes">
         <source>Please try again %n minutes later</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>Please try again %n minutes later</numerusform><numerusform>Please try again %n minutes later</numerusform></translation>
     </message>
     <message>
         <source>Reset Password</source>
@@ -127,7 +127,7 @@
     </message>
     <message numerus="yes">
         <source>Please try again %n minutes later</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>Please try again %n minutes later</numerusform><numerusform>Please try again %n minutes later</numerusform></translation>
     </message>
     <message>
         <source>Reset Password</source>
@@ -146,7 +146,7 @@
     </message>
     <message numerus="yes">
         <source>Verification failed, %n chances left</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>Verification failed, %n chances left</numerusform><numerusform>Verification failed, %n chances left</numerusform></translation>
     </message>
     <message>
         <source>Verification failed, only one chance left</source>
@@ -166,7 +166,7 @@
     </message>
     <message numerus="yes">
         <source>Please try again %n minute(s) later</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>Please try again %n minute(s) later</numerusform><numerusform>Please try again %n minute(s) later</numerusform></translation>
     </message>
     <message>
         <source>Please try again 1 minute later</source>
@@ -174,7 +174,7 @@
     </message>
     <message numerus="yes">
         <source>Please try again %n minutes later</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>Please try again %n minutes later</numerusform><numerusform>Please try again %n minutes later</numerusform></translation>
     </message>
 </context>
 <context>
@@ -185,22 +185,22 @@
     </message>
     <message numerus="yes">
         <source>Your password will expire in %n days, please change it timely</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>Your password will expire in %n days, please change it timely</numerusform><numerusform>Your password will expire in %n days, please change it timely</numerusform></translation>
     </message>
     <message>
         <source>Your password has expired. Please contact the administrator to change it.</source>
-        <translation type="unfinished"/>
+        <translation>Your password has expired. Please contact the administrator to change it.</translation>
     </message>
     <message>
         <source>Your password has expired. Please change it.</source>
-        <translation type="unfinished"/>
+        <translation>Your password has expired. Please change it.</translation>
     </message>
 </context>
 <context>
     <name>ChangePasswordWidget</name>
     <message>
         <source>Your password has expired. Please change it and log in again.</source>
-        <translation type="unfinished"/>
+        <translation>Your password has expired. Please change it and log in again.</translation>
     </message>
     <message>
         <source>Save</source>
@@ -208,7 +208,7 @@
     </message>
     <message>
         <source>Old password</source>
-        <translation type="unfinished"/>
+        <translation>Old password</translation>
     </message>
     <message>
         <source>New password</source>
@@ -216,11 +216,11 @@
     </message>
     <message>
         <source>Repeat new password</source>
-        <translation type="unfinished"/>
+        <translation>Repeat new password</translation>
     </message>
     <message>
         <source>Password hint (Optional)</source>
-        <translation type="unfinished"/>
+        <translation>Password hint (Optional)</translation>
     </message>
     <message>
         <source>Passwords do not match</source>
@@ -247,7 +247,7 @@
     <name>ControlWidget</name>
     <message>
         <source>Desktop Environment and Display Protocol</source>
-        <translation type="unfinished"/>
+        <translation>Desktop Environment and Display Protocol</translation>
     </message>
     <message>
         <source>Keyboard Layout</source>
@@ -255,7 +255,7 @@
     </message>
     <message>
         <source>Switch User</source>
-        <translation type="unfinished"/>
+        <translation>Switch User</translation>
     </message>
     <message>
         <source>Power</source>
@@ -437,7 +437,7 @@
     </message>
     <message>
         <source>Other Users</source>
-        <translation type="unfinished"/>
+        <translation>Other Users</translation>
     </message>
 </context>
 <context>

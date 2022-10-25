@@ -11,7 +11,7 @@
     </message>
     <message numerus="yes">
         <source>Verification failed, %n chances left</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>Verifikimi dështoi, edhe %n provë</numerusform><numerusform>Verifikimi dështoi, edhe %n prova</numerusform></translation>
     </message>
     <message>
         <source>Verification failed, only one chance left</source>
@@ -27,7 +27,7 @@
     </message>
     <message>
         <source>Device unavailable!</source>
-        <translation type="unfinished"/>
+        <translation>Pajisje e pakapshme!</translation>
     </message>
 </context>
 <context>
@@ -42,7 +42,7 @@
     </message>
     <message numerus="yes">
         <source>Verification failed, %n chances left</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>Verifikimi dështoi, edhe %n provë</numerusform><numerusform>Verifikimi dështoi, edhe %n prova</numerusform></translation>
     </message>
     <message>
         <source>Verification failed, only one chance left</source>
@@ -65,7 +65,7 @@
     </message>
     <message numerus="yes">
         <source>Verification failed, %n chances left</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>Verifikimi dështoi, edhe %n provë</numerusform><numerusform>Verifikimi dështoi, edhe %n prova</numerusform></translation>
     </message>
     <message>
         <source>Verification failed, only one chance left</source>
@@ -88,7 +88,7 @@
     </message>
     <message numerus="yes">
         <source>Verification failed, %n chances left</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>Verifikimi dështoi, edhe %n provë</numerusform><numerusform>Verifikimi dështoi, edhe %n prova</numerusform></translation>
     </message>
     <message>
         <source>Verification failed, only one chance left</source>
@@ -108,7 +108,7 @@
     </message>
     <message numerus="yes">
         <source>Please try again %n minutes later</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>Ju lutemi, riprovoni pas %n minute</numerusform><numerusform>Ju lutemi, riprovoni pas %n minutash</numerusform></translation>
     </message>
     <message>
         <source>Reset Password</source>
@@ -127,7 +127,7 @@
     </message>
     <message numerus="yes">
         <source>Please try again %n minutes later</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>Ju lutemi, riprovoni pas %n minute</numerusform><numerusform>Ju lutemi, riprovoni pas %n minutash</numerusform></translation>
     </message>
     <message>
         <source>Reset Password</source>
@@ -146,7 +146,7 @@
     </message>
     <message numerus="yes">
         <source>Verification failed, %n chances left</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>Verifikimi dështoi, edhe %n provë</numerusform><numerusform>Verifikimi dështoi, edhe %n prova</numerusform></translation>
     </message>
     <message>
         <source>Verification failed, only one chance left</source>
@@ -166,7 +166,7 @@
     </message>
     <message numerus="yes">
         <source>Please try again %n minute(s) later</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>Ju lutemi, riprovoni %n minute</numerusform><numerusform>Ju lutemi, riprovoni %n minutash</numerusform></translation>
     </message>
     <message>
         <source>Please try again 1 minute later</source>
@@ -174,7 +174,7 @@
     </message>
     <message numerus="yes">
         <source>Please try again %n minutes later</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>Ju lutemi, riprovoni pas %n minute</numerusform><numerusform>Ju lutemi, riprovoni pas %n minutash</numerusform></translation>
     </message>
 </context>
 <context>
@@ -185,22 +185,22 @@
     </message>
     <message numerus="yes">
         <source>Your password will expire in %n days, please change it timely</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>Fjalëkalimi juaj do të skadojë për %n ditë, ju lutemi, ndryshojeni në kohë</numerusform><numerusform>Fjalëkalimi juaj do të skadojë për %n ditë, ju lutemi, ndryshojeni në kohë</numerusform></translation>
     </message>
     <message>
         <source>Your password has expired. Please contact the administrator to change it.</source>
-        <translation type="unfinished"/>
+        <translation>Fjalëkalimi juaj ka skaduar. Ju lutemi, lidhuni me përgjegjësin për ta ndryshuar.</translation>
     </message>
     <message>
         <source>Your password has expired. Please change it.</source>
-        <translation type="unfinished"/>
+        <translation>Fjalëkalimi juaj ka skaduar. Ju lutemi, ndryshojeni.</translation>
     </message>
 </context>
 <context>
     <name>ChangePasswordWidget</name>
     <message>
         <source>Your password has expired. Please change it and log in again.</source>
-        <translation type="unfinished"/>
+        <translation>Fjalëkalimi juaj ka skaduar. Ju lutemi, ndryshojeni dhe ribëni hyrjen.</translation>
     </message>
     <message>
         <source>Save</source>
@@ -208,7 +208,7 @@
     </message>
     <message>
         <source>Old password</source>
-        <translation type="unfinished"/>
+        <translation>Fjalëkalimi i vjetër</translation>
     </message>
     <message>
         <source>New password</source>
@@ -216,11 +216,11 @@
     </message>
     <message>
         <source>Repeat new password</source>
-        <translation type="unfinished"/>
+        <translation>Rijepni fjalëkalimin e ri</translation>
     </message>
     <message>
         <source>Password hint (Optional)</source>
-        <translation type="unfinished"/>
+        <translation>Ndihmëz fjalëkalimi (Opsionale)</translation>
     </message>
     <message>
         <source>Passwords do not match</source>
@@ -247,7 +247,7 @@
     <name>ControlWidget</name>
     <message>
         <source>Desktop Environment and Display Protocol</source>
-        <translation type="unfinished"/>
+        <translation>Mjedis Desktop dhe Protokoll Ekrani</translation>
     </message>
     <message>
         <source>Keyboard Layout</source>
@@ -255,7 +255,7 @@
     </message>
     <message>
         <source>Switch User</source>
-        <translation type="unfinished"/>
+        <translation>Ndërroni Përdorues</translation>
     </message>
     <message>
         <source>Power</source>
@@ -437,14 +437,14 @@
     </message>
     <message>
         <source>Other Users</source>
-        <translation type="unfinished"/>
+        <translation>Përdorues të Tjerë</translation>
     </message>
 </context>
 <context>
     <name>VirtualKeyboardModule</name>
     <message>
         <source>Onboard</source>
-        <translation>Onboard</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

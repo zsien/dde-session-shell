@@ -236,7 +236,7 @@
     </message>
     <message>
         <source>Password changed</source>
-        <translation>修改密碼成功</translation>
+        <translation>密碼修改成功</translation>
     </message>
     <message>
         <source>Wrong password</source>
@@ -255,7 +255,7 @@
     </message>
     <message>
         <source>Switch User</source>
-        <translation>切換使用者</translation>
+        <translation>切換用戶</translation>
     </message>
     <message>
         <source>Power</source>
@@ -284,11 +284,11 @@
     <name>LockContent</name>
     <message>
         <source>Lock Screen</source>
-        <translation>鎖屏</translation>
+        <translation>鎖定螢幕</translation>
     </message>
     <message>
         <source>Failed to lock screen</source>
-        <translation>鎖屏失敗</translation>
+        <translation>鎖定螢幕失敗</translation>
     </message>
 </context>
 <context>
@@ -340,7 +340,7 @@
     </message>
     <message>
         <source>Password must have at least %1 characters</source>
-        <translation>密碼應包含至少%1個字符</translation>
+        <translation>密碼長度不能少於%1個字符</translation>
     </message>
     <message>
         <source>Password must be no more than %1 characters</source>
@@ -391,7 +391,7 @@
     </message>
     <message>
         <source>Reboot</source>
-        <translation>重新啟動</translation>
+        <translation>重啟</translation>
     </message>
     <message>
         <source>Suspend</source>
@@ -415,7 +415,7 @@
     </message>
     <message>
         <source>Switch user</source>
-        <translation>切換使用者</translation>
+        <translation>切換用戶</translation>
     </message>
 </context>
 <context>
@@ -479,7 +479,7 @@
     </message>
     <message>
         <source>Reboot</source>
-        <translation>重新啟動</translation>
+        <translation>重啟</translation>
     </message>
     <message>
         <source>Suspend</source>

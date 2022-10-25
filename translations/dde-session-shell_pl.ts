@@ -23,7 +23,7 @@
     </message>
     <message>
         <source>Face ID locked, use password please</source>
-        <translation>ID Twarzy zablokowane, proszę użyć hasła</translation>
+        <translation>ID Twarzy zablokowane, użyj hasła</translation>
     </message>
     <message>
         <source>Device unavailable!</source>
@@ -77,7 +77,7 @@
     </message>
     <message>
         <source>Iris ID locked, use password please</source>
-        <translation>ID Tęczówki zablokowane, proszę użyć hasła</translation>
+        <translation>ID Tęczówki zablokowane, użyj hasła</translation>
     </message>
 </context>
 <context>

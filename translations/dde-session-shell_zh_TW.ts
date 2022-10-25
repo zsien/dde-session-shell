@@ -27,7 +27,7 @@
     </message>
     <message>
         <source>Device unavailable!</source>
-        <translation>設備不可用！</translation>
+        <translation>裝置不可用！</translation>
     </message>
 </context>
 <context>
@@ -204,7 +204,7 @@
     </message>
     <message>
         <source>Save</source>
-        <translation>儲 存</translation>
+        <translation>保 存</translation>
     </message>
     <message>
         <source>Old password</source>
@@ -232,11 +232,11 @@
     </message>
     <message>
         <source>New password should differ from the current one</source>
-        <translation>新的密碼必須不同於目前密碼</translation>
+        <translation>新密碼和舊密碼不能相同</translation>
     </message>
     <message>
         <source>Password changed</source>
-        <translation>修改密碼成功</translation>
+        <translation>密碼修改成功</translation>
     </message>
     <message>
         <source>Wrong password</source>
@@ -251,7 +251,7 @@
     </message>
     <message>
         <source>Keyboard Layout</source>
-        <translation>鍵盤佈局</translation>
+        <translation>鍵盤布局</translation>
     </message>
     <message>
         <source>Switch User</source>
@@ -288,18 +288,18 @@
     </message>
     <message>
         <source>Failed to lock screen</source>
-        <translation>無法鎖定螢幕</translation>
+        <translation>鎖定螢幕失敗</translation>
     </message>
 </context>
 <context>
     <name>LockWorker</name>
     <message>
         <source>Fingerprint verification timed out, please enter your password manually</source>
-        <translation>指紋驗證逾時，請手動輸入密碼</translation>
+        <translation>指紋密碼驗證超時，請手動輸入密碼</translation>
     </message>
     <message>
         <source>Failed to match fingerprint</source>
-        <translation>無法進行指紋配對</translation>
+        <translation>指紋解鎖失敗</translation>
     </message>
 </context>
 <context>
@@ -310,11 +310,11 @@
     </message>
     <message>
         <source>The above users are still logged in and data will be lost due to shutdown, are you sure you want to shut down?</source>
-        <translation>以上的使用者仍在登入，且關機後這些使用者的資料將會遺失。確定關機？</translation>
+        <translation>此電腦還有以上帳戶在登入，關閉電腦會導致其資料遺失，是否要關閉此電腦？</translation>
     </message>
     <message>
         <source>The above users are still logged in and data will be lost due to reboot, are you sure you want to reboot?</source>
-        <translation>以上的使用者仍在登入，且重開機後這些使用者的資料將會遺失。確定重啟？</translation>
+        <translation>此電腦還有以上帳戶在登入，重啟電腦會導致其資料遺失，是否要重啟此電腦？</translation>
     </message>
 </context>
 <context>
@@ -336,15 +336,15 @@
     <name>PwqualityManager</name>
     <message>
         <source>Password cannot be empty</source>
-        <translation>密碼不能空白</translation>
+        <translation>密碼不能為空</translation>
     </message>
     <message>
         <source>Password must have at least %1 characters</source>
-        <translation>密碼應包含至少%1個字元</translation>
+        <translation>密碼長度不能少於%1個字元</translation>
     </message>
     <message>
         <source>Password must be no more than %1 characters</source>
-        <translation>密碼必須少於 %1 個字元</translation>
+        <translation>密碼長度不能超過%1個字元</translation>
     </message>
     <message>
         <source>Password can only contain English letters (case-sensitive), numbers or special symbols (~`!@#$%^&amp;*()-_+=|\{}[]:&quot;&apos;&lt;&gt;,.?/)</source>
@@ -368,11 +368,11 @@
     </message>
     <message>
         <source>Password must not contain more than 4 palindrome characters</source>
-        <translation>密碼不得含有連續4個以上的回文字符</translation>
+        <translation>密碼不得含有連續4個以上的回文字元</translation>
     </message>
     <message>
         <source>Do not use common words and combinations as password</source>
-        <translation>密碼不能是常見單詞及組合</translation>
+        <translation>密碼不能是常見單字及組合</translation>
     </message>
     <message>
         <source>Create a strong password please</source>
@@ -391,7 +391,7 @@
     </message>
     <message>
         <source>Reboot</source>
-        <translation>重新啟動</translation>
+        <translation>重啟</translation>
     </message>
     <message>
         <source>Suspend</source>
@@ -407,7 +407,7 @@
     </message>
     <message>
         <source>Log out</source>
-        <translation>登出</translation>
+        <translation>註銷</translation>
     </message>
     <message>
         <source>Switch system</source>
@@ -451,27 +451,27 @@
     <name>WarningContent</name>
     <message>
         <source>The programs are preventing the computer from shutting down, and forcing shut down may cause data loss.</source>
-        <translation>這些程式導致電腦不能關機。強制關機可能會導致資料遺失。</translation>
+        <translation>以上程式阻止關機，強制關機可能會導致其資料遺失。</translation>
     </message>
     <message>
         <source>To close the program, click Cancel, and then close the program.</source>
-        <translation>如要關閉程式，請按下「取消」後關閉程式。</translation>
+        <translation>您可以點擊“取消”然後關閉這些程式。</translation>
     </message>
     <message>
         <source>The programs are preventing the computer from reboot, and forcing reboot may cause data loss.</source>
-        <translation>這些程式導致電腦不能重新開機。強制重新開機可能會導致資料遺失。</translation>
+        <translation>以上程式阻止重啟，強制重啟可能會導致其資料遺失。</translation>
     </message>
     <message>
         <source>The programs are preventing the computer from suspend, and forcing suspend may cause data loss.</source>
-        <translation>這些程式導致電腦不能待機。強制待機可能會導致資料遺失。</translation>
+        <translation>以上程式阻止待機，強制待機可能會導致其資料遺失。</translation>
     </message>
     <message>
         <source>The programs are preventing the computer from hibernate, and forcing hibernate may cause data loss.</source>
-        <translation>這些程式導致電腦不能休眠。強制休眠可能會導致資料遺失。</translation>
+        <translation>以上程式阻止休眠，強制休眠可能會導致其資料遺失。</translation>
     </message>
     <message>
         <source>The programs are preventing the computer from log out, and forcing log out may cause data loss.</source>
-        <translation>這些程式導致電腦不能登出。強制登出可能會導致資料遺失。</translation>
+        <translation>以上程式阻止註銷，強制註銷可能會導致其資料遺失。</translation>
     </message>
     <message>
         <source>Shut down</source>
@@ -479,7 +479,7 @@
     </message>
     <message>
         <source>Reboot</source>
-        <translation>重新啟動</translation>
+        <translation>重啟</translation>
     </message>
     <message>
         <source>Suspend</source>
@@ -491,19 +491,19 @@
     </message>
     <message>
         <source>Log out</source>
-        <translation>登出</translation>
+        <translation>註銷</translation>
     </message>
     <message>
         <source>Are you sure you want to shut down?</source>
-        <translation>確定關機？</translation>
+        <translation>您確定要關機嗎？</translation>
     </message>
     <message>
         <source>Are you sure you want to reboot?</source>
-        <translation>確定重開機？</translation>
+        <translation>您確定要重啟嗎？</translation>
     </message>
     <message>
         <source>Are you sure you want to log out?</source>
-        <translation>確定登出？</translation>
+        <translation>您確定要註銷嗎？</translation>
     </message>
 </context>
 <context>

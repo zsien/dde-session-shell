@@ -3,7 +3,7 @@
     <name>AuthFace</name>
     <message>
         <source>Face ID</source>
-        <translation>ID de cara</translation>
+        <translation>ID facial</translation>
     </message>
     <message>
         <source>Verification successful</source>
@@ -19,11 +19,11 @@
     </message>
     <message>
         <source>Verify your Face ID</source>
-        <translation>Verifique su ID de cara</translation>
+        <translation>Verifique su ID facial</translation>
     </message>
     <message>
         <source>Face ID locked, use password please</source>
-        <translation>ID de cara bloqueado, utilice la contraseña por favor</translation>
+        <translation>ID facial bloqueada, utilice la contraseña por favor</translation>
     </message>
     <message>
         <source>Device unavailable!</source>
