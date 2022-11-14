@@ -204,8 +204,8 @@ int main(int argc, char *argv[])
         qDebug() << "register dbus failed"<< "maybe lockFront is running..." << conn.lastError();
 
         if (!runDaemon) {
-            const char *lockFrontInter = "com.deepin.dde.lockFront";
-            const char *shutdownFrontInter = "com.deepin.dde.shutdownFront";
+            const char *lockFrontInter = "org.deepin.dde.LockFront1";
+            const char *shutdownFrontInter = "org.deepin.dde.ShutdownFront1";
             if (showUserList) {
                 QDBusInterface ifc(DBUS_LOCK_NAME, DBUS_LOCK_PATH, lockFrontInter, QDBusConnection::sessionBus(), nullptr);
                 ifc.asyncCall("ShowUserList");

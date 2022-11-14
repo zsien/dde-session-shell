@@ -18,10 +18,10 @@
 #include <QObject>
 #include <QWidget>
 
-using AccountsInter = org::deepin::daemon::Accounts1;
-using UserInter = org::deepin::daemon::accounts1::User;
-using LoginedInter = org::deepin::daemon::Logined;
-using SessionManagerInter = com::deepin::SessionManager;
+using AccountsInter = org::deepin::dde::Accounts1;
+using UserInter = org::deepin::dde::accounts1::User;
+using LoginedInter = org::deepin::dde::Logined1;
+using SessionManagerInter = org::deepin::dde::SessionManager1;
 using HuaWeiSwitchOSInterface = com::huawei::switchos;
 
 class SessionBaseModel;

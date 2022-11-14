@@ -17,13 +17,13 @@
 #include <QGSettings>
 #include <memory>
 
-using AccountsInter = org::deepin::daemon::Accounts1;
-using LoginedInter = org::deepin::daemon::Logined;
+using AccountsInter = org::deepin::dde::Accounts1;
+using LoginedInter = org::deepin::dde::Logined1;
 using Login1SessionSelf = org::freedesktop::login1::Session;
-using PowerManagerInter = org::deepin::daemon::PowerManager1;
+using PowerManagerInter = org::deepin::dde::PowerManager1;
 using DBusObjectInter = org::freedesktop::DBus;
 
-using com::deepin::daemon::Authenticate;
+using Authenticate = org::deepin::dde::Authenticate1;
 
 class User;
 class SessionBaseModel;

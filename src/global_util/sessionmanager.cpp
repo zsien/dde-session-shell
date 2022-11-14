@@ -84,8 +84,8 @@ SessionManager::SessionManager(QObject *parent)
 {
     // 判断显卡是否支持wayland
     if (m_allowSwitchingToWayland && isWaylandExisted()) {
-        QDBusInterface systemDisplayInter("com.deepin.system.Display", "/com/deepin/system/Display",
-                "com.deepin.system.Display", QDBusConnection::systemBus(), this);
+        QDBusInterface systemDisplayInter("org.deepin.dde.Display1", "/org/deepin/dde/Display1",
+                "org.deepin.dde.Display1", QDBusConnection::systemBus(), this);
         QDBusReply<bool> reply  = systemDisplayInter.call("SupportWayland");
         if (QDBusError::NoError == reply.error().type()) {
             m_allowSwitchingToWayland = reply.value();

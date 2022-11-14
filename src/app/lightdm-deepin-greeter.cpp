@@ -260,7 +260,7 @@ int main(int argc, char* argv[])
     dss::module::ModulesLoader *modulesLoader = &dss::module::ModulesLoader::instance();
     modulesLoader->start(QThread::LowestPriority);
 
-    const QString serviceName = "org.deepin.daemon.Accounts1";
+    const QString serviceName = "org.deepin.dde.Accounts1";
     QDBusConnectionInterface *interface = QDBusConnection::systemBus().interface();
     if (!interface->isServiceRegistered(serviceName)) {
         qWarning() << "accounts service is not registered wait...";

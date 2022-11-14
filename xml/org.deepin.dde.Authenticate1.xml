@@ -1,4 +1,4 @@
-<interface name="com.deepin.daemon.Authenticate">
+<interface name="org.deepin.dde.Authenticate1">
     <property name="SupportedFlags" type="i" access="read"/>
     <property name="FrameworkState" type="i" access="read"/>
     <property name="SupportEncrypts" type="s" access="read"/>

@@ -210,7 +210,7 @@ QString User::userPwdName(const uid_t uid) const
 NativeUser::NativeUser(const QString &path, QObject *parent)
     : User(parent)
     , m_path(path)
-    , m_userInter(new UserInter("org.deepin.daemon.Accounts1", path, QDBusConnection::systemBus(), this))
+    , m_userInter(new UserInter("org.deepin.dde.Accounts1", path, QDBusConnection::systemBus(), this))
 {
     initConnections();
     initData();
@@ -219,8 +219,8 @@ NativeUser::NativeUser(const QString &path, QObject *parent)
 
 NativeUser::NativeUser(const uid_t &uid, QObject *parent)
     : User(parent)
-    , m_path("/org/deepin/daemon/Accounts1/User" + QString::number(uid))
-    , m_userInter(new UserInter("org.deepin.daemon.Accounts1", m_path, QDBusConnection::systemBus(), this))
+    , m_path("/org/deepin/dde/Accounts1/User" + QString::number(uid))
+    , m_userInter(new UserInter("org.deepin.dde.Accounts1", m_path, QDBusConnection::systemBus(), this))
 {
     initConnections();
     initData();
@@ -230,7 +230,7 @@ NativeUser::NativeUser(const uid_t &uid, QObject *parent)
 NativeUser::NativeUser(const NativeUser &user)
     : User(user)
     , m_path(user.path())
-    , m_userInter(new UserInter("org.deepin.daemon.Accounts1", m_path, QDBusConnection::systemBus(), this))
+    , m_userInter(new UserInter("org.deepin.dde.Accounts1", m_path, QDBusConnection::systemBus(), this))
 {
     initConnections();
 }

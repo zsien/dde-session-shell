@@ -31,7 +31,7 @@ void DBusLockAgent::Suspend(bool enable)
         m_model->setIsBlackMode(true);
         m_model->setVisible(true);
     } else {
-        QDBusInterface infc("org.deepin.daemon.Power1","/org/deepin/daemon/Power1","org.deepin.daemon.Power1");
+        QDBusInterface infc("org.deepin.dde.Power1","/org/deepin/dde/Power1","org.deepin.dde.Power1");
         // 待机恢复需要密码
         bool bSuspendLock = infc.property("SleepLock").toBool();
 

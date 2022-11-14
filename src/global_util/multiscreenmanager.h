@@ -10,7 +10,7 @@
 
 #include "systemdisplay_interface.h"
 
-using SystemDisplayInter = com::deepin::system::Display;
+using SystemDisplayInter = org::deepin::dde::Display1;
 
 const static int COPY_MODE = 1;
 const static int EXTENDED_MODE = 2;

@@ -29,7 +29,7 @@
 
 #include <QObject>
 
-using UserInter = org::deepin::daemon::accounts1::User;
+using UserInter = org::deepin::dde::accounts1::User;
 
 class User : public QObject
 {

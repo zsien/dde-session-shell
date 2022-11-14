@@ -210,7 +210,7 @@ void LockFrame::resizeEvent(QResizeEvent *event)
 
 bool LockFrame::handlePoweroffKey()
 {
-    QDBusInterface powerInter("org.deepin.daemon.Power1","/org/deepin/daemon/Power1","org.deepin.daemon.Power1");
+    QDBusInterface powerInter("org.deepin.dde.Power1","/org/deepin/dde/Power1","org.deepin.dde.Power1");
     if (!powerInter.isValid()) {
         qDebug() << "powerInter is not valid";
         return false;

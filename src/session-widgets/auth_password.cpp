@@ -43,10 +43,6 @@
 
 #include <unistd.h>
 
-#define Service "com.deepin.dialogs.ResetPassword"
-#define Path "/com/deepin/dialogs/ResetPassword"
-#define Interface "com.deepin.dialogs.ResetPassword"
-
 using namespace AuthCommon;
 
 AuthPassword::AuthPassword(QWidget *parent)
@@ -467,9 +463,9 @@ void AuthPassword::showResetPasswordMessage()
     m_resetPasswordFloatingMessage->setWidget(suggestButton);
     m_resetPasswordFloatingMessage->setMessage(tr("Forgot password?"));
     connect(suggestButton, &QPushButton::clicked, this, [ this ] {
-        const QString AccountsService("org.deepin.daemon.Accounts1");
-        const QString path = QString("/org/deepin/daemon/Accounts1/User%1").arg(m_currentUid);
-        org::deepin::daemon::accounts1::User user(AccountsService, path, QDBusConnection::systemBus());
+        const QString AccountsService("org.deepin.dde.Accounts1");
+        const QString path = QString("/org/deepin/dde/Accounts1/User%1").arg(m_currentUid);
+        org::deepin::dde::accounts1::User user(AccountsService, path, QDBusConnection::systemBus());
         auto reply = user.SetPassword("");
         reply.waitForFinished();
         if (reply.isError())
@@ -520,9 +516,9 @@ bool AuthPassword::isUserAccountBinded()
         return false;
     }
 
-    QDBusInterface accountsInter("org.deepin.daemon.Accounts1",
-                                 QString("/org/deepin/daemon/Accounts1/User%1").arg(m_currentUid),
-                                 "org.deepin.daemon.Accounts1.User",
+    QDBusInterface accountsInter("org.deepin.dde.Accounts1",
+                                 QString("/org/deepin/dde/Accounts1/User%1").arg(m_currentUid),
+                                 "org.deepin.dde.Accounts1.User",
                                  QDBusConnection::systemBus());
     QVariant retUUID = accountsInter.property("UUID");
     if (!accountsInter.isValid()) {

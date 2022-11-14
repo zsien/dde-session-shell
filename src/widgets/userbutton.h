@@ -40,7 +40,7 @@
 
 #include "accountsuser_interface.h"
 
-using UserInter = org::deepin::daemon::accounts1::User;
+using UserInter = org::deepin::dde::accounts1::User;
 
 static const int USER_ICON_WIDTH = 180;
 static const int USER_ICON_HEIGHT = 180;

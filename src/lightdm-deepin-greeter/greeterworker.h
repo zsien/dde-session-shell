@@ -14,7 +14,7 @@
 
 #include <QObject>
 
-using SoundThemePlayerInter = com::deepin::api::SoundThemePlayer;
+using SoundThemePlayerInter = org::deepin::dde::SoundThemePlayer1;
 
 class GreeterWorker : public Auth::AuthInterface
 {

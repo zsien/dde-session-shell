@@ -17,7 +17,7 @@
 #define SECURITYENHANCE_PATH "/com/deepin/daemon/SecurityEnhance"
 #define SECURITYENHANCE_NAME "com.deepin.daemon.SecurityEnhance"
 
-using PowerInter = org::deepin::system::Power1;
+using PowerInter = org::deepin::dde::Power1;
 using namespace Auth;
 using namespace AuthCommon;
 DCORE_USE_NAMESPACE
@@ -31,7 +31,7 @@ GreeterWorker::GreeterWorker(SessionBaseModel *const model, QObject *parent)
     , m_greeter(new QLightDM::Greeter(this))
     , m_authFramework(new DeepinAuthFramework(this))
     , m_lockInter(new DBusLockService(LOCKSERVICE_NAME, LOCKSERVICE_PATH, QDBusConnection::systemBus(), this))
-    , m_soundPlayerInter(new SoundThemePlayerInter("com.deepin.api.SoundThemePlayer", "/com/deepin/api/SoundThemePlayer", QDBusConnection::systemBus(), this))
+    , m_soundPlayerInter(new SoundThemePlayerInter("org.deepin.dde.SoundThemePlayer1", "/org/deepin/dde/SoundThemePlayer1", QDBusConnection::systemBus(), this))
     , m_resetSessionTimer(new QTimer(this))
     , m_limitsUpdateTimer(new QTimer(this))
     , m_retryAuth(false)
@@ -82,7 +82,7 @@ void GreeterWorker::initConnections()
     connect(m_greeter, &QLightDM::Greeter::showPrompt, this, &GreeterWorker::showPrompt);
     connect(m_greeter, &QLightDM::Greeter::showMessage, this, &GreeterWorker::showMessage);
     connect(m_greeter, &QLightDM::Greeter::authenticationComplete, this, &GreeterWorker::authenticationComplete);
-    /* com.deepin.daemon.Accounts */
+    /* org.deepin.dde.Accounts1 */
     connect(m_accountsInter, &AccountsInter::UserAdded, m_model, static_cast<void (SessionBaseModel::*)(const QString &)>(&SessionBaseModel::addUser));
     connect(m_accountsInter, &AccountsInter::UserDeleted, m_model, static_cast<void (SessionBaseModel::*)(const QString &)>(&SessionBaseModel::removeUser));
     // connect(m_accountsInter, &AccountsInter::UserListChanged, m_model, &SessionBaseModel::updateUserList); // UserListChanged信号的处理， 改用UserAdded和UserDeleted信号替代
@@ -101,7 +101,7 @@ void GreeterWorker::initConnections()
     });
     connect(m_loginedInter, &LoginedInter::LastLogoutUserChanged, m_model, static_cast<void (SessionBaseModel::*)(const uid_t)>(&SessionBaseModel::updateLastLogoutUser));
     connect(m_loginedInter, &LoginedInter::UserListChanged, m_model, &SessionBaseModel::updateLoginedUserList);
-    /* com.deepin.daemon.Authenticate */
+    /* org.deepin.dde.Authenticate1 */
     connect(m_authFramework, &DeepinAuthFramework::FramworkStateChanged, m_model, &SessionBaseModel::updateFrameworkState);
     connect(m_authFramework, &DeepinAuthFramework::LimitsInfoChanged, this, [this](const QString &account) {
         qDebug() << "GreeterWorker::initConnections LimitsInfoChanged:" << account;
@@ -111,7 +111,7 @@ void GreeterWorker::initConnections()
     });
     connect(m_authFramework, &DeepinAuthFramework::SupportedEncryptsChanged, m_model, &SessionBaseModel::updateSupportedEncryptionType);
     connect(m_authFramework, &DeepinAuthFramework::SupportedMixAuthFlagsChanged, m_model, &SessionBaseModel::updateSupportedMixAuthFlags);
-    /* com.deepin.daemon.Authenticate.Session */
+    /* org.deepin.dde.Authenticate1.Session */
     connect(m_authFramework, &DeepinAuthFramework::AuthStateChanged, this, &GreeterWorker::onAuthStateChanged);
     connect(m_authFramework, &DeepinAuthFramework::FactorsInfoChanged, m_model, &SessionBaseModel::updateFactorsInfo);
     connect(m_authFramework, &DeepinAuthFramework::FuzzyMFAChanged, m_model, &SessionBaseModel::updateFuzzyMFA);
@@ -159,7 +159,7 @@ void GreeterWorker::initConnections()
         }
         m_soundPlayerInter->PrepareShutdownSound(static_cast<int>(m_model->currentUser()->uid()));
     });
-    /* com.deepin.dde.LockService */
+    /* org.deepin.dde.LockService1 */
     connect(m_lockInter, &DBusLockService::UserChanged, this, [ = ](const QString &json) {
         qInfo() << "DBusLockService::UserChanged:" << json;
         // 如果是已登录用户则返回，否则已登录用户和未登录用户来回切换时会造成用户信息错误
@@ -224,7 +224,7 @@ void GreeterWorker::initData()
     if (isSecurityEnhanceOpen())
         m_model->setSEType(true);
 
-    /* com.deepin.daemon.Accounts */
+    /* org.deepin.dde.Accounts */
     m_model->updateUserList(m_accountsInter->userList());
     m_model->updateLastLogoutUser(m_loginedInter->lastLogoutUser());
     m_model->updateLoginedUserList(m_loginedInter->userList());
@@ -242,16 +242,16 @@ void GreeterWorker::initData()
         if (DSysInfo::deepinType() == DSysInfo::DeepinServer) {
             m_model->updateCurrentUser(user);
         } else {
-            /* com.deepin.dde.LockService */
+            /* org.deepin.dde.LockService1 */
             m_model->updateCurrentUser(m_lockInter->CurrentUser());
         }
     } else {
-        /* com.deepin.dde.LockService */
+        /* org.deepin.dde.LockService1 */
         m_model->updateCurrentUser(m_lockInter->CurrentUser());
     }
     m_soundPlayerInter->PrepareShutdownSound(static_cast<int>(m_model->currentUser()->uid()));
 
-    /* com.deepin.daemon.Authenticate */
+    /* org.deepin.dde.Authenticate1 */
     if (m_authFramework->isDeepinAuthValid()) {
         m_model->updateFrameworkState(m_authFramework->GetFrameworkState());
         m_model->updateSupportedEncryptionType(m_authFramework->GetSupportedEncrypts());
@@ -273,7 +273,7 @@ void GreeterWorker::initConfiguration()
 
     // 当这个配置不存在是，如果是不是笔记本就打开小键盘，否则就关闭小键盘 0关闭键盘 1打开键盘 2默认值（用来判断是不是有这个key）
     if (m_model->currentUser() != nullptr && getNumLockState(m_model->currentUser()->name()) == NUM_LOCK_UNKNOWN) {
-        PowerInter powerInter("org.deepin.system.Power1", "/org/deepin/system/Power1", QDBusConnection::systemBus(), this);
+        PowerInter powerInter("org.deepin.dde.Power1", "/org/deepin/dde/Power1", QDBusConnection::systemBus(), this);
         if (powerInter.hasBattery()) {
             saveNumlockState(m_model->currentUser(), false);
         } else {
@@ -561,7 +561,7 @@ void GreeterWorker::checkDBusServer(bool isValid)
     } else {
         // FIXME: 我不希望这样做，但是QThread::msleep会导致无限递归
         QTimer::singleShot(300, this, [ = ] {
-            qWarning() << "org.deepin.daemon.Accounts1 is not start, rechecking!";
+            qWarning() << "org.deepin.dde.Accounts1 is not start, rechecking!";
             checkDBusServer(m_accountsInter->isValid());
         });
     }
@@ -824,7 +824,7 @@ int GreeterWorker::getNumLockState(const QString &userName)
 void GreeterWorker::recoveryUserKBState(std::shared_ptr<User> user)
 {
     //FIXME(lxz)
-    //    PowerInter powerInter("com.deepin.system.Power", "/com/deepin/system/Power", QDBusConnection::systemBus(), this);
+    //    PowerInter powerInter("org.deepin.dde.Power1", "/org/deepin/dde/Power1", QDBusConnection::systemBus(), this);
     //    const BatteryPresentInfo info = powerInter.batteryIsPresent();
     //    const bool defaultValue = !info.values().first();
     if (user.get() == nullptr)

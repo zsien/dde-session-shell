@@ -48,7 +48,7 @@ public:
     };
     Q_ENUM(ModeStatus)
 
-    /* com.deepin.daemon.Authenticate */
+    /* org.deepin.dde.Authenticate1 */
     struct AuthProperty {
         bool FuzzyMFA;          // Reserved
         bool MFAFlag;           // 多因子标志位
@@ -136,19 +136,19 @@ public:
     std::shared_ptr<User> json2User(const QString &userJson);
 
 signals:
-    /* com.deepin.daemon.Accounts */
+    /* org.deepin.dde.Accounts1 */
     void currentUserChanged(const std::shared_ptr<User>);
     void userAdded(const std::shared_ptr<User>);
     void userRemoved(const std::shared_ptr<User>);
     void userListChanged(const QList<std::shared_ptr<User>>);
     void loginedUserListChanged(const QList<std::shared_ptr<User>>);
-    /* com.deepin.daemon.Authenticate */
+    /* org.deepin.dde.Authenticate1 */
     void MFAFlagChanged(const bool);
     /* others */
     void visibleChanged(const bool);
 
 public slots:
-    /* com.deepin.daemon.Accounts */
+    /* org.deepin.dde.Accounts1 */
     void addUser(const QString &path);
     void addUser(const std::shared_ptr<User> user);
     void removeUser(const QString &path);
@@ -159,12 +159,12 @@ public slots:
     void updateLastLogoutUser(const uid_t uid);
     void updateLastLogoutUser(const std::shared_ptr<User> lastLogoutUser);
     void updateLoginedUserList(const QString &list);
-    /* com.deepin.daemon.Authenticate */
+    /* org.deepin.dde.Authenticate1 */
     void updateLimitedInfo(const QString &info);
     void updateFrameworkState(const int state);
     void updateSupportedMixAuthFlags(const int flags);
     void updateSupportedEncryptionType(const QString &type);
-    /* com.deepin.daemon.Authenticate.Session */
+    /* org.deepin.dde.Authenticate1.Session */
     void updateAuthState(const int type, const int state, const QString &message);
     void updateFactorsInfo(const MFAInfoList &infoList);
     void updateFuzzyMFA(const bool fuzzMFA);

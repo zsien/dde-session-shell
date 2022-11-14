@@ -78,7 +78,7 @@ function(generation_dbus_interface xml class_name class_file)
 endfunction(generation_dbus_interface)
 
 generation_dbus_interface(
-    ${CMAKE_SOURCE_DIR}/xml/com.deepin.daemon.Authenticate.xml
+    ${CMAKE_SOURCE_DIR}/xml/org.deepin.dde.Authenticate1.xml
     Authenticate
     ${XML2CPP_DIR}/authenticate_interface
 )
@@ -90,43 +90,37 @@ generation_dbus_interface(
 )
 
 generation_dbus_interface(
-    ${CMAKE_SOURCE_DIR}/xml/com.deepin.daemon.Accounts.xml
+    ${CMAKE_SOURCE_DIR}/xml/org.deepin.dde.Accounts1.xml
     Accounts
     ${XML2CPP_DIR}/accounts_interface
 )
 
 generation_dbus_interface(
-    ${CMAKE_SOURCE_DIR}/xml/com.deepin.daemon.Accounts.User.xml
+    ${CMAKE_SOURCE_DIR}/xml/org.deepin.dde.Accounts1.User.xml
     AccountsUser
     ${XML2CPP_DIR}/accountsuser_interface
 )
 
 generation_dbus_interface(
-    ${CMAKE_SOURCE_DIR}/xml/com.deepin.daemon.ImageEffect.xml
+    ${CMAKE_SOURCE_DIR}/xml/org.deepin.dde.ImageEffect1.xml
     ImageEffect
     ${XML2CPP_DIR}/imageeffect_interface
 )
 
 generation_dbus_interface(
-    ${CMAKE_SOURCE_DIR}/xml/com.deepin.daemon.Logined.xml
+    ${CMAKE_SOURCE_DIR}/xml/org.deepin.dde.Logined1.xml
     Logined
     ${XML2CPP_DIR}/logined_interface
 )
 
 generation_dbus_interface(
-    ${CMAKE_SOURCE_DIR}/xml/com.deepin.daemon.Power.xml
-    Power
-    ${XML2CPP_DIR}/power_interface
-)
-
-generation_dbus_interface(
-    ${CMAKE_SOURCE_DIR}/xml/com.deepin.daemon.PowerManager.xml
+    ${CMAKE_SOURCE_DIR}/xml/org.deepin.dde.PowerManager1.xml
     PowerManager
     ${XML2CPP_DIR}/powermanager_interface
 )
 
 generation_dbus_interface(
-    ${CMAKE_SOURCE_DIR}/xml/com.deepin.system.SystemPower.xml
+    ${CMAKE_SOURCE_DIR}/xml/org.deepin.dde.SystemPower1.xml
     SystemPower
     ${XML2CPP_DIR}/systempower_interface
 )
@@ -138,25 +132,25 @@ generation_dbus_interface(
 )
 
 generation_dbus_interface(
-    ${CMAKE_SOURCE_DIR}/xml/com.deepin.daemon.Authenticate.Session2.xml
+    ${CMAKE_SOURCE_DIR}/xml/org.deepin.dde.Authenticate1.Session2.xml
     AuthenticateSession2
     ${XML2CPP_DIR}/authenticatesession2_interface
 )
 
 generation_dbus_interface(
-    ${CMAKE_SOURCE_DIR}/xml/com.deepin.SessionManager.xml
+    ${CMAKE_SOURCE_DIR}/xml/org.deepin.dde.SessionManager1.xml
     SessionManager
     ${XML2CPP_DIR}/sessionmanager_interface
 )
 
 generation_dbus_interface(
-    ${CMAKE_SOURCE_DIR}/xml/com.deepin.api.SoundThemePlayer.xml
+    ${CMAKE_SOURCE_DIR}/xml/org.deepin.dde.SoundThemePlayer1.xml
     SoundThemePlayer
     ${XML2CPP_DIR}/soundthemeplayer_interface
 )
 
 generation_dbus_interface(
-    ${CMAKE_SOURCE_DIR}/xml/com.deepin.system.SystemDisplay.xml
+    ${CMAKE_SOURCE_DIR}/xml/org.deepin.dde.SystemDisplay1.xml
     SystemDisplay
     ${XML2CPP_DIR}/systemdisplay_interface
 )

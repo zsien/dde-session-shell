@@ -1,4 +1,4 @@
-<interface name="com.deepin.system.Display">
+<interface name="org.deepin.dde.Display1">
     <method name="GetConfig">
         <arg type="s" direction="out"/>
     </method>

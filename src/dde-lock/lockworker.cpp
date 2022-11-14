@@ -28,8 +28,8 @@ LockWorker::LockWorker(SessionBaseModel *const model, QObject *parent)
     , m_canAuthenticate(false)
     , m_authFramework(new DeepinAuthFramework(this))
     , m_lockInter(new DBusLockService("org.deepin.dde.LockService1", "/org/deepin/dde/LockService1", QDBusConnection::systemBus(), this))
-    , m_hotZoneInter(new DBusHotzone("org.deepin.daemon.Zone1", "/org/deepin/daemon/Zone1", QDBusConnection::sessionBus(), this))
-    , m_sessionManagerInter(new SessionManagerInter("com.deepin.SessionManager", "/com/deepin/SessionManager", QDBusConnection::sessionBus(), this))
+    , m_hotZoneInter(new DBusHotzone("org.deepin.dde.Zone1", "/org/deepin/dde/Zone1", QDBusConnection::sessionBus(), this))
+    , m_sessionManagerInter(new SessionManagerInter("org.deepin.dde.SessionManager1", "/org/deepin/dde/SessionManager1", QDBusConnection::sessionBus(), this))
     , m_switchosInterface(new HuaWeiSwitchOSInterface("com.huawei", "/com/huawei/switchos", QDBusConnection::sessionBus(), this))
     , m_resetSessionTimer(new QTimer(this))
     , m_limitsUpdateTimer(new QTimer(this))
@@ -79,7 +79,7 @@ void LockWorker::initConnections()
     connect(m_loginedInter, &LoginedInter::LastLogoutUserChanged, m_model, static_cast<void (SessionBaseModel::*)(const uid_t)>(&SessionBaseModel::updateLastLogoutUser));
     connect(m_loginedInter, &LoginedInter::UserListChanged, m_model, &SessionBaseModel::updateLoginedUserList);
 
-    /* com.deepin.daemon.Authenticate */
+    /* org.deepin.dde.Authenticate1 */
     connect(m_authFramework, &DeepinAuthFramework::FramworkStateChanged, m_model, &SessionBaseModel::updateFrameworkState);
     connect(m_authFramework, &DeepinAuthFramework::LimitsInfoChanged, this, [this](const QString &account) {
         qDebug() << "DeepinAuthFramework::LimitsInfoChanged:" << account;
@@ -96,7 +96,7 @@ void LockWorker::initConnections()
     connect(m_authFramework, &DeepinAuthFramework::AuthStateChanged, this, &LockWorker::onAuthStateChanged);
     connect(m_authFramework, &DeepinAuthFramework::FactorsInfoChanged, m_model, &SessionBaseModel::updateFactorsInfo);
 
-    /* com.deepin.dde.LockService */
+    /* org.deepin.dde.LockService1 */
     connect(m_lockInter, &DBusLockService::UserChanged, this, [ = ](const QString &json) {
         qInfo() << "DBusLockService::UserChanged:" << json;
         QTimer::singleShot(100, this, [ = ] {
@@ -106,7 +106,7 @@ void LockWorker::initConnections()
     });
     connect(m_lockInter, &DBusLockService::Event, this, &LockWorker::handleServiceEvent);
 
-    /* com.deepin.SessionManager */
+    /* org.deepin.dde.SessionManager1 */
     connect(m_sessionManagerInter, &SessionManagerInter::Unlock, this, [ = ] {
         emit m_model->authFinished(true);
     });
@@ -171,7 +171,7 @@ void LockWorker::initConnections()
 
     connect(m_dbusInter, &DBusObjectInter::NameOwnerChanged, this, [ = ](const QString &name, const QString &oldOwner, const QString &newOwner) {
         Q_UNUSED(oldOwner)
-        if (name == "com.deepin.daemon.Authenticate" && newOwner != "" && m_model->visible() && m_sessionManagerInter->locked()) {
+        if (name == "org.deepin.dde.Authenticate1" && newOwner != "" && m_model->visible() && m_sessionManagerInter->locked()) {
             m_resetSessionTimer->stop();
             endAuthentication(m_account, AT_All);
             createAuthentication(m_model->currentUser()->name());
@@ -189,7 +189,7 @@ void LockWorker::initConnections()
 
 void LockWorker::initData()
 {
-    /* com.deepin.daemon.Accounts */
+    /* org.deepin.dde.Accounts1 */
     m_model->updateUserList(m_accountsInter->userList());
     m_model->updateLastLogoutUser(m_loginedInter->lastLogoutUser());
     m_model->updateLoginedUserList(m_loginedInter->userList());
@@ -206,7 +206,7 @@ void LockWorker::initData()
         m_model->addUser(user);
     }
 
-    /* com.deepin.dde.LockService */
+    /* org.deepin.dde.LockService1 */
     std::shared_ptr<User> user_ptr = m_model->findUserByUid(getuid());
     if (user_ptr.get()) {
         m_model->updateCurrentUser(user_ptr);
@@ -223,7 +223,7 @@ void LockWorker::initData()
         m_model->updateCurrentUser(m_lockInter->CurrentUser());
     }
 
-    /* com.deepin.daemon.Authenticate */
+    /* org.deepin.dde.Authenticate1 */
     m_model->updateFrameworkState(m_authFramework->GetFrameworkState());
     m_model->updateSupportedEncryptionType(m_authFramework->GetSupportedEncrypts());
     m_model->updateSupportedMixAuthFlags(m_authFramework->GetSupportedMixAuthFlags());

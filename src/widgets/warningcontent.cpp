@@ -31,7 +31,7 @@ WarningContent::WarningContent(SessionBaseModel * const model, const SessionBase
     , m_login1Inter(new DBusLogin1Manager("org.freedesktop.login1", "/org/freedesktop/login1", QDBusConnection::systemBus(), this))
     , m_powerAction(action)
 {
-    m_inhibitorBlacklists << "NetworkManager" << "ModemManager" << "org.deepin.daemon.Power1";
+    m_inhibitorBlacklists << "NetworkManager" << "ModemManager" << "org.deepin.dde.Power1";
     setTopFrameVisible(false);
     setBottomFrameVisible(false);
 }
@@ -99,7 +99,7 @@ QList<InhibitWarnView::InhibitorData> WarningContent::listInhibitors(const Sessi
 
                     if (connection.interface()->isServiceRegistered(inhibitor.who)) {
 
-                        QDBusInterface ifc(inhibitor.who, "/com/deepin/InhibitHint", "com.deepin.InhibitHint", connection);
+                        QDBusInterface ifc(inhibitor.who, "/org/deepin/dde/InhibitHint1", "org.deepin.dde.InhibitHint1", connection);
                         QDBusMessage msg = ifc.call("Get", qgetenv("LANG"), inhibitor.why);
                         if (msg.type() == QDBusMessage::ReplyMessage) {
                             InhibitHint inhibitHint = qdbus_cast<InhibitHint>(msg.arguments().at(0).value<QDBusArgument>());

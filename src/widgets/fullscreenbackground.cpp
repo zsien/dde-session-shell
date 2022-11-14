@@ -54,7 +54,7 @@ QList<FullscreenBackground *> FullscreenBackground::frameList;
 FullscreenBackground::FullscreenBackground(SessionBaseModel *model, QWidget *parent)
     : QWidget(parent)
     , m_fadeOutAni(nullptr)
-    , m_imageEffectInter(new ImageEffectInter("org.deepin.daemon.ImageEffect1", "/org/deepin/daemon/ImageEffect1", QDBusConnection::systemBus(), this))
+    , m_imageEffectInter(new ImageEffectInter("org.deepin.dde.ImageEffect1", "/org/deepin/dde/ImageEffect1", QDBusConnection::systemBus(), this))
     , m_model(model)
     , m_useSolidBackground(false)
     , m_fadeOutAniFinished(false)

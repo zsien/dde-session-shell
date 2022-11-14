@@ -12,7 +12,7 @@ MultiScreenManager::MultiScreenManager(QObject *parent)
     : QObject(parent)
     , m_registerFunction(nullptr)
     , m_raiseContentFrameTimer(new QTimer(this))
-    , m_systemDisplay(new SystemDisplayInter("com.deepin.system.Display", "/com/deepin/system/Display", QDBusConnection::systemBus(), this))
+    , m_systemDisplay(new SystemDisplayInter("org.deepin.dde.Display1", "/org/deepin/dde/Display1", QDBusConnection::systemBus(), this))
     , m_isCopyMode(false)
 {
     connect(qApp, &QGuiApplication::screenAdded, this, &MultiScreenManager::onScreenAdded, Qt::DirectConnection);
