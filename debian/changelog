@@ -1,3 +1,14 @@
+dde-session-shell (6.0.4) unstable; urgency=medium
+
+  [ TagBuilder ]
+  * chore: 更新翻译文件(Influence: 无。)
+  * fix: 解决有些情况下关机阻止界面取消后不回到桌面的情况(Bug: 171541)(Influence: 关机阻止界面退出后的显示。)
+  * chore: V23接口改造适配(Task: 207483)(Influence: 无)
+  * feat: 社区版屏蔽显示协议切换入口(Task: 224723)(Influence: 社区版屏蔽显示协议切换入口)
+  * fix: 修复登录界面缩放错误的问题(Bug: 176397)(Influence: 设置缩放后登录界面和桌面的缩放不一致)
+
+ -- zhaoyingzhen <zhaoyingzhen@uniontech.com>  Tue, 13 Dec 2022 19:18:26 +0800
+
 dde-session-shell (6.0.3) unstable; urgency=medium
 
   [ Deepin Packages Builder ]
