@@ -174,7 +174,6 @@ include_directories(${PROJECT_SOURCE_DIR}/src/widgets)
 include_directories(${PROJECT_SOURCE_DIR}/src/session-widgets)
 include_directories(${PROJECT_SOURCE_DIR}/src/libdde-auth)
 include_directories(${PROJECT_SOURCE_DIR}/interface)
-include_directories(${PROJECT_SOURCE_DIR}/src/qtdbusextended)
 include_directories(${PROJECT_SOURCE_DIR}/src/global_util/dbus/types)
 
 aux_source_directory(${PROJECT_SOURCE_DIR}/src/global_util GLOBAL_UTILS)
@@ -184,7 +183,6 @@ aux_source_directory(${PROJECT_SOURCE_DIR}/src/widgets WIDGETS)
 aux_source_directory(${PROJECT_SOURCE_DIR}/src/session-widgets SESSION_WIDGETS)
 aux_source_directory(${PROJECT_SOURCE_DIR}/src/libdde-auth AUTHENTICATE)
 aux_source_directory(${PROJECT_SOURCE_DIR}/interface INTERFACE)
-aux_source_directory(${PROJECT_SOURCE_DIR}/src/qtdbusextended QT_DBUS_EXTENDED)
 aux_source_directory(${PROJECT_SOURCE_DIR}/src/global_util/dbus/types DBUS_DATA_TYPES)
 
 set(QRCS
@@ -256,7 +254,6 @@ set(GREETER_SRCS
     ${SESSION_WIDGETS}
     ${AUTHENTICATE}
     ${INTERFACE}
-    ${QT_DBUS_EXTENDED}
     ${DBUS_DATA_TYPES}
     src/app/lightdm-deepin-greeter.cpp
     src/lightdm-deepin-greeter/loginframe.cpp
