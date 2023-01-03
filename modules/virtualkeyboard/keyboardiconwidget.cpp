@@ -23,10 +23,14 @@
 
 #include <QPainter>
 #include <QMouseEvent>
+#include <QSvgRenderer>
+
+const static QSize iconSize = QSize(30, 30);
 
 KeyboardIconWidget::KeyboardIconWidget(QWidget *parent)
     : QWidget(parent)
 {
+    setFixedSize(iconSize);
     setAttribute(Qt::WA_TranslucentBackground, true);
 }
 
@@ -41,16 +45,16 @@ void KeyboardIconWidget::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
 
-    QRect rect = this->rect();
+    QPixmap pixmap(iconSize);
+    pixmap.load(m_iconPath);
+    pixmap.fill(Qt::transparent);
 
-    QPixmap pixmap(m_iconPath);
-    QRect rectImage = pixmap.rect();
-    rect.setX((rect.width() - rectImage.width()) /2);
-    rect.setY((rect.height() - rectImage.height()) / 2);
+    QSvgRenderer renderer(m_iconPath);
+    renderer.render(&painter);
 
-    rect.setWidth(rectImage.width());
-    rect.setHeight(rectImage.height());
-    painter.drawPixmap(rect, pixmap);
+    int x = (rect().width() - iconSize.width()) / 2;
+    int y = (rect().height() - iconSize.height()) / 2;
+    painter.drawPixmap(x, y, iconSize.width(), iconSize.height(), pixmap);
 
     QWidget::paintEvent(event);
 }
