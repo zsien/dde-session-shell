@@ -80,7 +80,7 @@ void TipContentWidget::paintEvent(QPaintEvent *event)
     QFrame::paintEvent(event);
 
     QPainter painter(this);
-    painter.setPen(QPen(palette().brightText(), 1));
+    painter.setPen(QPen(palette().windowText(), 1));
 
     QTextOption option;
     option.setAlignment(Qt::AlignCenter);
