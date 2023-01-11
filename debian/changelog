@@ -1,3 +1,10 @@
+dde-session-shell (6.0.5.2) unstable; urgency=medium
+
+  [ Deepin Packages Builder ]
+  * Revert "Revert "feat: 社区版屏蔽显示协议切换入口""(Task: 236183)
+
+ -- caixiangrong <caixiangrong@uniontech.com>  Wed, 11 Jan 2023 12:05:22 +0800
+
 dde-session-shell (6.0.5.1) unstable; urgency=medium
 
   * UNRELEASED
