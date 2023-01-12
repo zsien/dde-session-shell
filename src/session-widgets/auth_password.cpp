@@ -570,11 +570,12 @@ void AuthPassword::updateResetPasswordUI()
         return;
     }
 
-    if (m_resetPasswordMessageVisible) {
-        showResetPasswordMessage();
-    } else {
-        closeResetPasswordMessage();
-    }
+    //TODO 暂时屏蔽通过UniodID重置密码功能，V23上面UOSID还未集成，此功能不可用
+    //    if (m_resetPasswordMessageVisible) {
+    //        showResetPasswordMessage();
+    //    } else {
+    //        closeResetPasswordMessage();
+    //    }
 }
 
 bool AuthPassword::eventFilter(QObject *watched, QEvent *event)
