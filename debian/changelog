@@ -1,3 +1,10 @@
+dde-session-shell (6.0.6) unstable; urgency=medium
+
+  [ TagBuilder ]
+  * fix: 暂时屏蔽UnionID重置密码功能(Bug: 182925)(Influence: 通过UniondID重置密码)
+
+ -- zhaoyingzhen <zhaoyingzhen@uniontech.com>  Fri, 13 Jan 2023 10:23:19 +0800
+
 dde-session-shell (6.0.5.2) unstable; urgency=medium
 
   [ Deepin Packages Builder ]
