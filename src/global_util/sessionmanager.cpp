@@ -14,7 +14,7 @@ DCORE_USE_NAMESPACE
 static const QString DEFAULT_SESSION_NAME = "dde-x11";
 static const QString WAYLAND_SESSION_NAME = "dde-wayland";
 static const QString DISPLAY_X11_NAME     = "X11";
-static const QString DISPLAY_WAYLAND_NAME = "Wayland";
+static const QString DISPLAY_WAYLAND_NAME = "Wayland (Technology Preview)";
 
 
 const QString displaySessionName(const QString &realName)
