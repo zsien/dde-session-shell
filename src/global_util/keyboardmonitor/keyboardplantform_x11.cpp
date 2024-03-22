@@ -172,26 +172,16 @@ bool KeyboardPlantformX11::setNumlockStatus(const bool &on)
     if (!d)
         return false;
 
-    XKeyboardState x;
-    XGetKeyboardControl(d, &x);
-    const bool numLockEnabled = x.led_mask & 2;
+    unsigned int mask = XkbKeysymToModifiers(d, XK_Num_Lock);
 
-    if (numLockEnabled == on) {
-        return true;
+    XkbStateRec xkbState;
+    XkbGetState(d, XkbUseCoreKbd, &xkbState);
+    bool oldState = xkbState.locked_mods & mask;
+    if (oldState == on) {
+        return false;
     }
 
-    // Get the keycode for XK_Caps_Lock keysymbol
-    unsigned int keycode = XKeysymToKeycode(d, XK_Num_Lock);
-
-    // Simulate Press
-    int pressExit = XTestFakeKeyEvent(d, keycode, True, CurrentTime);
-    XFlush(d);
-
-    // Simulate Release
-    int releseExit = XTestFakeKeyEvent(d, keycode, False, CurrentTime);
-    XFlush(d);
-
-    return pressExit == 0 && releseExit == 0;
+    return XkbLockModifiers(d, XkbUseCoreKbd, mask, on ? mask : 0);
 }
 
 void KeyboardPlantformX11::run()
