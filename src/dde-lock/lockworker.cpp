@@ -58,6 +58,10 @@ LockWorker::LockWorker(SessionBaseModel *const model, QObject *parent)
         }
     }
 
+    if (QGSettings::isSchemaInstalled("com.deepin.dde.power")) {
+        m_powerGsettings = new QGSettings("com.deepin.dde.power", "/com/deepin/dde/power/", this);
+    }
+
     m_resetSessionTimer->setSingleShot(true);
     connect(m_resetSessionTimer, &QTimer::timeout, this, [ = ] {
         endAuthentication(m_account, AT_All);
@@ -380,8 +384,19 @@ void LockWorker::doPowerAction(const SessionBaseModel::PowerAction action)
     switch (action) {
     case SessionBaseModel::PowerAction::RequireSuspend:
     {
-        m_model->setIsBlackMode(true);
-        m_model->setCurrentModeState(SessionBaseModel::ModeStatus::PasswordMode);
+        bool sleepLock = true;
+        if (m_powerGsettings && m_powerGsettings->keys().contains("sleep-lock")){
+            sleepLock = m_powerGsettings->get("sleep-lock").toBool();
+        }
+
+        if (sleepLock) {
+            m_model->setIsBlackMode(true);
+            m_model->setCurrentModeState(SessionBaseModel::ModeStatus::PasswordMode);
+        } else {
+            m_model->setIsBlackMode(false);
+            m_model->setVisible(false);
+        }
+
         int delayTime = 500;
         if(m_gsettings && m_gsettings->keys().contains("delaytime")){
             delayTime = m_gsettings->get("delaytime").toInt();

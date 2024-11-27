@@ -84,6 +84,7 @@ protected:
     Authenticate*      m_authenticateInter;
     DBusObjectInter*   m_dbusInter;
     QGSettings*        m_gsettings = nullptr;
+    QGSettings*        m_powerGsettings = nullptr;
     uint               m_lastLogoutUid;
     uint               m_currentUserUid;
     std::list<uint>    m_loginUserList;
